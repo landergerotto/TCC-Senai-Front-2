@@ -6,7 +6,7 @@ function DateComponent() {
     const [currentDate, setCurrentDate] = useState('');
 
     useEffect(() => {
-        axios.get('http://worldtimeapi.org/api/ip')
+        axios.get('https://worldtimeapi.org/api/ip')
             .then(response => {
                 const datetime = response.data.datetime;
                 const date = new Date(datetime);

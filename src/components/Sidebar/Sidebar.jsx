@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
-
-// TODO IMPORT STYLES
-// import "../styles.css"; 
+import styles from "./Sidebar.module.css";
 import SideNav, {
     Toggle,
     Nav,
@@ -12,57 +11,42 @@ import SideNav, {
 } from "@trendmicro/react-sidenav";
 
 function SideNavBar(props) {
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = React.useState(false);
+    const navigate = useNavigate();
 
     return (
-        <SideNav className="sidenav" expanded={this.state.isVisible}>
-            <SideNav.Toggle
-                onClick={() => {
-                    setIsVisible( !isVisible );
-                }}
-            />
+        <SideNav
+            className={styles.sidenav}
+            defaultExpanded={isVisible}
+            onToggle={(expanded) => setIsVisible(expanded)}
+        >
+            <SideNav.Toggle />
             <SideNav.Nav defaultSelected="/Summary">
-                <NavItem eventKey="Summary" onSelect={() => this.props.navigate("/")}>
+                <NavItem eventKey="Summary" onSelect={() => navigate("/")}>
                     <NavIcon>
-                        <i
-                            class="fa fa-home"
-                            style={{ fontSize: "1.5em" }}
-                            aria-hidden="false"
-                        ></i>
+                        <i className="fa fa-home" style={{ fontSize: "1.5em" }} aria-hidden="false"></i>
                     </NavIcon>
                     <NavText>Summary</NavText>
                 </NavItem>
-                <NavItem
-                    eventKey="statistics"
-                    onSelect={() => this.props.navigate("/statistics")}
-                >
+                <NavItem eventKey="statistics" onSelect={() => navigate("/statistics")}>
                     <NavIcon>
                         <i className="fa fa-bar-chart" style={{ fontSize: "1.5em" }} />
                     </NavIcon>
                     <NavText>Bugs statistics</NavText>
                 </NavItem>
-                <NavItem
-                    eventKey="Bugs types"
-                    onSelect={() => this.props.navigate("/types")}
-                >
+                <NavItem eventKey="Bugs types" onSelect={() => navigate("/types")}>
                     <NavIcon>
                         <i className="fa fa-bug" style={{ fontSize: "1.5em" }} />
                     </NavIcon>
                     <NavText>Bugs types</NavText>
                 </NavItem>
-                <NavItem
-                    eventKey="timeline"
-                    onSelect={() => this.props.navigate("/timeline")}
-                >
+                <NavItem eventKey="timeline" onSelect={() => navigate("/timeline")}>
                     <NavIcon>
                         <i className="fa fa-line-chart" style={{ fontSize: "1.5em" }} />
                     </NavIcon>
                     <NavText>Bugs timeline</NavText>
                 </NavItem>
-                <NavItem
-                    eventKey="Bugs area"
-                    onSelect={() => this.props.navigate("/area")}
-                >
+                <NavItem eventKey="Bugs area" onSelect={() => navigate("/area")}>
                     <NavIcon>
                         <i className="fa fa-area-chart" style={{ fontSize: "1.5em" }} />
                     </NavIcon>
@@ -72,6 +56,5 @@ function SideNavBar(props) {
         </SideNav>
     );
 }
-
 
 export default SideNavBar;

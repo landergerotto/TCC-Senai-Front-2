@@ -1,14 +1,10 @@
-import Date from "../../components/Date/date";
+import SideNavBar from "../../components/Sidebar/Sidebar";
 
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-import styles from './index.module.css';
 
 function TestPage() {
     return (
         <>
-            pog
+            <SideNavBar></SideNavBar>
         </>
     )
 }

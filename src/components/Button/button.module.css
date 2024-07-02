@@ -11,6 +11,16 @@
     transition: 0.25s;
 }
 
+.buttonBg:hover {
+    background-color: #0569a3;
+    cursor: pointer;
+}
+
+.buttonBg:active {
+    background-color: #0c5a88;
+    cursor: pointer;
+}
+
 .buttonCancelBg {
     background-color: white;
     width: 100%;
@@ -25,13 +35,17 @@
     transition: 0.25s;
 }
 
-.buttonBg:hover {
-    background-color: #0569a3;
-    cursor: pointer;
-}
-
 .buttonCancelBg:hover {
     background-color: #007BC0;
     color: white;
     cursor: pointer;
+}
+
+.buttonCancelBg:active {
+    background-color: #0c5a88;
+    cursor: pointer;
+}
+
+.text {
+    user-select: none;
 }

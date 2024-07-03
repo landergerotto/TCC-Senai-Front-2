@@ -1,8 +1,8 @@
 import styles from './button.module.css'
 
-function Button({ text, type, onClick }) {
+function Button({ text, type, onClick, style }) {
     return (
-        <div className={type == "cancel" ? styles.buttonCancelBg : styles.buttonBg} onClick={onClick}>
+        <div className={type == "cancel" ? styles.buttonCancelBg : styles.buttonBg} onClick={onClick} style={style}>
             <div className={styles.text}>
                 {text}
             </div>

@@ -1,0 +1,4 @@
+.bg {
+    display: flex;
+    flex-direction: column;
+}

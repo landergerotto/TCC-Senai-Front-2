@@ -5,15 +5,23 @@ import './App.css'
 
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/Home'
-import LoginPage from './pages/Login/login'
-
+import TestPage from './pages/Test'
+import SideNavBar from './components/Sidebar/Sidebar'
+import NavbarComponent from './components/Navbar/navbar.jsx';
 function App() {
 
   return (
-    <Routes>
-      <Route path='/' element={<HomePage />}></Route>
-      <Route path='/login' element={<LoginPage />}></Route>
-    </Routes>
+    <>
+    <div>
+      <NavbarComponent />
+      <SideNavBar />
+    </div>
+      <Routes>
+        <Route path='/' element={<HomePage />}></Route>
+        <Route path='/t' element={<TestPage />}></Route>
+        <Route path='/login' element={<LoginPage />}></Route>
+      </Routes>
+    </>
   )
 }
 

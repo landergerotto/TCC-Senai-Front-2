@@ -5,8 +5,10 @@ import Col from 'react-bootstrap/Col';
 
 import styles from './index.module.css';
 import Button from "../../components/Button/button";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const navigate = useNavigate();
     return (
         <>
             <Row>
@@ -19,7 +21,7 @@ function HomePage() {
             <Row>
                 <Col></Col>
                 <Col>
-                    <Button text={"cock and ball torture"} type={'cancel'}/>
+                    <Button text={"cock and ball torture"} type={'cancel'} onClick={() => navigate('/login')} />
                 </Col>
                 <Col></Col>
             </Row>

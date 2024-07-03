@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CIcon from '@coreui/icons-react';
 import { cilSpeedometer, cilCloudDownload, cilLayers, cilPuzzle } from '@coreui/icons';
 
-// import styles from "./Sidebar.module.css";
+import styles from "./Sidebar.module.css";
 import { CSidebar, CSidebarHeader, CSidebarBrand, CSidebarNav, CNavTitle, CNavItem, CBadge, CNavGroup, CSidebarFooter, CSidebarToggler } from '@coreui/react';
 import '@coreui/coreui/dist/css/coreui.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -13,8 +13,8 @@ function SideNavBar(props) {
     const navigate = useNavigate();
 
     return (
-        <div style={{ position: 'absolute', top: '0', height: '100vh' }}>
-            <CSidebar className="border-end" colorScheme="dark" placement="start" unfoldable>
+        <div className={styles.sidebar}>
+            <CSidebar className="border-end" colorScheme="dark" placement="start" unfoldable style={{height:'100vh'}}>
                 <CSidebarHeader className="border-bottom">
                     <CSidebarBrand>CUI</CSidebarBrand>
                 </CSidebarHeader>
@@ -35,98 +35,6 @@ function SideNavBar(props) {
                     <CNavItem href="https://coreui.io"><CIcon customClassName="nav-icon" icon={cilCloudDownload} /> Download CoreUI</CNavItem>
                     <CNavItem href="https://coreui.io/pro/"><CIcon customClassName="nav-icon" icon={cilLayers} /> Try CoreUI PRO</CNavItem>
                 </CSidebarNav>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
             </CSidebar>
 
         </div>

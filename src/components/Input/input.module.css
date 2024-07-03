@@ -1,0 +1,9 @@
+.bg {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 1.25em;
+    margin-left: 0.2em;
+}

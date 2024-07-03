@@ -8,7 +8,7 @@ import HomePage from './pages/Home'
 import TestPage from './pages/Test'
 import SideNavBar from './components/Sidebar/Sidebar'
 import NavbarComponent from './components/Navbar/navbar.jsx';
-import { Row, Col } from 'react-bootstrap'
+import LoginPage from './pages/Login/login'
 function App() {
 
   return (
@@ -20,6 +20,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/t' element={<TestPage />}></Route>
+        <Route path='/login' element={<LoginPage />}></Route>
       </Routes>
     </>
   )

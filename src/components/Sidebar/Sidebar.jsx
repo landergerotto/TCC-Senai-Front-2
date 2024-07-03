@@ -14,7 +14,13 @@ function SideNavBar(props) {
 
     return (
         <div className={styles.sidebar}>
-            <CSidebar className="border-end" colorScheme="dark" placement="start" unfoldable style={{height:'100vh'}}>
+            <CSidebar 
+            className="border-end" 
+            colorScheme="dark" 
+            placement="start" 
+            unfoldable
+            overlaid
+            style={{ height:'10000vh' }}>
                 <CSidebarHeader className="border-bottom">
                     <CSidebarBrand>CUI</CSidebarBrand>
                 </CSidebarHeader>

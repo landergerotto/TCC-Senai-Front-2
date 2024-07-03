@@ -4,7 +4,7 @@ import SideNavBar from "../../components/Sidebar/Sidebar";
 function TestPage() {
     return (
         <>
-            <SideNavBar></SideNavBar>
+            {/* <SideNavBar></SideNavBar> */}
         </>
     )
 }

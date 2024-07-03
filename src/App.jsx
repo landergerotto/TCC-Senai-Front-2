@@ -6,14 +6,22 @@ import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/Home'
 import TestPage from './pages/Test'
-
+import SideNavBar from './components/Sidebar/Sidebar'
+import NavbarComponent from './components/Navbar/navbar.jsx';
+import { Row, Col } from 'react-bootstrap'
 function App() {
 
   return (
-    <Routes>
-      <Route path='/' element={<HomePage />}></Route>
-      <Route path='/t' element={<TestPage />}></Route>
-    </Routes>
+    <>
+    <div>
+      <NavbarComponent />
+      <SideNavBar />
+    </div>
+      <Routes>
+        <Route path='/' element={<HomePage />}></Route>
+        <Route path='/t' element={<TestPage />}></Route>
+      </Routes>
+    </>
   )
 }
 

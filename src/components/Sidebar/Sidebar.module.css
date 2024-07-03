@@ -130,6 +130,5 @@ height: 100%;
 
 .sidebar {
   position: absolute;
-  top: 0;
+  top: 10px;
 }
-/* position: 'absolute', top: '0', height: '100vh !important' */

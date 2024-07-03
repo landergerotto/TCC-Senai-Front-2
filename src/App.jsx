@@ -8,6 +8,7 @@ import HomePage from './pages/Home'
 import TestPage from './pages/Test'
 import SideNavBar from './components/Sidebar/Sidebar'
 import NavbarComponent from './components/Navbar/navbar.jsx';
+import LoginPage from './pages/Login/login'
 function App() {
 
   return (

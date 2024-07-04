@@ -12,9 +12,10 @@ import LoginPage from './pages/Login/login'
 function App() {
   return (
     <>
+    <div>
       <NavbarComponent />
       <SideNavBar />
-    
+    </div>
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/t' element={<TestPage />}></Route>

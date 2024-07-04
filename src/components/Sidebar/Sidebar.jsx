@@ -13,6 +13,7 @@ function SideNavBar(props) {
     const navigate = useNavigate();
 
     return (
+        
         <div className={styles.sidebar}>           
             <CSidebar 
             className="border-end" 

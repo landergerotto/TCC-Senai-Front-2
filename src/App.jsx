@@ -10,13 +10,11 @@ import SideNavBar from './components/Sidebar/Sidebar'
 import NavbarComponent from './components/Navbar/navbar.jsx';
 import LoginPage from './pages/Login/login'
 function App() {
-
   return (
     <>
-    <div>
       <NavbarComponent />
       <SideNavBar />
-    </div>
+    
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/t' element={<TestPage />}></Route>

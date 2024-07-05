@@ -4,7 +4,7 @@ import navcolors from "/nav-colors.png";
 import logobosch from "/logo-bosch.png";
 import bpscross from "/bpscross.png";
 
-import "./navbar.css";
+import "./Navbar.css";
 
 function NavbarComponent() {
   return (

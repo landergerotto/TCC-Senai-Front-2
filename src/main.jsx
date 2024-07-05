@@ -12,9 +12,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import HomePage from './Home.jsx';
-import TestPage from './Test.jsx';
-import LoginPage from './Login.jsx';
+import HomePage from './pages/Home/Home.jsx';
+import TestPage from './pages/Test/Test.jsx';
+import LoginPage from './pages/Login/Login.jsx';
 
 const router = createBrowserRouter([
   {

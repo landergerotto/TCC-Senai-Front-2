@@ -3,7 +3,7 @@ import Date from "./components/Date/date";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import styles from './index.module.css';
+import styles from './Home.module.css';
 import Button from "./components/Button/button";
 import { useNavigate } from "react-router-dom";
 

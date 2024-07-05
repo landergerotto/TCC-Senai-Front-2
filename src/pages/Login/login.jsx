@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import Formulario from "../../components/Formulario/formulario";
+import Formulario from "../../components/Formulario/Formulario";
 import Input from "../../components/Input/Input";
 
 function LoginPage() {

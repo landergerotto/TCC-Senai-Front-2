@@ -7,7 +7,7 @@ import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/Home/Home.jsx'
 import TestPage from './pages/Test/Test.jsx'
 import SideNavBar from './components/Sidebar/Sidebar'
-import NavbarComponent from './components/Navbar/navbar.jsx';
+import NavbarComponent from './components/Navbar/Navbar.jsx';
 import LoginPage from './pages/Login/Login.jsx'
 function App() {
   return (

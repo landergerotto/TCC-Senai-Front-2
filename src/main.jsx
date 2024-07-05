@@ -16,7 +16,7 @@ import {
 // import TestPage from './pages/Test/Test.jsx';
 // import LoginPage from './pages/Login/Login.jsx';
 import SideNavBar from './components/Sidebar/Sidebar.jsx';
-import NavbarComponent from './components/Navbar/navbar.jsx';
+import NavbarComponent from './components/Navbar/Navbar.jsx';
 
 // const router = createBrowserRouter([
 //   {

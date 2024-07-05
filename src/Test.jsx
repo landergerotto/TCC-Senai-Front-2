@@ -1,4 +1,4 @@
-import SideNavBar from "../../components/Sidebar/Sidebar";
+import SideNavBar from "./components/Sidebar/Sidebar";
 
 
 function TestPage() {

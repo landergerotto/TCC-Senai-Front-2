@@ -12,9 +12,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import HomePage from './pages/Home/index.jsx';
-import TestPage from './pages/Test/index.jsx';
-import LoginPage from './pages/Login/login.jsx';
+import HomePage from './Home.jsx';
+import TestPage from './Test.jsx';
+import LoginPage from './Login.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +36,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <SpeedInsights />
     <Analytics />
     <RouterProvider router={router} />
-  
   </>,
 )

@@ -1,6 +1,6 @@
 import { Card, CardBody, CardTitle } from "react-bootstrap";
 import Input from "../Input/input";
-import styles from './Formulario.module.css';
+import styles from './formulario.module.css';
 import Button from '../Button/button'
 
 function Formulario({ title, fields, actions }) {

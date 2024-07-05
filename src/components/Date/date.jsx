@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './Date.module.css';
+import styles from './date.module.css';
 
 function DateComponent() {
     const [currentDate, setCurrentDate] = useState('');

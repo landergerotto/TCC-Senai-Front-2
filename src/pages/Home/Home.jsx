@@ -3,7 +3,7 @@ import Date from "../../components/Date/date";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import styles from './index.module.css';
+import styles from './Home.module.css';
 import Button from "../../components/Button/button";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,8 @@ function HomePage() {
             <Row>
                 <Col></Col>
                 <Col>
-                    <Button text={"cock and ball torture"} type={'cancel'} onClick={() => navigate('/login')} />
+                    <Button text={"Clica em mim ae kkk"} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
+                    <Button text={"Clica em mim ae kkk 2"} type={'cancel'} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
                 </Col>
                 <Col></Col>
             </Row>

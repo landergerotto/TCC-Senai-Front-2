@@ -15,6 +15,8 @@ import {
 import HomePage from './pages/Home/Home.jsx';
 import TestPage from './pages/Test/Test.jsx';
 import LoginPage from './pages/Login/Login.jsx';
+import SideNavBar from './components/Sidebar/Sidebar.jsx';
+import NavbarComponent from './components/Navbar/navbar.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <>
     <SpeedInsights />
     <Analytics />
+    <NavbarComponent />
+    <SideNavBar />
     <RouterProvider router={router} />
   </>,
 )

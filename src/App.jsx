@@ -14,6 +14,7 @@ function App() {
     <>
       <NavbarComponent />
       <SideNavBar />
+    
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/t' element={<TestPage />}></Route>

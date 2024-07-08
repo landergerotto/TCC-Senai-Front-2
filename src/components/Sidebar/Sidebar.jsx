@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CIcon from '@coreui/icons-react';
-import { cilSpeedometer, cilCloudDownload, cilLayers, cilPuzzle } from '@coreui/icons';
+import {cilChart, cilDescription, cilSpeedometer, cilCloudDownload, cilLayers, cilPuzzle, cilChartLine } from '@coreui/icons';
 
 import styles from "./Sidebar.module.css";
 import { CSidebar, CSidebarHeader, CSidebarBrand, CSidebarNav, CNavTitle, CNavItem, CBadge, CNavGroup, CSidebarFooter, CSidebarToggler } from '@coreui/react';
@@ -22,20 +22,20 @@ function SideNavBar(props) {
             unfoldable
             style={{ height:'10000vh' }}>
                 <CSidebarHeader className="border-bottom">
-                    <CSidebarBrand>CUI</CSidebarBrand>
+                    <CSidebarBrand>BOSCH</CSidebarBrand>
                 </CSidebarHeader>
                 <CSidebarNav>
-                    <CNavTitle>Nav Title</CNavTitle>
-                    <CNavItem href="#"><CIcon customClassName="nav-icon" icon={cilSpeedometer} /> Nav item</CNavItem>
-                    <CNavItem href="#"><CIcon customClassName="nav-icon" icon={cilSpeedometer} /> With badge <CBadge color="primary ms-auto">NEW</CBadge></CNavItem>
+                    <CNavTitle>BPS Cross</CNavTitle>
+                    <CNavItem href="#"><CIcon customClassName="nav-icon" icon={cilChart} /> VSM</CNavItem>
+                    <CNavItem href="#"><CIcon customClassName="nav-icon" icon={cilDescription} /> Form <CBadge color="primary ms-auto">NEW</CBadge></CNavItem>
                     <CNavGroup
                         toggler={
                             <>
-                                <CIcon customClassName="nav-icon" icon={cilPuzzle} /> Nav dropdown
+                                <CIcon customClassName="nav-icon" icon={cilChartLine} /> Relatório
                             </>
                         }
                     >
-                        <CNavItem href="#"><span className="nav-icon"><span className="nav-icon-bullet"></span></span> Nav dropdown item</CNavItem>
+                        <CNavItem href="#"><span className="nav-icon"><span className="nav-icon-bullet"></span></span> Gráficos</CNavItem>
                         <CNavItem href="#"><span className="nav-icon"><span className="nav-icon-bullet"></span></span> Nav dropdown item</CNavItem>
                     </CNavGroup>
                     <CNavItem href="https://coreui.io"><CIcon customClassName="nav-icon" icon={cilCloudDownload} /> Download CoreUI</CNavItem>

@@ -6,7 +6,7 @@ function LoginPage() {
         { label: "Email", type: "email", name: "email" },
         { label: "Senha", type: "password", name: "password" }
     ];
-    let actions = ["Entrar", "Cancelar"];
+    const actions = ["Entrar", "Cancelar"];
     return (
         <Container>
             <Formulario title={"Login"} fields={fields} actions={actions} />

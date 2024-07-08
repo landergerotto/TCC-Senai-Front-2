@@ -21,8 +21,8 @@ function HomePage() {
             <Row>
                 <Col></Col>
                 <Col>
-                    <Button text={"Clica em mim ae kkk"} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
-                    <Button text={"Clica em mim ae kkk 2"} type={'cancel'} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
+                    <Button text={"Login"} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
+                    <Button text={"Registro"} type={'cancel'} onClick={() => navigate('/register')} style={{ marginTop: '1em' }} />
                 </Col>
                 <Col></Col>
             </Row>

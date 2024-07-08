@@ -4,26 +4,56 @@ import styles from './formulario.module.css';
 import Button from '../Button/button';
 
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Formulario({ title, fields, actions }) {
+function Formulario({ title, fields, actions, target, type }) {
+    const navigate = useNavigate();
+    const [status, setStatus] = useState(true);
+
+    useEffect(() => {
+        localStorage.clear();
+    }, 1)
+
     function getValue(id) {
         const element = document.getElementById(id);
         localStorage.setItem(`${id}`, element.value);
     }
 
+    function confirmPassword() {
+        if (type != 'register')
+            return true;
+
+        let senha = localStorage.getItem('password');
+        let confirma = localStorage.getItem('confirm');
+
+        if (senha != confirma)
+            return false;
+        return true;
+    }
+
     function sendForm() {
         let informations = [];
-        fields.map((field, index) => {
+
+        for (let i = 0; i < fields.length; i++) {
+            const field = fields[i];
             const info = localStorage.getItem(`${field.name}`);
-            
-            if(!info || info.split.length < 1) {
+
+            if (!info || info.trim().length < 1) {
                 alert(`É necessário preencher o campo ${field.label}`);
                 return;
             }
-            informations[index] = info;
-        });
+            if (confirmPassword() == true)
+                informations.push(info);
+            else {
+                alert('As senham não coincidem.');
+                return;
+            }
+        }
+        // axios.post() CONFIGURAR O POST AQUI
 
-        // axios.post() CONFIGURAR O POST AQUI 
+        navigate(`${target}`);
+        alert(`${title} realizado com sucesso.`);
     }
 
     return (
@@ -34,11 +64,11 @@ function Formulario({ title, fields, actions }) {
                 </div>
                 {fields.map((field, index) => {
                     return (
-                        <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)}/>
+                        <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} />
                     )
                 })}
                 <div className={styles.btn}>
-                    <Button text={actions[0]} style={{ marginTop: '1em' }} onClick={() => sendForm()}/>
+                    <Button text={actions[0]} style={{ marginTop: '1em' }} onClick={() => sendForm()} />
                     <Button text={actions[1]} type={"cancel"} style={{ marginTop: '1em' }} />
                 </div>
             </CardBody>

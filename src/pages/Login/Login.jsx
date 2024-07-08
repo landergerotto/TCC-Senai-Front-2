@@ -9,7 +9,7 @@ function LoginPage() {
     const actions = ["Entrar", "Cancelar"];
     return (
         <Container>
-            <Formulario title={"Login"} fields={fields} actions={actions} />
+            <Formulario title={"Login"} fields={fields} actions={actions} target={'/'}/>
         </Container>
     )
 }

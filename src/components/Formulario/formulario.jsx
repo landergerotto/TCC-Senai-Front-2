@@ -69,7 +69,7 @@ function Formulario({ title, fields, actions, target, type }) {
                 })}
                 <div className={styles.btn}>
                     <Button text={actions[0]} style={{ marginTop: '1em' }} onClick={() => sendForm()} />
-                    <Button text={actions[1]} type={"cancel"} style={{ marginTop: '1em' }} />
+                    <Button text={actions[1]} type={"cancel"} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
                 </div>
             </CardBody>
         </Card>

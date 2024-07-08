@@ -23,6 +23,7 @@ function HomePage() {
                 <Col>
                     <Button text={"Login"} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
                     <Button text={"Registro"} type={'cancel'} onClick={() => navigate('/register')} style={{ marginTop: '1em' }} />
+                    <Button text={"Cadastro de Processo"} type={'cancel'} onClick={() => navigate('/create')} style={{ marginTop: '1em' }} />
                 </Col>
                 <Col></Col>
             </Row>

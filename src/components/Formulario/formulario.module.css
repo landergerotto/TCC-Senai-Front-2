@@ -3,6 +3,10 @@
     justify-content: center;
 }
 
+.cardBody {
+    padding: 0.5em 4em 2.5em;
+}
+
 .title {
     font-size: 2em;
 }

@@ -15,6 +15,10 @@ function HomePage() {
         { label: "Identificação do Lote", type: "number", name: "idLote" },
         { label: "Quantidade do Lote", type: "number", name: "qntdLote" },
         { label: "Quantidade de Refugo", type: "number", name: "qntdRegufo" },
+        { label: "PartNumber", type: "text", name: "partnumber" },
+        { label: "Movimentação", type: "text", name: "movimentacao" },
+        { label: "Edv do Operador", type: "text", name: "edv" },
+        { label: "Interditado", type: "text", name: "interditado" },
     ]
 
     const navigate = useNavigate();

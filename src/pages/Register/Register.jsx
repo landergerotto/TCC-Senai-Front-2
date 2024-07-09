@@ -1,5 +1,7 @@
-import { Container } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
 import Formulario from "../../components/Formulario/formulario";
+
+import styles from './Register.module.css'
 
 function RegisterPage() {
     const fields = [
@@ -10,8 +12,10 @@ function RegisterPage() {
     ];
     const actions = ["Registrar", "Cancelar"];
     return (
-        <Container>
-            <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'}/>
+        <Container className={styles.container}>
+            <Col lg={6}>
+                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} />
+            </Col>
         </Container>
     )
 }

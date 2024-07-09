@@ -1,19 +1,20 @@
-import { Card, CardBody, CardTitle } from "react-bootstrap";
-import Input from "../Input/input";
-import styles from './formulario.module.css';
-import Button from '../Button/button';
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Formulario({ title, fields, actions, target, type }) {
+import { Card, CardBody, CardTitle } from "react-bootstrap";
+
+import Input from "../Input/input";
+import Button from '../Button/button';
+
+import styles from './formulario.module.css';
+
+function Formulario({ title, fields, actions = [], target, type }) {
     const navigate = useNavigate();
-    const [status, setStatus] = useState(true);
 
     useEffect(() => {
         localStorage.clear();
-    }, 1)
+    }, [1])
 
     function getValue(id) {
         const element = document.getElementById(id);
@@ -58,7 +59,7 @@ function Formulario({ title, fields, actions, target, type }) {
 
     return (
         <Card className={styles.card}>
-            <CardBody>
+            <CardBody className={styles.cardBody}>
                 <div className={styles.cardTitle}>
                     <CardTitle className={styles.title}>{title}</CardTitle>
                 </div>
@@ -68,8 +69,17 @@ function Formulario({ title, fields, actions, target, type }) {
                     )
                 })}
                 <div className={styles.btn}>
-                    <Button text={actions[0]} style={{ marginTop: '1em' }} onClick={() => sendForm()} />
-                    <Button text={actions[1]} type={"cancel"} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
+                    {actions.map((action, index) => {
+                        if (action.label === 'Entrar') {
+                            return (
+                                <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={sendForm} />
+                            )
+                        } else if (action.label === 'Cancelar') {
+                            return (
+                                <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
+                            )
+                        }
+                    })}
                 </div>
             </CardBody>
         </Card>

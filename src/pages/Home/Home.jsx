@@ -1,13 +1,22 @@
-import Date from "../../components/Date/date";
+import styles from './Home.module.css';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import styles from './Home.module.css';
+import Date from "../../components/Date/date";
 import Button from "../../components/Button/button";
+import Formulario from "../../components/Formulario/formulario";
+
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const fields = [
+        { label: "Processo", type: "text", name: "processo" },
+        { label: "Identificação do Lote", type: "number", name: "idLote" },
+        { label: "Quantidade do Lote", type: "number", name: "qntdLote" },
+        { label: "Quantidade de Refugo", type: "number", name: "qntdRegufo" },
+    ]
+
     const navigate = useNavigate();
     return (
         <>
@@ -17,6 +26,9 @@ function HomePage() {
                 <Col className={styles.end}>
                     <Date />
                 </Col>
+            </Row>
+            <Row>
+                <Formulario fields={fields}  target={'/'}/>
             </Row>
             <Row>
                 <Col></Col>

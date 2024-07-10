@@ -65,7 +65,7 @@ function HomeForm({ title, fields, actions = [], target, type }) {
                         fields.map((field, index) => {
                             return (
                                 <Col lg={3}>
-                                    <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em' }} />
+                                    <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', marginBottom: '3em', width: '80%' }} labelStyle={{ fontWeight: '700', marginLeft: '0.6em' }}/>   
                                 </Col>
                             )
                         })

@@ -11,7 +11,11 @@ function ProcessPage() {
         { label: "POT", type: "number", name: "pot" },
         { label: "Quantidade MAE", type: "number", name: "qndtMAE" }
     ];
-    const actions = ["Registrar", "Cancelar"];
+    const actions = [
+        { label: "Cadastrar", type: "normal" },
+        { label: "Cancelar", type: "cancel" }
+    ];
+    
     return (
         <Container className={styles.container}>
             <Col lg={6}>

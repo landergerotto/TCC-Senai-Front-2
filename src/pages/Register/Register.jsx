@@ -10,7 +10,10 @@ function RegisterPage() {
         { label: "Senha", type: "password", name: "password" },
         { label: "Confirmar senha", type: "password", name: "confirm" }
     ];
-    const actions = ["Registrar", "Cancelar"];
+    const actions = [
+        { label: "Registrar", type: "normal" },
+        { label: "Cancelar", type: "cancel" }
+    ];
     return (
         <Container className={styles.container}>
             <Col lg={6}>

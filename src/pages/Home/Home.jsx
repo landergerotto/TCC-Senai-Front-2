@@ -8,6 +8,7 @@ import Button from "../../components/Button/button";
 import Formulario from "../../components/Formulario/formulario";
 
 import { useNavigate } from "react-router-dom";
+import HomeForm from '../../components/HomeForm/Homeform';
 
 function HomePage() {
     const fields = [
@@ -32,7 +33,7 @@ function HomePage() {
                 </Col>
             </Row>
             <Row>
-                <Formulario fields={fields}  target={'/'}/>
+                <HomeForm fields={fields}  target={'/'}/>
             </Row>
             <Row>
                 <Col></Col>

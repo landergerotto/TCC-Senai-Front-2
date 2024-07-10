@@ -70,13 +70,14 @@ function Formulario({ title, fields, actions = [], target, type }) {
                 })}
                 <div className={styles.btn}>
                     {actions.map((action, index) => {
-                        if (action.label === 'Entrar') {
-                            return (
-                                <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={sendForm} />
-                            )
-                        } else if (action.label === 'Cancelar') {
+                        if (action.label === 'Cancelar') {
                             return (
                                 <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
+                            )
+                        }
+                        else {
+                            return (
+                                <Button key={index} text={action.label} style={{ marginTop: '1em' }} onClick={sendForm} />
                             )
                         }
                     })}

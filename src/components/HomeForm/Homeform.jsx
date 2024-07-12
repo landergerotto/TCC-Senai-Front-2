@@ -8,6 +8,7 @@ import Input from "../Input/input";
 import Button from '../Button/button';
 
 import styles from './Homeform.module.css';
+import Tabela from "../Tabela/Tabela";
 
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
@@ -64,8 +65,10 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                     {
                         fields.map((field, index) => {
                             return (
-                                <Col lg={3}>
-                                    <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '75%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
+                                <Col lg={3} key={index} className={styles.center}>
+                                    <div style={{ width: '85%' }}>
+                                        <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
+                                    </div>
                                 </Col>
                             )
                         })
@@ -89,6 +92,20 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                         })
                     }
                 </div>
+            </Row>
+            <Row style={{ paddingInline: '3em' }}>
+                <Tabela fields={fields} title={'Últimos Lançamentos'}/>
+            </Row>
+            <Row style={{ padding: '0em 3em 0em 5em' }}>
+                <Col className={styles.col}>
+                    <Button text={"Confirmar"} onClick={() => navigate('/login')} style={styles.btn} />
+                </Col>
+                <Col className={styles.col}>
+                    <Button text={"Salvar Lançamento"} onClick={() => navigate('/register')} style={styles.btn} />
+                </Col>
+                <Col className={styles.col}>
+                    <Button text={"Deletar Lançamento"} onClick={() => navigate('/create')} style={styles.btn} />
+                </Col>
             </Row>
         </Container>
 

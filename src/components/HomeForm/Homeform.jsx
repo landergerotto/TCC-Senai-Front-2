@@ -9,7 +9,7 @@ import Button from '../Button/button';
 
 import styles from './Homeform.module.css';
 
-function HomeForm({ title, fields, actions = [], target, type }) {
+function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,7 +65,7 @@ function HomeForm({ title, fields, actions = [], target, type }) {
                         fields.map((field, index) => {
                             return (
                                 <Col lg={3}>
-                                    <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em' }} />
+                                    <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '75%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
                                 </Col>
                             )
                         })

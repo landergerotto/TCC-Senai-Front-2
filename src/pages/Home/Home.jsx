@@ -33,7 +33,7 @@ function HomePage() {
                 </Col>
             </Row>
             <Row>
-                <HomeForm fields={fields}  target={'/'}/>
+                <HomeForm fields={fields} target={'/'} />
             </Row>
             <Row>
                 <Col></Col>

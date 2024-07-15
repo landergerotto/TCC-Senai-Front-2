@@ -20,3 +20,15 @@ thead {
 tr {
     text-align: center;
 }
+
+.btnDelete {
+    background-color: transparent;
+    border: none;
+    color: red;
+}
+
+.btnConfirm {
+    background-color: transparent;
+    border: none;
+    color: green;
+}

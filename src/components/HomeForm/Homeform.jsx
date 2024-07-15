@@ -20,7 +20,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Entrada",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "approved"
     },
     {
         "proccess": "teste2",
@@ -30,7 +31,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Saída",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "waiting"
     },
     {
         "proccess": "teste2",
@@ -40,7 +42,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Saída",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "waiting"
     },
     {
         "proccess": "teste2",
@@ -50,7 +53,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Saída",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "waiting"
     },
     {
         "proccess": "teste2",
@@ -60,7 +64,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Saída",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "waiting"
     },
     {
         "proccess": "teste2",
@@ -70,7 +75,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "partNumber": "F0R123",
         "movimentacao": "Saída",
         "edv": "123456",
-        "interditado": 5
+        "interditado": 5,
+        "status": "waiting"
     }
     ];
 

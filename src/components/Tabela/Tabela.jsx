@@ -1,4 +1,5 @@
 import Table from 'react-bootstrap/Table';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import styles from './Tabela.module.css';
 
@@ -19,6 +20,7 @@ function Tabela({ title, fields, data }) {
                                     )
                                 })
                             }
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody className={styles.tabela}>
@@ -34,6 +36,16 @@ function Tabela({ title, fields, data }) {
                                         <td key={index}>{info.movimentacao}</td>
                                         <td key={index}>{info.edv}</td>
                                         <td key={index}>{info.interditado}</td>
+                                        <td key={index}>{info.status == "waiting" ?
+                                            <button className={styles.btnDelete} onClick={() => console.log(info.status)}>
+                                                <i className="bi bi-trash-fill"></i>
+                                            </button>
+                                            :
+                                            <button className={styles.btnConfirm} onClick={() => console.log(info.status)}>
+                                                <i className="bi bi-check"></i>
+                                            </button>
+                                        }
+                                        </td>
                                     </tr>
                                 )
                             })

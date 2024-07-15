@@ -14,11 +14,21 @@
 
 thead {
     position: sticky;
-    top: 0;
+    top: -1px;
 }
 
 tr {
     text-align: center;
+}
+
+.firstTd {
+    display: flex;
+    justify-content: center;
+}
+
+.tdText {
+    display: flex;
+    justify-content: center;
 }
 
 .btnDelete {

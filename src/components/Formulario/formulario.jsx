@@ -9,7 +9,7 @@ import Button from '../Button/button';
 
 import styles from './formulario.module.css';
 
-function Formulario({ title, fields, actions = [], target, type }) {
+function Formulario({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,7 +65,7 @@ function Formulario({ title, fields, actions = [], target, type }) {
                 </div>
                 {fields.map((field, index) => {
                     return (
-                        <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} />
+                        <Input key={index} label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} labelStyle={labelStyle}/>
                     )
                 })}
                 <div className={styles.btn}>

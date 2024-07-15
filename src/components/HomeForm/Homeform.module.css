@@ -2,8 +2,27 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    padding: 0;
 }
 
 .container {
     padding: 3em 3em 3em 6em !important;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    margin-top: 1em;
+    width: 85% !important;
+    font-size: 1.6em !important;
+    font-weight: 300    ;
+    padding: 1em !important;
+}
+
+.col {
+    display: flex;
+    justify-content: center;
 }

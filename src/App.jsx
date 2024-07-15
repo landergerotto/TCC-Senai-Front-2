@@ -14,8 +14,8 @@ import NavbarComponent from './components/Navbar/navbar.jsx';
 function App() {
   return (
     <>
-      <NavbarComponent />
       <SideNavBar />
+      <NavbarComponent />
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route path='/t' element={<TestPage />}></Route>

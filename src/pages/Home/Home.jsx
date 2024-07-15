@@ -13,12 +13,12 @@ import HomeForm from '../../components/HomeForm/Homeform';
 function HomePage() {
     const fields = [
         { label: "Processo", type: "text", name: "processo" },
-        { label: "Identificação do Lote", type: "number", name: "idLote" },
-        { label: "Quantidade do Lote", type: "number", name: "qntdLote" },
-        { label: "Quantidade de Refugo", type: "number", name: "qntdRegufo" },
+        { label: "ID Lote", type: "number", name: "idLote" },
+        { label: "Qntd Lote", type: "number", name: "qntdLote" },
+        { label: "Qntd de Refugo", type: "number", name: "qntdRegufo" },
         { label: "PartNumber", type: "text", name: "partnumber" },
         { label: "Movimentação", type: "text", name: "movimentacao" },
-        { label: "Edv do Operador", type: "text", name: "edv" },
+        { label: "EDV", type: "text", name: "edv" },
         { label: "Interditado", type: "text", name: "interditado" },
     ]
 

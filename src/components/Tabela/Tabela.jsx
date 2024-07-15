@@ -27,18 +27,23 @@ function Tabela({ title, fields, data }) {
                         {
                             data.map((info, index) => {
                                 return (
-                                    <tr>
-                                        <td key={index}>{info.proccess}</td>
-                                        <td key={index}>{info.lote}</td>
-                                        <td key={index}>{info.qntdLote}</td>
-                                        <td key={index}>{info.qntdRefugo}</td>
-                                        <td key={index}>{info.partNumber}</td>
-                                        <td key={index}>{info.movimentacao}</td>
-                                        <td key={index}>{info.edv}</td>
-                                        <td key={index}>{info.interditado}</td>
-                                        <td key={index}>{info.status == "waiting" ?
+                                    <tr key={index}>
+                                        <td className={styles.firstTd}>
+                                            <input type="checkbox" className={styles.input} />
+                                            <div className={styles.tdText}>
+                                                {info.proccess}
+                                            </div>
+                                        </td>
+                                        <td>{info.lote}</td>
+                                        <td>{info.qntdLote}</td>
+                                        <td>{info.qntdRefugo}</td>
+                                        <td>{info.partNumber}</td>
+                                        <td>{info.movimentacao}</td>
+                                        <td>{info.edv}</td>
+                                        <td>{info.interditado}</td>
+                                        <td>{info.status == "waiting" ?
                                             <button className={styles.btnDelete} onClick={() => console.log(info.status)}>
-                                                <i className="bi bi-trash-fill"></i>
+                                                <i className="bi bi-x-lg"></i>
                                             </button>
                                             :
                                             <button className={styles.btnConfirm} onClick={() => console.log(info.status)}>

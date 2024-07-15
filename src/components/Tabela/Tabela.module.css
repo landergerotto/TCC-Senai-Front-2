@@ -1,6 +1,20 @@
+.body {
+    width: 100%;
+}
+
 .title {
     font-size: 1.9em;
     font-weight: 600;
+}
+
+.tabela {
+    max-height: 13em;
+    overflow-y: auto;
+}
+
+thead {
+    position: sticky;
+    top: 0;
 }
 
 tr {

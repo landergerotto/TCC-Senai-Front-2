@@ -12,6 +12,67 @@ import Tabela from "../Tabela/Tabela";
 
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
+    const data = [{
+        "proccess": "teste",
+        "lote": "123456",
+        "qntdLote": 20,
+        "qntdRefugo": 2,
+        "partNumber": "F0R123",
+        "movimentacao": "Entrada",
+        "edv": "123456",
+        "interditado": 5
+    },
+    {
+        "proccess": "teste2",
+        "lote": "123456",
+        "qntdLote": 22,
+        "qntdRefugo": 11,
+        "partNumber": "F0R123",
+        "movimentacao": "Saída",
+        "edv": "123456",
+        "interditado": 5
+    },
+    {
+        "proccess": "teste2",
+        "lote": "123456",
+        "qntdLote": 22,
+        "qntdRefugo": 11,
+        "partNumber": "F0R123",
+        "movimentacao": "Saída",
+        "edv": "123456",
+        "interditado": 5
+    },
+    {
+        "proccess": "teste2",
+        "lote": "123456",
+        "qntdLote": 22,
+        "qntdRefugo": 11,
+        "partNumber": "F0R123",
+        "movimentacao": "Saída",
+        "edv": "123456",
+        "interditado": 5
+    },
+    {
+        "proccess": "teste2",
+        "lote": "123456",
+        "qntdLote": 22,
+        "qntdRefugo": 11,
+        "partNumber": "F0R123",
+        "movimentacao": "Saída",
+        "edv": "123456",
+        "interditado": 5
+    },
+    {
+        "proccess": "teste2",
+        "lote": "123456",
+        "qntdLote": 22,
+        "qntdRefugo": 11,
+        "partNumber": "F0R123",
+        "movimentacao": "Saída",
+        "edv": "123456",
+        "interditado": 5
+    }
+    ];
 
     useEffect(() => {
         localStorage.clear();
@@ -75,28 +136,35 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                     }
                 </div>
             </Row>
+            {
+                actions.length > 0 ?
+                    <Row>
+                        <div className={styles.btn}>
+                            {
+                                actions.map((action, index) => {
+                                    if (action.label === 'Cancelar') {
+                                        return (
+                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
+                                        )
+                                    }
+                                    else {
+                                        return (
+                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={sendForm} />
+                                        )
+                                    }
+                                })
+                            }
+                        </div>
+                    </Row> 
+                    : 
+                    <>
+
+                    </>
+            }
             <Row>
-                <div className={styles.btn}>
-                    {
-                        actions.map((action, index) => {
-                            if (action.label === 'Cancelar') {
-                                return (
-                                    <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
-                                )
-                            }
-                            else {
-                                return (
-                                    <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={sendForm} />
-                                )
-                            }
-                        })
-                    }
-                </div>
+                <Tabela title={'Últimos Lançamentos'} fields={fields} data={data} />
             </Row>
-            <Row style={{ paddingInline: '3em' }}>
-                <Tabela fields={fields} title={'Últimos Lançamentos'}/>
-            </Row>
-            <Row style={{ padding: '0em 3em 0em 5em' }}>
+            <Row>
                 <Col className={styles.col}>
                     <Button text={"Confirmar"} onClick={() => navigate('/login')} style={styles.btn} />
                 </Col>

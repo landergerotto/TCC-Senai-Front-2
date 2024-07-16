@@ -19,7 +19,7 @@ function ProcessPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Cadastro de Processo"} fields={fields} actions={actions} target={'/login'} type={'register'} />
+                <Formulario title={"Cadastro de Processo"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.3em' }}/>
             </Col>
         </Container>
     )

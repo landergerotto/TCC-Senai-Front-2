@@ -6,6 +6,7 @@ import HomePage from './pages/Home/Home.jsx';
 import TestPage from './pages/Test/Test.jsx';
 import LoginPage from './pages/Login/Login.jsx';
 import ProcessPage from './pages/Process/Process';
+import NotFoundPage from './pages/NotFound/NotFound';
 import RegisterPage from './pages/Register/Register';
 
 import SideNavBar from './components/Sidebar/Sidebar';
@@ -22,6 +23,7 @@ function App() {
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/register' element={<RegisterPage />}></Route>
         <Route path='/create' element={<ProcessPage />}></Route>
+        <Route path='*' element={<NotFoundPage />}></Route>
       </Routes>
     </>
   )

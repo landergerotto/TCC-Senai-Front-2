@@ -66,17 +66,6 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         "edv": "123456",
         "interditado": 5,
         "status": "waiting"
-    },
-    {
-        "proccess": "teste2",
-        "lote": "123456",
-        "qntdLote": 22,
-        "qntdRefugo": 11,
-        "partNumber": "F0R123",
-        "movimentacao": "Saída",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "waiting"
     }
     ];
 
@@ -161,8 +150,8 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                                 })
                             }
                         </div>
-                    </Row> 
-                    : 
+                    </Row>
+                    :
                     <>
 
                     </>

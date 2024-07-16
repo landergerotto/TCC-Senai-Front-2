@@ -1,8 +1,8 @@
 import React from "react";
 
-import navcolors from "/nav-colors.png";
-import logobosch from "/logo-bosch.png";
-import bpscross from "/bpscross.png";
+import navcolors from "../../assets/Img/nav-colors.png";
+import logobosch from "../../assets/Img/logo-bosch.png";
+import bpscross from "../../assets/Img/bpscross.png";
 
 import style from "./navbar.module.css";
 

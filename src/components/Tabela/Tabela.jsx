@@ -21,6 +21,7 @@ function Tabela({ title, fields, data }) {
                                 })
                             }
                             <th>Status</th>
+                            <th> <i className="bi bi-trash-fill"></i> </th>
                         </tr>
                     </thead>
                     <tbody className={styles.tabela}>
@@ -29,7 +30,6 @@ function Tabela({ title, fields, data }) {
                                 return (
                                     <tr key={index}>
                                         <td className={styles.firstTd}>
-                                            <input type="checkbox" className={styles.input} />
                                             <div className={styles.tdText}>
                                                 {info.proccess}
                                             </div>
@@ -50,6 +50,9 @@ function Tabela({ title, fields, data }) {
                                                 <i className="bi bi-check"></i>
                                             </button>
                                         }
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" className={styles.input} />
                                         </td>
                                     </tr>
                                 )

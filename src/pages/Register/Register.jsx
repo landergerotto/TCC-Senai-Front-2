@@ -17,7 +17,7 @@ function RegisterPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} />
+                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.5em' }} />
             </Col>
         </Container>
     )

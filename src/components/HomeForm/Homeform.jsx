@@ -12,6 +12,8 @@ import Tabela from "../Tabela/Tabela";
 
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
+    const options = ["Máquina 1", "Máquina 2", "Máquina 3"] // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
+
     const data = [{
         "proccess": "teste",
         "lote": "123456",
@@ -126,7 +128,12 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                             return (
                                 <Col lg={3} key={index} className={styles.center}>
                                     <div style={{ width: '85%' }}>
-                                        <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
+                                        {
+                                            field.label == 'Processo' ?
+                                                <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} select={true} options={options} />
+                                                :
+                                                <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
+                                        }
                                     </div>
                                 </Col>
                             )

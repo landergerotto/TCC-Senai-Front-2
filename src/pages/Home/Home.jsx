@@ -33,7 +33,7 @@ function HomePage() {
                 </Col>
             </Row>
             <Row>
-                <HomeForm fields={fields} target={'/'} />
+                <HomeForm title={"Lançamento"} fields={fields} target={'/'} />
             </Row>
         </>
     )

@@ -28,7 +28,7 @@ function SideNavBar(props) {
                     {/* <CNavTitle>BPS Cross</CNavTitle> */}
                     <CNavItem href="/"><CIcon customClassName="nav-icon" icon={cilHome} /> Home </CNavItem>
                     <CNavItem href="/login"><CIcon customClassName="nav-icon" icon={cilAccountLogout} /> Login </CNavItem>
-                    <CNavItem href="/register"><CIcon customClassName="nav-icon" icon={cilPlus} /> Registrar </CNavItem>
+                    <CNavItem href="/create"><CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar Processo </CNavItem>
                     <CNavItem href="/vsm"><CIcon customClassName="nav-icon" icon={cilFactory} /> VSM </CNavItem>
                     <CNavItem href="/relatorio"><CIcon customClassName="nav-icon" icon={cilChartLine} /> Relatório </CNavItem>
                     {/* <CNavGroup

@@ -69,9 +69,9 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     }
     ];
 
-    useEffect(() => {
-        localStorage.clear();
-    }, [1])
+    // useEffect(() => {
+    //     localStorage.clear();
+    // }, [1])
 
     function getValue(id) {
         const element = document.getElementById(id);
@@ -91,7 +91,7 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     }
 
     function sendForm() {
-        let informations = [];
+        let informations = {};
 
         for (let i = 0; i < fields.length; i++) {
             const field = fields[i];
@@ -101,14 +101,17 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                 alert(`É necessário preencher o campo ${field.label}`);
                 return;
             }
-            if (confirmPassword() == true)
-                informations.push(info);
+
+            if (confirmPassword()) {
+                informations[field.name] = info;
+            }
             else {
                 alert('As senham não coincidem.');
                 return;
             }
         }
         // axios.post() CONFIGURAR O POST AQUI
+        localStorage.setItem('lancamento', JSON.stringify(informations));
 
         navigate(`${target}`);
         alert(`${title} realizado com sucesso.`);
@@ -139,12 +142,12 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                                 actions.map((action, index) => {
                                     if (action.label === 'Cancelar') {
                                         return (
-                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => navigate('/')} />
+                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
                                         )
                                     }
                                     else {
                                         return (
-                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={sendForm} />
+                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
                                         )
                                     }
                                 })
@@ -161,13 +164,13 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
             </Row>
             <Row>
                 <Col className={styles.col}>
-                    <Button text={"Confirmar"} onClick={() => navigate('/login')} style={styles.btn} />
+                    <Button text={"Confirmar"} onClick={() => sendForm()} style={styles.btn} />
                 </Col>
                 <Col className={styles.col}>
-                    <Button text={"Salvar Lançamento"} onClick={() => navigate('/register')} style={styles.btn} />
+                    <Button text={"Salvar Lançamento"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
                 </Col>
                 <Col className={styles.col}>
-                    <Button text={"Deletar Lançamento"} onClick={() => navigate('/create')} style={styles.btn} />
+                    <Button text={"Deletar Lançamento"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
                 </Col>
             </Row>
         </Container>

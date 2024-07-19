@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState, useRef  } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Row, Col, Container } from "react-bootstrap";
@@ -13,8 +13,9 @@ import Tabela from "../Tabela/Tabela";
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
     const selectRef = useRef(null);
-    
-    const options = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
+
+    const optionsProcesso = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
+    const optionsInterditado = ["Sim", "Não"];
 
     const data = [{
         "proccess": "teste",
@@ -127,6 +128,28 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
         alert(`${title} realizado com sucesso.`);
     }
 
+    const renderInput = (field) => {
+        const commonProps = {
+            label: field.label,
+            type: field.type,
+            name: field.name,
+            id: field.name,
+            onChange: () => getValue(field.name),
+            style: { marginInline: '0.5em', width: '100%', marginBottom: '2em' },
+            labelStyle: { fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }
+        };
+
+        if (field.label === 'Processo') {
+            return <Input {...commonProps} select={true} options={optionsProcesso} />;
+        }
+
+        if (field.label === 'Interditado') {
+            return <Input {...commonProps} select={true} options={optionsInterditado} />;
+        }
+
+        return <Input {...commonProps} />;
+    };
+
     return (
         <Container className={styles.container}>
             <Row>
@@ -136,12 +159,7 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                             return (
                                 <Col lg={3} key={index} className={styles.center}>
                                     <div style={{ width: '85%' }}>
-                                        {
-                                            field.label === 'Processo' ?
-                                                <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} select={true} options={options} />
-                                                :
-                                                <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
-                                        }
+                                        {renderInput(field)}
                                     </div>
                                 </Col>
                             )
@@ -151,24 +169,24 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
             </Row>
             {
                 actions.length > 0 &&
-                    <Row>
-                        <div className={styles.btn}>
-                            {
-                                actions.map((action, index) => {
-                                    if (action.label === 'Cancelar') {
-                                        return (
-                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
-                                        )
-                                    }
-                                    else {
-                                        return (
-                                            <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
-                                        )
-                                    }
-                                })
-                            }
-                        </div>
-                    </Row>
+                <Row>
+                    <div className={styles.btn}>
+                        {
+                            actions.map((action, index) => {
+                                if (action.label === 'Cancelar') {
+                                    return (
+                                        <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <Button key={index} text={action.label} type={action.type} style={{ marginTop: '1em' }} onClick={() => console.log("ta fazendo ainda calma")} />
+                                    )
+                                }
+                            })
+                        }
+                    </div>
+                </Row>
             }
             <Row>
                 <Tabela title={'Últimos Lançamentos'} fields={fields} data={data} />

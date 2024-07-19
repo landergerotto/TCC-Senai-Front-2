@@ -15,7 +15,7 @@ function HomePage() {
         { label: "Processo", type: "text", name: "processo" },
         { label: "ID Lote", type: "number", name: "idLote" },
         { label: "Qntd Lote", type: "number", name: "qntdLote" },
-        { label: "Qntd de Refugo", type: "number", name: "qntdRegufo" },
+        { label: "Qntd de Refugo", type: "number", name: "qntdRefugo" },
         { label: "PartNumber", type: "text", name: "partnumber" },
         { label: "Movimentação", type: "text", name: "movimentacao" },
         { label: "EDV", type: "text", name: "edv" },

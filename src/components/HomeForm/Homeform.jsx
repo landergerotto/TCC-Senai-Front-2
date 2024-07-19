@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef  } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Row, Col, Container } from "react-bootstrap";
@@ -12,7 +12,9 @@ import Tabela from "../Tabela/Tabela";
 
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
-    const options = ["Máquina 1", "Máquina 2", "Máquina 3"] // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
+    const selectRef = useRef(null);
+    
+    const options = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
 
     const data = [{
         "proccess": "teste",
@@ -71,23 +73,29 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     }
     ];
 
-    // useEffect(() => {
-    //     localStorage.clear();
-    // }, [1])
+    useEffect(() => {
+        if (selectRef.current) {
+            getSelectValue(selectRef.current);
+        }
+    }, []);
 
     function getValue(id) {
         const element = document.getElementById(id);
         localStorage.setItem(`${id}`, element.value);
     }
 
+    function getSelectValue(selectElement) {
+        localStorage.setItem(selectElement.id, selectElement.value);
+    }
+
     function confirmPassword() {
-        if (type != 'register')
+        if (type !== 'register')
             return true;
 
         let senha = localStorage.getItem('password');
         let confirma = localStorage.getItem('confirm');
 
-        if (senha != confirma)
+        if (senha !== confirma)
             return false;
         return true;
     }
@@ -129,7 +137,7 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                                 <Col lg={3} key={index} className={styles.center}>
                                     <div style={{ width: '85%' }}>
                                         {
-                                            field.label == 'Processo' ?
+                                            field.label === 'Processo' ?
                                                 <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} select={true} options={options} />
                                                 :
                                                 <Input label={field.label} type={field.type} name={field.name} id={field.name} onChange={() => getValue(field.name)} style={{ marginInline: '0.5em', width: '100%', marginBottom: '2em' }} labelStyle={{ fontWeight: '600', fontSize: '1.3em', marginLeft: '0.6em' }} />
@@ -142,7 +150,7 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                 </div>
             </Row>
             {
-                actions.length > 0 ?
+                actions.length > 0 &&
                     <Row>
                         <div className={styles.btn}>
                             {
@@ -161,10 +169,6 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                             }
                         </div>
                     </Row>
-                    :
-                    <>
-
-                    </>
             }
             <Row>
                 <Tabela title={'Últimos Lançamentos'} fields={fields} data={data} />
@@ -174,15 +178,14 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                     <Button text={"Confirmar"} onClick={() => sendForm()} style={styles.btn} />
                 </Col>
                 <Col className={styles.col}>
-                    <Button text={"Salvar Lançamento"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
+                    <Button text={"Cancelar"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
                 </Col>
                 <Col className={styles.col}>
-                    <Button text={"Deletar Lançamento"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
+                    <Button text={"Salvar na Nuvem"} onClick={() => console.log("ta fazendo ainda calma")} style={styles.btn} />
                 </Col>
             </Row>
         </Container>
-
-    )
+    );
 }
 
 export default HomeForm;

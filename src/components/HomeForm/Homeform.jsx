@@ -76,6 +76,12 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     //     ])
     // }, [1]);
 
+    useEffect(() => {
+        const storedData = localStorage.getItem('data');
+        if (storedData)
+            setData(JSON.parse(storedData));
+    }, [])
+
     function getValue(id) {
         const element = document.getElementById(id);
         localStorage.setItem(`${id}`, element.value);
@@ -98,12 +104,11 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     }
 
     function sendForm() {
-        let lancamento = [];
+        const storedData = localStorage.getItem('data');
+        if (storedData)
+            setData(JSON.parse(storedData));
 
-        if (localStorage.getItem('lancamento'))
-            lancamento = JSON.parse(localStorage.getItem('lancamento'));
-        console.log('type lancamento: ', typeof (lancamento));
-        console.log('lancamento: ', lancamento);
+        console.log('data: ', data);
 
         let informations = {};
 
@@ -118,20 +123,23 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
 
             if (confirmPassword()) {
                 informations[field.name] = info;
-            } else {
-                alert('As senham não coincidem.');
+            }
+            else {
+                alert('As senhas não coincidem.');
                 return;
             }
         }
-        // lancamento.push(informations);
-        console.log('lancamento: ', lancamento);
-        localStorage.setItem('lancamento', JSON.stringify(lancamento));
-        setData(prevData => [...prevData, informations]);
+
+        setData(prevData => {
+            const updatedData = Array.isArray(prevData) ? prevData : [];
+            return [...updatedData, informations];
+        });
+
+        localStorage.setItem('data', JSON.stringify([...data, informations]));
 
         navigate(`${target}`);
         alert(`${title} realizado com sucesso.`);
     }
-
 
     const renderInput = (field) => {
         const commonProps = {

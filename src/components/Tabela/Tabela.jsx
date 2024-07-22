@@ -31,13 +31,13 @@ function Tabela({ title, fields, data }) {
                                     <tr key={index}>
                                         <td className={styles.firstTd}>
                                             <div className={styles.tdText}>
-                                                {info.proccess}
+                                                {info.processo}
                                             </div>
                                         </td>
-                                        <td>{info.lote}</td>
+                                        <td>{info.idLote}</td>
                                         <td>{info.qntdLote}</td>
                                         <td>{info.qntdRefugo}</td>
-                                        <td>{info.partNumber}</td>
+                                        <td>{info.partnumber}</td>
                                         <td>{info.movimentacao}</td>
                                         <td>{info.edv}</td>
                                         <td>{info.interditado}</td>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Row, Col, Container } from "react-bootstrap";
@@ -12,73 +12,69 @@ import Tabela from "../Tabela/Tabela";
 
 function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const navigate = useNavigate();
-    const selectRef = useRef(null);
+    const [data, setData] = useState([]);
 
     const optionsProcesso = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
     const optionsInterditado = ["Sim", "Não"];
 
-    const data = [{
-        "proccess": "teste",
-        "lote": "123456",
-        "qntdLote": 20,
-        "qntdRefugo": 2,
-        "partNumber": "F0R123",
-        "movimentacao": "Entrada",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "approved"
-    },
-    {
-        "proccess": "teste2",
-        "lote": "123456",
-        "qntdLote": 22,
-        "qntdRefugo": 11,
-        "partNumber": "F0R123",
-        "movimentacao": "Saída",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "waiting"
-    },
-    {
-        "proccess": "teste2",
-        "lote": "123456",
-        "qntdLote": 22,
-        "qntdRefugo": 11,
-        "partNumber": "F0R123",
-        "movimentacao": "Saída",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "waiting"
-    },
-    {
-        "proccess": "teste2",
-        "lote": "123456",
-        "qntdLote": 22,
-        "qntdRefugo": 11,
-        "partNumber": "F0R123",
-        "movimentacao": "Saída",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "waiting"
-    },
-    {
-        "proccess": "teste2",
-        "lote": "123456",
-        "qntdLote": 22,
-        "qntdRefugo": 11,
-        "partNumber": "F0R123",
-        "movimentacao": "Saída",
-        "edv": "123456",
-        "interditado": 5,
-        "status": "waiting"
-    }
-    ];
-
-    useEffect(() => {
-        if (selectRef.current) {
-            getSelectValue(selectRef.current);
-        }
-    }, []);
+    // useEffect(() => {
+    //     setData([{
+    //         "proccess": "teste1",
+    //         "lote": "123456",
+    //         "qntdLote": 20,
+    //         "qntdRefugo": 2,
+    //         "partNumber": "F0R123",
+    //         "movimentacao": "Entrada",
+    //         "edv": "123456",
+    //         "interditado": 5,
+    //         "status": "approved"
+    //     },
+    //     {
+    //         "proccess": "teste2",
+    //         "lote": "123456",
+    //         "qntdLote": 22,
+    //         "qntdRefugo": 11,
+    //         "partNumber": "F0R123",
+    //         "movimentacao": "Saída",
+    //         "edv": "123456",
+    //         "interditado": 5,
+    //         "status": "waiting"
+    //     },
+    //     {
+    //         "proccess": "teste3",
+    //         "lote": "123456",
+    //         "qntdLote": 22,
+    //         "qntdRefugo": 11,
+    //         "partNumber": "F0R123",
+    //         "movimentacao": "Saída",
+    //         "edv": "123456",
+    //         "interditado": 5,
+    //         "status": "waiting"
+    //     },
+    //     {
+    //         "proccess": "teste4",
+    //         "lote": "123456",
+    //         "qntdLote": 22,
+    //         "qntdRefugo": 11,
+    //         "partNumber": "F0R123",
+    //         "movimentacao": "Saída",
+    //         "edv": "123456",
+    //         "interditado": 5,
+    //         "status": "waiting"
+    //     },
+    //     {
+    //         "proccess": "teste5",
+    //         "lote": "123456",
+    //         "qntdLote": 22,
+    //         "qntdRefugo": 11,
+    //         "partNumber": "F0R123",
+    //         "movimentacao": "Saída",
+    //         "edv": "123456",
+    //         "interditado": 5,
+    //         "status": "waiting"
+    //     }
+    //     ])
+    // }, [1]);
 
     function getValue(id) {
         const element = document.getElementById(id);
@@ -102,6 +98,13 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     }
 
     function sendForm() {
+        let lancamento = [];
+
+        if (localStorage.getItem('lancamento'))
+            lancamento = JSON.parse(localStorage.getItem('lancamento'));
+        console.log('type lancamento: ', typeof (lancamento));
+        console.log('lancamento: ', lancamento);
+
         let informations = {};
 
         for (let i = 0; i < fields.length; i++) {
@@ -115,18 +118,20 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
 
             if (confirmPassword()) {
                 informations[field.name] = info;
-            }
-            else {
+            } else {
                 alert('As senham não coincidem.');
                 return;
             }
         }
-        // axios.post() CONFIGURAR O POST AQUI
-        localStorage.setItem('lancamento', JSON.stringify(informations));
+        lancamento.push(informations);
+        console.log('lancamento: ', lancamento);
+        localStorage.setItem('lancamento', JSON.stringify(lancamento));
+        setData(lancamento);
 
         navigate(`${target}`);
         alert(`${title} realizado com sucesso.`);
     }
+
 
     const renderInput = (field) => {
         const commonProps = {

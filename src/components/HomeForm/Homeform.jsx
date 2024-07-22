@@ -123,10 +123,10 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
                 return;
             }
         }
-        lancamento.push(informations);
+        // lancamento.push(informations);
         console.log('lancamento: ', lancamento);
         localStorage.setItem('lancamento', JSON.stringify(lancamento));
-        setData(lancamento);
+        setData(prevData => [...prevData, informations]);
 
         navigate(`${target}`);
         alert(`${title} realizado com sucesso.`);

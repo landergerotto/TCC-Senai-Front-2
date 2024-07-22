@@ -51,9 +51,13 @@ function Formulario({ title, fields, actions = [], target, type, labelStyle }) {
                 return;
             }
         }
+        console.log(informations);
         // axios.post() CONFIGURAR O POST AQUI
 
-        navigate(`${target}`);
+        if(title == 'Login')
+            sessionStorage.setItem('token', informations[0])
+
+        // navigate(`${target}`);
         alert(`${title} realizado com sucesso.`);
     }
 

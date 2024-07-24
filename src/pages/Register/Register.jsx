@@ -5,8 +5,13 @@ import styles from './Register.module.css'
 
 function RegisterPage() {
     const fields = [
-        { label: "Nome", type: "text", name: "nome" },
-        { label: "edv", type: "number", name: "edv" },
+        { label: "EDV", type: "number", name: "EDV" },
+        { label: "Primeiro Nome", type: "text", name: "firstName" },
+        { label: "Último Nome", type: "text", name: "lastName" },
+        { label: "Usuário Bosch", type: "text", name: "displayName" },
+        { label: "Email", type: "email", name: "email" },
+        { label: "Data de Nascimento", type: "date", name: "birth" }, 
+        { label: "Bosch ID", type: "text", name: "boschId" }, 
         { label: "Senha", type: "password", name: "password" },
         { label: "Confirmar senha", type: "password", name: "confirm" }
     ];

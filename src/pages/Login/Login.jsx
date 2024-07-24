@@ -15,6 +15,7 @@ function LoginPage() {
     ];
     const actions = [
         { label: "Entrar", type: "normal" },
+        { label: "Registrar-se", type: "cancel" },
         { label: "Cancelar", type: "cancel" }
     ];
 

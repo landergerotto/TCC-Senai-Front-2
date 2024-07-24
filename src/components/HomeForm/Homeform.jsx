@@ -17,65 +17,6 @@ function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
     const optionsProcesso = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
     const optionsInterditado = ["Sim", "Não"];
 
-    // useEffect(() => {
-    //     setData([{
-    //         "proccess": "teste1",
-    //         "lote": "123456",
-    //         "qntdLote": 20,
-    //         "qntdRefugo": 2,
-    //         "partNumber": "F0R123",
-    //         "movimentacao": "Entrada",
-    //         "edv": "123456",
-    //         "interditado": 5,
-    //         "status": "approved"
-    //     },
-    //     {
-    //         "proccess": "teste2",
-    //         "lote": "123456",
-    //         "qntdLote": 22,
-    //         "qntdRefugo": 11,
-    //         "partNumber": "F0R123",
-    //         "movimentacao": "Saída",
-    //         "edv": "123456",
-    //         "interditado": 5,
-    //         "status": "waiting"
-    //     },
-    //     {
-    //         "proccess": "teste3",
-    //         "lote": "123456",
-    //         "qntdLote": 22,
-    //         "qntdRefugo": 11,
-    //         "partNumber": "F0R123",
-    //         "movimentacao": "Saída",
-    //         "edv": "123456",
-    //         "interditado": 5,
-    //         "status": "waiting"
-    //     },
-    //     {
-    //         "proccess": "teste4",
-    //         "lote": "123456",
-    //         "qntdLote": 22,
-    //         "qntdRefugo": 11,
-    //         "partNumber": "F0R123",
-    //         "movimentacao": "Saída",
-    //         "edv": "123456",
-    //         "interditado": 5,
-    //         "status": "waiting"
-    //     },
-    //     {
-    //         "proccess": "teste5",
-    //         "lote": "123456",
-    //         "qntdLote": 22,
-    //         "qntdRefugo": 11,
-    //         "partNumber": "F0R123",
-    //         "movimentacao": "Saída",
-    //         "edv": "123456",
-    //         "interditado": 5,
-    //         "status": "waiting"
-    //     }
-    //     ])
-    // }, [1]);
-
     useEffect(() => {
         const storedData = localStorage.getItem('data');
         if (storedData)

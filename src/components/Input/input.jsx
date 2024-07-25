@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './input.module.css';
 
-function Input({ label, type, name, id, values, onChange, style, labelStyle, select = false, options = [] }) {
+function Input({ label, type, name, id, values, onChange, style, labelStyle, bgStyle, select = false, options = [] }) {
     const [value, setValue] = useState(localStorage.getItem(name) || '');
 
     useEffect(() => {
@@ -14,7 +14,7 @@ function Input({ label, type, name, id, values, onChange, style, labelStyle, sel
     };
 
     return (
-        <div className={styles.bg}>
+        <div className={styles.bg} style={bgStyle}>
             <label htmlFor={name} style={labelStyle}>{label}</label>
             {select ? (
                 <select name={name} id={id} onChange={handleChange} style={style} value={value} >

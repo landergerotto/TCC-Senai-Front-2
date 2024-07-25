@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +22,7 @@ function Formulario({
 
   useEffect(() => {
     localStorage.clear();
-  }, [1]);
+  }, []);
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -59,7 +58,6 @@ function Formulario({
     }
     console.log(informations);
 
-    // axios.post() CONFIGURAR O POST AQUI
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 

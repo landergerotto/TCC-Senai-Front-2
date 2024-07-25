@@ -17,6 +17,7 @@ function Formulario({
   type,
   labelStyle,
   url,
+  bgStyle
 }) {
   const navigate = useNavigate();
 
@@ -57,6 +58,7 @@ function Formulario({
       }
     }
     console.log(informations);
+
     // axios.post() CONFIGURAR O POST AQUI
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
@@ -73,7 +75,7 @@ function Formulario({
         <div className={styles.cardTitle}>
           <CardTitle className={styles.title}>{title}</CardTitle>
         </div>
-        <div className={ title == 'Registro' ? styles.inputs : "" }>
+        <div className={title == "Registro" ? styles.inputs : ""}>
           {fields.map((field, index) => {
             return (
               <Input
@@ -84,6 +86,7 @@ function Formulario({
                 id={field.name}
                 onChange={() => getValue(field.name)}
                 labelStyle={labelStyle}
+                bgStyle={bgStyle}
               />
             );
           })}

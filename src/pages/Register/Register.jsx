@@ -11,9 +11,9 @@ function RegisterPage() {
         { label: "Usuário Bosch", type: "text", name: "displayName" },
         { label: "Email", type: "email", name: "email" },
         { label: "Data de Nascimento", type: "date", name: "birth" }, 
-        { label: "Bosch ID", type: "text", name: "boschId" }, 
         { label: "Senha", type: "password", name: "password" },
-        { label: "Confirmar senha", type: "password", name: "confirm" }
+        { label: "Confirmar senha", type: "password", name: "confirm" },
+        { label: "Bosch ID", type: "text", name: "boschId" }
     ];
     const actions = [
         { label: "Registrar", type: "normal" },
@@ -22,7 +22,7 @@ function RegisterPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.5em' }} />
+                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.5em' }} bgStyle={{ width: '15em' }}/>
             </Col>
         </Container>
     )

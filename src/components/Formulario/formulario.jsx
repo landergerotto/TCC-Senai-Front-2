@@ -1,5 +1,8 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 
 import { Card, CardBody, CardTitle } from "react-bootstrap";
 
@@ -8,6 +11,11 @@ import Button from "../Button/button";
 
 import styles from "./formulario.module.css";
 import { apiUser } from "../../Api/apiUser";
+
+import { SECRET } from "../../env";
+
+import CryptoJS from "crypto-js";
+import jwtService from "../../service/jwtService";
 
 function Formulario({
   title,
@@ -32,7 +40,7 @@ function Formulario({
   function confirmPassword() {
     if (type != "register") return true;
 
-    let senha = localStorage.getItem("password");
+    let senha = localStorage.getItem("Password");
     let confirma = localStorage.getItem("confirm");
 
     if (senha != confirma) return false;
@@ -61,21 +69,24 @@ function Formulario({
     
     setData(informations);
     console.log("informations", informations);
-    localStorage.setItem("data", JSON.stringify(informations));
+    // const jwt = jwtService.generateJWT(informations);
+    
+    // localStorage.setItem("JWT", jsonCrypt);
+    // console.log('jwt: ', jwt)
 
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
-    apiUser
-      .post(`/${link}`, informations)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error("Houve um erro na requisição:", error);
-      });
+    // apiUser
+    //   .post(`/${link}`, informations)
+    //   .then(response => {
+    //     console.log(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error("Houve um erro na requisição:", error);
+    //   });
 
-    if (title == "Login") sessionStorage.setItem("token", informations[0]);
+    // if (title == "Login") sessionStorage.setItem("token", informations[0]);
 
     // navigate(`${target}`);
     // localStorage.clear();

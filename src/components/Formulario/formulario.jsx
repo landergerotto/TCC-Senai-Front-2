@@ -7,6 +7,7 @@ import Input from "../Input/input";
 import Button from "../Button/button";
 
 import styles from "./formulario.module.css";
+import { apiUser } from "../../Api/apiUser";
 
 function Formulario({
   title,
@@ -16,13 +17,12 @@ function Formulario({
   type,
   labelStyle,
   url,
-  bgStyle
+  bgStyle,
 }) {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
+  const [data, setData] = useState();
+  const [link, setLink] = useState(url);
+  // console.log(url);
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -40,7 +40,7 @@ function Formulario({
   }
 
   function sendForm(url) {
-    let informations = [];
+    let informations = {};
 
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i];
@@ -50,20 +50,35 @@ function Formulario({
         alert(`É necessário preencher o campo ${field.label}`);
         return;
       }
-      if (confirmPassword() == true) informations.push(info);
-      else {
+      if (confirmPassword() == true) {
+        if (field.name != 'confirm')
+          informations[field.name] = info;
+      } else {
         alert("As senham não coincidem.");
         return;
       }
     }
-    console.log(informations);
+    
+    setData(informations);
+    console.log("informations", informations);
+    localStorage.setItem("data", JSON.stringify(informations));
 
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
+    apiUser
+      .post(`/${link}`, informations)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error("Houve um erro na requisição:", error);
+      });
+
     if (title == "Login") sessionStorage.setItem("token", informations[0]);
 
     // navigate(`${target}`);
+    // localStorage.clear();
     alert(`${title} realizado com sucesso.`);
   }
 

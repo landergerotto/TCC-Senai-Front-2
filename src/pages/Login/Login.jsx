@@ -22,7 +22,7 @@ function LoginPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Login"} fields={fields} actions={actions} target={'/'} navigate={navigate} labelStyle={{ marginTop: '0.5em' }}/>
+                <Formulario title={"Login"} fields={fields} actions={actions} target={'/'} navigate={navigate} labelStyle={{ marginTop: '0.5em' }} url={"auth/login"}/>
             </Col>
         </Container>
     )

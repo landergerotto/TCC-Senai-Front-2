@@ -1,1 +1,0 @@
-export const SECRET = "poe no dotenv"

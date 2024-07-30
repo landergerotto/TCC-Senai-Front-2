@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-const SECRET = "../env.js";
+const SECRET = ".env";
 
 function encryptData(data) {
   const json = JSON.stringify(data);
@@ -17,7 +17,7 @@ function decrypt(encryptedData) {
   return decryptedData;
 }
 
-module.exports = {
+export default {
     encryptData,
     decrypt
 };

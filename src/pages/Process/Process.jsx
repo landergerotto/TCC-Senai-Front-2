@@ -5,11 +5,11 @@ import styles from './Process.module.css'
 
 function ProcessPage() {
     const fields = [
-        { label: "Nome", type: "text", name: "nome" },
-        { label: "CT", type: "text", name: "ct" },
-        { label: "OEE", type: "number", name: "oee" },
-        { label: "POT", type: "number", name: "pot" },
-        { label: "Quantidade MAE", type: "number", name: "qndtMAE" }
+        { label: "Nome", type: "text", name: "Name" },
+        { label: "CT", type: "number", name: "CT" },
+        { label: "OEE", type: "number", name: "OEE" },
+        { label: "POT", type: "number", name: "POT" },
+        { label: "Quantidade MAE", type: "number", name: "MAEQnt" }
     ];
     const actions = [
         { label: "Cadastrar", type: "normal" },
@@ -19,7 +19,7 @@ function ProcessPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Cadastro de Processo"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.3em' }}/>
+                <Formulario title={"Cadastro de Processo"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.3em' }} url={"process/create"} />
             </Col>
         </Container>
     )

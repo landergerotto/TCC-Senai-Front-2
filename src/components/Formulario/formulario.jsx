@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardBody, CardTitle } from "react-bootstrap";
@@ -8,6 +11,8 @@ import Button from "../Button/button";
 
 import styles from "./formulario.module.css";
 import { apiUser } from "../../Api/apiUser";
+
+import cryptoService from "../../service/cryptoService";
 
 function Formulario({
   title,
@@ -32,14 +37,14 @@ function Formulario({
   function confirmPassword() {
     if (type != "register") return true;
 
-    let senha = localStorage.getItem("password");
+    let senha = localStorage.getItem("Password");
     let confirma = localStorage.getItem("confirm");
 
     if (senha != confirma) return false;
     return true;
   }
 
-  function sendForm(url) {
+  function sendForm() {
     let informations = {};
 
     for (let i = 0; i < fields.length; i++) {
@@ -61,21 +66,21 @@ function Formulario({
     
     setData(informations);
     console.log("informations", informations);
-    localStorage.setItem("data", JSON.stringify(informations));
+    const encryptedInfo = cryptoService.encryptData(informations);
+    console.log('encrypted: ', encryptedInfo)
 
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
     apiUser
-      .post(`/${link}`, informations)
+      .post(`/${link}`, encryptedInfo)
+      // .post(`/${link}`, informations)
       .then(response => {
         console.log(response.data);
       })
       .catch(error => {
         console.error("Houve um erro na requisição:", error);
       });
-
-    if (title == "Login") sessionStorage.setItem("token", informations[0]);
 
     // navigate(`${target}`);
     // localStorage.clear();

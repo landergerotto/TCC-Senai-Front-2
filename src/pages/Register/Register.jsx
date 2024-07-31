@@ -22,7 +22,7 @@ function RegisterPage() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.5em' }} bgStyle={{ width: '15em' }} url={"create"} />
+                <Formulario title={"Registro"} fields={fields} actions={actions} target={'/login'} type={'register'} labelStyle={{ marginTop: '0.5em' }} bgStyle={{ width: '15em' }} url={"user/create"} />
             </Col>
         </Container>
     )

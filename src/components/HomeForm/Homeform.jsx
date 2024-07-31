@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +12,18 @@ import Button from "../Button/button";
 import styles from "./Homeform.module.css";
 import Tabela from "../Tabela/Tabela";
 
-function HomeForm({ title, fields, actions = [], target, type, labelStyle }) {
+function HomeForm({
+  title,
+  fields,
+  actions = [],
+  target,
+  type,
+  labelStyle,
+  url
+}) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [link, setLink] = useState(url);
 
   const optionsProcesso = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
   const optionsInterditado = ["Sim", "Não"];

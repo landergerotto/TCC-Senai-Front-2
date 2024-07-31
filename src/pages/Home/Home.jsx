@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import styles from './Home.module.css';
 
 import Row from 'react-bootstrap/Row';

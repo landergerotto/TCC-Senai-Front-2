@@ -44,7 +44,7 @@ function Formulario({
     return true;
   }
 
-  function sendForm(url) {
+  function sendForm() {
     let informations = {};
 
     for (let i = 0; i < fields.length; i++) {
@@ -74,6 +74,7 @@ function Formulario({
 
     apiUser
       .post(`/${link}`, encryptedInfo)
+      // .post(`/${link}`, informations)
       .then(response => {
         console.log(response.data);
       })

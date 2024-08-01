@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
@@ -39,7 +40,6 @@ function HomeForm({
         response.data.map((resp) => {
           listOptions.push(resp.Name);
         });
-        console.log(listOptions);
         setOptionsProcesso(listOptions);
       })
       .catch((error) => {
@@ -52,11 +52,21 @@ function HomeForm({
     localStorage.setItem(`${id}`, element.value);
   }
 
+  function clearInputs() {
+    fields.map((field) => {
+      localStorage.setItem(field.name, "");
+      document.getElementById(field.id).value = "";
+    });
+  }
+
+  function clearLancamentos() {
+    localStorage.setItem("data", "");
+    window.location.reload();
+  }
+
   function sendForm() {
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
-
-    console.log("data: ", data);
 
     let informations = {};
 
@@ -80,6 +90,29 @@ function HomeForm({
 
     navigate(`${target}`);
     alert(`${title} realizado com sucesso.`);
+  }
+
+  function confirmClear(option) {
+    console.log("length: ", fields.length);
+    switch (option) {
+      case "Campos":
+        const allFieldsEmpty = fields.every((field) => {
+          return document.getElementById(field.id).value.length < 1;
+        });
+        if (allFieldsEmpty) {
+          alert("Campos já estão vazios.");
+          return;
+        }
+        if (confirm(`Deseja limpar os ${option}?`)) clearInputs();
+        break;
+      case "Lançamentos":
+        if (localStorage.getItem("data").length < 1) {
+          alert("Não há lançamentos disponíveis.");
+          return;
+        }
+        if (confirm(`Deseja limpar os ${option}?`)) clearLancamentos();
+        break;
+    }
   }
 
   const renderInput = (field) => {
@@ -119,35 +152,6 @@ function HomeForm({
           })}
         </div>
       </Row>
-      {actions.length > 0 && (
-        <Row>
-          <div className={styles.btn}>
-            {actions.map((action, index) => {
-              if (action.label === "Cancelar") {
-                return (
-                  <Button
-                    key={index}
-                    text={action.label}
-                    type={action.type}
-                    style={{ marginTop: "1em" }}
-                    onClick={() => console.log("ta fazendo ainda calma")}
-                  />
-                );
-              } else {
-                return (
-                  <Button
-                    key={index}
-                    text={action.label}
-                    type={action.type}
-                    style={{ marginTop: "1em" }}
-                    onClick={() => console.log("ta fazendo ainda calma")}
-                  />
-                );
-              }
-            })}
-          </div>
-        </Row>
-      )}
       <Row>
         <Tabela title={"Últimos Lançamentos"} fields={fields} data={data} />
       </Row>
@@ -161,8 +165,15 @@ function HomeForm({
         </Col>
         <Col className={styles.col}>
           <Button
-            text={"Cancelar"}
-            onClick={() => console.log("ta fazendo ainda calma")}
+            text={"Limpar Campos"}
+            onClick={() => confirmClear("Campos")}
+            style={styles.btn}
+          />
+        </Col>
+        <Col className={styles.col}>
+          <Button
+            text={"Limpar Lançamentos"}
+            onClick={() => confirmClear("Lançamentos")}
             style={styles.btn}
           />
         </Col>

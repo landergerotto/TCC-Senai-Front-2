@@ -66,25 +66,27 @@ function Formulario({
     
     setData(informations);
     console.log("informations", informations);
-    const encryptedInfo = cryptoService.encryptData(informations);
-    console.log('encrypted: ', encryptedInfo)
+    const EncryptedInfo = cryptoService.encryptData(informations);
+    console.log('encrypted: ', EncryptedInfo)
 
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
     apiUser
-      .post(`/${link}`, encryptedInfo)
+      .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
       // .post(`/${link}`, informations)
       .then(response => {
         console.log(response.data);
+        alert(`${title} realizado com sucesso.`);
       })
       .catch(error => {
         console.error("Houve um erro na requisição:", error);
+        alert(`An error occured when trying to create the process.`)
       });
 
     // navigate(`${target}`);
     // localStorage.clear();
-    alert(`${title} realizado com sucesso.`);
+    
   }
 
   return (

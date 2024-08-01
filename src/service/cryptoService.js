@@ -1,10 +1,10 @@
 import CryptoJS from "crypto-js";
-const SECRET = ".env";
+const SECRET = "poe no dotenv";
 
 function encryptData(data) {
   const json = JSON.stringify(data);
   const encryptedData = CryptoJS.AES.encrypt(
-    JSON.stringify(json),
+    json,
     SECRET
   ).toString();
   return encryptedData;

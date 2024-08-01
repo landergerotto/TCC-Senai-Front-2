@@ -13,17 +13,16 @@ import HomeForm from '../../components/HomeForm/Homeform';
 
 function HomePage() {
     const fields = [
-        { label: "Processo", type: "text", name: "processo" },
-        { label: "ID Lote", type: "number", name: "idLote" },
-        { label: "Qntd Lote", type: "number", name: "qntdLote" },
-        { label: "Qntd de Refugo", type: "number", name: "qntdRefugo" },
-        { label: "PartNumber", type: "text", name: "partnumber" },
-        { label: "Movimentação", type: "text", name: "movimentacao" },
-        { label: "EDV", type: "text", name: "edv" },
-        { label: "Interditado", type: "text", name: "interditado" },
+        { label: "Processo", type: "text", name: "processo", id: "processo" },
+        { label: "ID Lote", type: "number", name: "idLote", id: "idLote" },
+        { label: "Qntd Lote", type: "number", name: "qntdLote", id: "qntdLote" },
+        { label: "Qntd de Refugo", type: "number", name: "qntdRefugo", id: "qntdRefugo" },
+        { label: "PartNumber", type: "text", name: "partnumber", id: "partnumber" },
+        { label: "Movimentação", type: "text", name: "movimentacao", id: "movimentacao" },
+        { label: "EDV", type: "text", name: "edv", id: "edv" },
+        { label: "Interditado", type: "text", name: "interditado", id: "interditado" }
     ]
-
-    const navigate = useNavigate();
+    
     return (
         <>
             <Row>

@@ -52,6 +52,13 @@ function HomeForm({
     localStorage.setItem(`${id}`, element.value);
   }
 
+  function clearInputs() {
+    fields.map((field) => {
+      localStorage.setItem(field.name, "");
+      document.getElementById(field.id).value = "";
+    });
+  }
+
   function sendForm() {
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
@@ -162,6 +169,13 @@ function HomeForm({
         <Col className={styles.col}>
           <Button
             text={"Cancelar"}
+            onClick={() => clearInputs()}
+            style={styles.btn}
+          />
+        </Col>
+        <Col className={styles.col}>
+          <Button
+            text={"Limpar Lançamentos"}
             onClick={() => console.log("ta fazendo ainda calma")}
             style={styles.btn}
           />

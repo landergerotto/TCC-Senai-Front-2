@@ -10,7 +10,7 @@ import Input from "../Input/input";
 import Button from "../Button/button";
 
 import styles from "./formulario.module.css";
-import { apiUser } from "../../Api/apiUser";
+import { apiUrl } from "../../Api/apiUrl";
 
 import cryptoService from "../../service/cryptoService";
 
@@ -72,7 +72,7 @@ function Formulario({
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
-    apiUser
+    apiUrl
       .post(`/${link}`, encryptedInfo)
       // .post(`/${link}`, informations)
       .then(response => {

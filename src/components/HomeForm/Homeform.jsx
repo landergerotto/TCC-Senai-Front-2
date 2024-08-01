@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +10,7 @@ import Button from "../Button/button";
 
 import styles from "./Homeform.module.css";
 import Tabela from "../Tabela/Tabela";
+import { apiUrl } from "../../Api/apiUrl";
 
 function HomeForm({
   title,
@@ -19,37 +19,37 @@ function HomeForm({
   target,
   type,
   labelStyle,
-  url
+  url,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [link, setLink] = useState(url);
+  const [optionsProcesso, setOptionsProcesso] = useState([]);
 
-  const optionsProcesso = ["Máquina 1", "Máquina 2", "Máquina 3"]; // PEGAR OS IDS DE MÁQUINAS CADASTRADAS AQUI
   const optionsInterditado = ["Sim", "Não"];
 
   useEffect(() => {
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
+
+    apiUrl
+      .get("process/get")
+      .then((response) => {
+        const listOptions = [];
+        response.data.map((resp) => {
+          listOptions.push(resp.Name);
+        });
+        console.log(listOptions);
+        setOptionsProcesso(listOptions);
+      })
+      .catch((error) => {
+        console.log("Erro ao buscar dados do processo: ", error);
+      });
   }, []);
 
   function getValue(id) {
     const element = document.getElementById(id);
     localStorage.setItem(`${id}`, element.value);
-  }
-
-  function getSelectValue(selectElement) {
-    localStorage.setItem(selectElement.id, selectElement.value);
-  }
-
-  function confirmPassword() {
-    if (type !== "register") return true;
-
-    let senha = localStorage.getItem("password");
-    let confirma = localStorage.getItem("confirm");
-
-    if (senha !== confirma) return false;
-    return true;
   }
 
   function sendForm() {

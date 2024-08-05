@@ -27,7 +27,6 @@ function Formulario({
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [link, setLink] = useState(url);
-  // console.log(url);
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -56,37 +55,35 @@ function Formulario({
         return;
       }
       if (confirmPassword() == true) {
-        if (field.name != 'confirm')
-          informations[field.name] = info;
+        if (field.name != "confirm") informations[field.name] = info;
       } else {
         alert("As senham não coincidem.");
         return;
       }
     }
-    
+
     setData(informations);
     console.log("informations", informations);
     const EncryptedInfo = cryptoService.encryptData(informations);
-    console.log('encrypted: ', EncryptedInfo)
+    console.log("encrypted: ", EncryptedInfo);
 
     // REGISTRO : https://tcc-senai-back.vercel.app/user/create
     // LOGIN : https://tcc-senai-back.vercel.app/user/login
 
     apiUrl
-      .post(`/${link}`, {EncryptedInfo: EncryptedInfo})
+      .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
       // .post(`/${link}`, informations)
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         alert(`${title} realizado com sucesso.`);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Houve um erro na requisição:", error);
-        alert(`An error occured when trying to create the process.`)
+        alert(`An error occured when trying to create the process.`);
       });
 
     // navigate(`${target}`);
     // localStorage.clear();
-    
   }
 
   return (
@@ -98,16 +95,23 @@ function Formulario({
         <div className={title == "Registro" ? styles.inputs : ""}>
           {fields.map((field, index) => {
             return (
-              <Input
-                key={index}
-                label={field.label}
-                type={field.type}
-                name={field.name}
-                id={field.name}
-                onChange={() => getValue(field.name)}
-                labelStyle={labelStyle}
-                bgStyle={bgStyle}
-              />
+              <>
+                <Input
+                  key={index}
+                  label={field.label}
+                  type={field.type}
+                  name={field.name}
+                  id={field.name}
+                  onChange={() => getValue(field.name)}
+                  labelStyle={labelStyle}
+                  bgStyle={bgStyle}
+                />
+                {field.underTextAction && (
+                  <div style={field.underTextStyle}>
+                    <p onClick={field.underTextAction} >{field.underText}</p>
+                  </div>
+                )}
+              </>
             );
           })}
         </div>

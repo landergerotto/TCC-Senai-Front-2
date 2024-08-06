@@ -1,14 +1,28 @@
-import Date from "../../components/Date/date";
+/* eslint-disable no-unused-vars */
+import styles from './Home.module.css';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import styles from './Home.module.css';
+import Date from "../../components/Date/date";
 import Button from "../../components/Button/button";
+import Formulario from "../../components/Formulario/formulario";
+
 import { useNavigate } from "react-router-dom";
+import HomeForm from '../../components/HomeForm/Homeform';
 
 function HomePage() {
-    const navigate = useNavigate();
+    const fields = [
+        { label: "Processo", type: "text", name: "processo", id: "processo" },
+        { label: "ID Lote", type: "number", name: "idLote", id: "idLote" },
+        { label: "Qntd Lote", type: "number", name: "qntdLote", id: "qntdLote" },
+        { label: "Qntd de Refugo", type: "number", name: "qntdRefugo", id: "qntdRefugo" },
+        { label: "PartNumber", type: "text", name: "partnumber", id: "partnumber" },
+        { label: "Movimentação", type: "text", name: "movimentacao", id: "movimentacao" },
+        { label: "EDV", type: "text", name: "edv", id: "edv" },
+        { label: "Interditado", type: "text", name: "interditado", id: "interditado" }
+    ]
+    
     return (
         <>
             <Row>
@@ -19,12 +33,7 @@ function HomePage() {
                 </Col>
             </Row>
             <Row>
-                <Col></Col>
-                <Col>
-                    <Button text={"Clica em mim ae kkk"} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
-                    <Button text={"Clica em mim ae kkk 2"} type={'cancel'} onClick={() => navigate('/login')} style={{ marginTop: '1em' }} />
-                </Col>
-                <Col></Col>
+                <HomeForm title={"Lançamento"} fields={fields} target={'/'} />
             </Row>
         </>
     )

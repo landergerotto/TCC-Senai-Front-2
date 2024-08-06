@@ -10,6 +10,12 @@ label {
 
 input {
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+select {
+    border: 1px solid black;
+    border-radius: 10px;
     padding: 1em;
 }

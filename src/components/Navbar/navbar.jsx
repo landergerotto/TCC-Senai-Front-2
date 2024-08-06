@@ -1,18 +1,18 @@
 import React from "react";
 
-import navcolors from "/nav-colors.png";
-import logobosch from "/logo-bosch.png";
-import bpscross from "/bpscross.png";
+import navcolors from "../../assets/Img/nav-colors.png";
+import logobosch from "../../assets/Img/logo-bosch.png";
+import bpscross from "../../assets/Img/bpscross.png";
 
-import "./navbar.css";
+import style from "./navbar.module.css";
 
 function NavbarComponent() {
   return (
     <header>
-      <img src={navcolors} className="nav-colors" alt="Nav Colors" />
+      <img src={navcolors} className={style.navColors} alt="Nav Colors" />
       <nav>
-        <img src={bpscross} className="bps" alt="Bosch Logo" />
-        <img src={logobosch} className="logo" alt="Bosch Logo" />
+        <img src={bpscross} className={style.bps} alt="Bosch Logo" />
+        <img src={logobosch} className={style.logo} alt="Bosch Logo" />
       </nav>
     </header>
   );

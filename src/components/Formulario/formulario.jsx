@@ -34,7 +34,7 @@ function Formulario({
   }
 
   function confirmPassword() {
-    if (type != "register") return true;
+    if (!localStorage.getItem("confirm")) return true;
 
     let senha = localStorage.getItem("Password");
     let confirma = localStorage.getItem("confirm");
@@ -67,9 +67,6 @@ function Formulario({
     const EncryptedInfo = cryptoService.encryptData(informations);
     console.log("encrypted: ", EncryptedInfo);
 
-    // REGISTRO : https://tcc-senai-back.vercel.app/user/create
-    // LOGIN : https://tcc-senai-back.vercel.app/user/login
-
     apiUrl
       .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
       // .post(`/${link}`, informations)
@@ -79,11 +76,8 @@ function Formulario({
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
-        alert(`An error occured when trying to create the process.`);
+        alert("Um erro ocorreu, tente novamente.");
       });
-
-    // navigate(`${target}`);
-    // localStorage.clear();
   }
 
   return (

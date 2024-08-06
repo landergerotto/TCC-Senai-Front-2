@@ -29,11 +29,18 @@ function LoginPage() {
       underTextStyle: underTextStyle,
     },
   ];
+
   const actions = [
     { label: "Entrar", type: "normal" },
     { label: "Registrar-se", type: "cancel" },
     { label: "Cancelar", type: "cancel" },
   ];
+
+//   const recupera = [
+//     {
+//         label: ""
+//     }
+//   ]
 
   return (
     <Container className={styles.container}>

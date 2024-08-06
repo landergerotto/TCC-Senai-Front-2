@@ -23,10 +23,12 @@ function Formulario({
   labelStyle,
   url,
   bgStyle,
+  onClickButton,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [link, setLink] = useState(url);
+  const [user, setUser] = useState();
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -64,8 +66,17 @@ function Formulario({
 
     setData(informations);
     console.log("informations", informations);
+    
     const EncryptedInfo = cryptoService.encryptData(informations);
     console.log("encrypted: ", EncryptedInfo);
+    if (user) {
+      if (user.email == informations.Email) {
+        console.log("Arrumar o post aqui"); // ARRUMAR AQUI DEPOIS
+        return;
+      }
+      alert("O email inserido não é válido.");
+      return;
+    }
 
     apiUrl
       .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
@@ -79,6 +90,23 @@ function Formulario({
         alert("Um erro ocorreu, tente novamente.");
       });
   }
+
+  const validateField = () => {
+    if (title != "Recuperar Senha") return;
+
+    const EDV = localStorage.getItem("EDV");
+    if (!EDV) return;
+
+    apiUrl
+      .get(`/${link}/${EDV}`)
+      .then((response) => {
+        console.log(response.data);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Houve um erro na requisição:", error);
+      });
+  };
 
   return (
     <Card className={styles.card}>
@@ -99,10 +127,16 @@ function Formulario({
                   onChange={() => getValue(field.name)}
                   labelStyle={labelStyle}
                   bgStyle={bgStyle}
+                  onBlur={() => validateField()}
                 />
                 {field.underTextAction && (
-                  <div style={field.underTextStyle}>
-                    <p onClick={field.underTextAction} >{field.underText}</p>
+                  <div>
+                    <p
+                      onClick={field.underTextAction}
+                      style={field.underTextStyle}
+                    >
+                      {field.underText}
+                    </p>
                   </div>
                 )}
               </>

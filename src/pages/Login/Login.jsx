@@ -15,7 +15,8 @@ function LoginPage() {
     marginLeft: "0.25em",
     marginTop: "0.15em",
     color: "#007BC0",
-    cursor: "pointer"
+    cursor: "pointer",
+    width: "fit-content"
   };
 
   const fields = [

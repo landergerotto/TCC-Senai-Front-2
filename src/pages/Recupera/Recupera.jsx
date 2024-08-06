@@ -10,12 +10,12 @@ export function RecuperaPage() {
   const navigate = useNavigate();
 
   const fields = [
-    { label: "Email", type: "email", name: "email" },
     {
       label: "EDV",
       type: "number",
       name: "EDV"
     },
+    { label: "Email", type: "email", name: "email" }
   ];
 
   const actions = [
@@ -32,7 +32,7 @@ export function RecuperaPage() {
           actions={actions}
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
-          url={"auth/login"} // MUDAR A URL PARA A DE RECUPERAR SENHA
+          url={"user/get"}
         />
       </Col>
     </Container>

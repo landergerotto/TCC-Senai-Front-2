@@ -15,7 +15,7 @@ export function RecuperaPage() {
       type: "number",
       name: "EDV"
     },
-    { label: "Email", type: "email", name: "email" }
+    { label: "Email", type: "email", name: "Email" }
   ];
 
   const actions = [

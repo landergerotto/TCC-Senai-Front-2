@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    font-size: 2em;
+    text-align: center;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 2em;
+}
+
+input {
+    width: 100%;
+    text-align: center;
+}
+
+.btnGroup {
+    margin-top: 5em;
+}

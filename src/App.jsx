@@ -12,6 +12,7 @@ import RegisterPage from './pages/Register/Register';
 import SideNavBar from './components/Sidebar/Sidebar';
 import NavbarComponent from './components/Navbar/navbar.jsx';
 import { RecuperaPage } from './pages/Recupera/Recupera.jsx';
+import CodigoPage from './pages/Codigo/Codigo.jsx';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path='/register' element={<RegisterPage />}></Route>
         <Route path='/create' element={<ProcessPage />}></Route>
         <Route path='/recupera' element={<RecuperaPage />}></Route>
+        <Route path='/codigo' element={<CodigoPage />}></Route>
         <Route path='*' element={<NotFoundPage />}></Route>
       </Routes>
     </>

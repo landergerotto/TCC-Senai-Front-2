@@ -65,13 +65,13 @@ function Formulario({
     }
 
     setData(informations);
-    console.log("informations", informations);
+    // console.log("informations", informations);
     
     const EncryptedInfo = cryptoService.encryptData(informations);
-    console.log("encrypted: ", EncryptedInfo);
     if (user) {
-      if (user.email == informations.Email) {
-        console.log("Arrumar o post aqui"); // ARRUMAR AQUI DEPOIS
+      if (user.Email == informations.Email) {
+        console.log("Arrumar o post aqui");
+        navigate('/codigo');
         return;
       }
       alert("O email inserido não é válido.");
@@ -100,11 +100,10 @@ function Formulario({
     apiUrl
       .get(`/${link}/${EDV}`)
       .then((response) => {
-        console.log(response.data);
         setUser(response.data);
       })
       .catch((error) => {
-        console.error("Houve um erro na requisição:", error);
+        console.error("Houve um erro na requisição: ", error);
       });
   };
 

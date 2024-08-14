@@ -83,7 +83,7 @@ function CodigoPage() {
                   ))}
                 </CardText>
                 <div className={styles.btnGroup}>
-                  <Button text={"Verificar Código"} />
+                  <Button text={"Verificar Código"} onClick={() => navigate("/redefine")} />
                   <Button
                     text={"Cancelar"}
                     type={"cancel"}

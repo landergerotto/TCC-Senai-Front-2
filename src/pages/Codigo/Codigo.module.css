@@ -15,9 +15,10 @@
     margin-top: 2em;
 }
 
-input {
+.inputCode {
     width: 100%;
     text-align: center;
+    padding-inline: 0;
 }
 
 .btnGroup {

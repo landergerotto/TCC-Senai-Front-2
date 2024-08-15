@@ -32,7 +32,7 @@ export function RecuperaPage() {
           actions={actions}
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
-          url={"user/get"}
+          url={"auth/email"}
         />
       </Col>
     </Container>

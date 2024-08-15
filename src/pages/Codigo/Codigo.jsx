@@ -12,6 +12,7 @@ import styles from "./Codigo.module.css";
 import Button from "../../components/Button/button";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { apiUrl } from "../../Api/apiUrl";
 
 function CodigoPage() {
   const navigate = useNavigate();
@@ -20,14 +21,12 @@ function CodigoPage() {
 
   function checkInput(input) {
     let letters = [...input];
-    console.log("letters: ", letters);
     return letters;
   }
 
   function handleChange(event, id) {
     const value = event.target.value;
-    const letters = checkInput(value);
-    console.log(letters);
+    const letters = checkInput(value, id);
     if (letters.length > 1) {
       letters.forEach((letter, index) => {
         const currentInput = inputRefs.current[id + index];
@@ -48,13 +47,45 @@ function CodigoPage() {
   function handleKeyDown(event, id) {
     if (event.key === "Backspace") {
       if (inputRefs.current[id].value === "") {
-        if (id > 0) {
-          inputRefs.current[id - 1].focus();
-        }
+        if (id > 0) inputRefs.current[id - 1].focus();
       } else {
         inputRefs.current[id].value = "";
       }
     }
+  }
+
+  function onlyNumbers(string) {
+    return /^\d+$/.test(string);
+  }
+
+  function verifyToken() {
+    const token = inputRefs.current.map((input) => input.value).join("");
+    console.log("Código inserido: ", token);
+    const Email = localStorage.getItem('Email');
+    console.log('Email: ', Email);
+    const EDV = localStorage.getItem('EDV');
+    console.log('EDV: ', EDV);
+
+    if (token.length != 6 || !onlyNumbers) {
+      alert("Código Inválido, tente novamente.");
+      return;
+    }
+
+    if (!EDV || !Email) {
+      alert("Houve um problema ao processar a solicitação, tente novamente.");
+      return;
+    }
+
+    apiUrl
+      .post('/auth/validtoken', { EDV, Email, token })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Houve um erro na requisição: ", error);
+        alert("Um erro ocorreu, tente novamente");
+      })
+    // navigate('/redefine');
   }
 
   return (
@@ -83,7 +114,10 @@ function CodigoPage() {
                   ))}
                 </CardText>
                 <div className={styles.btnGroup}>
-                  <Button text={"Verificar Código"} onClick={() => navigate("/redefine")} />
+                  <Button
+                    text={"Verificar Código"}
+                    onClick={() => verifyToken()}
+                  />
                   <Button
                     text={"Cancelar"}
                     type={"cancel"}

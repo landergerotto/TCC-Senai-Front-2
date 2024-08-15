@@ -37,12 +37,6 @@ function LoginPage() {
     { label: "Cancelar", type: "cancel" },
   ];
 
-//   const recupera = [
-//     {
-//         label: ""
-//     }
-//   ]
-
   return (
     <Container className={styles.container}>
       <Col lg={6}>

@@ -65,13 +65,23 @@ function Formulario({
     }
 
     setData(informations);
-    // console.log("informations", informations);
-    
-    const EncryptedInfo = cryptoService.encryptData(informations);
+
+    const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
       if (user.Email == informations.Email) {
-        console.log("Arrumar o post aqui");
-        navigate('/codigo');
+        const EDV = user.EDV;
+        console.log(EDV);
+        const Email = user.Email;
+        console.log(Email);
+        apiUrl
+          .post(`/${link}`, { EDV, Email })
+          .then((response) => {
+            console.log(response);
+            // navigate("/codigo");
+          })
+          .catch((error) => {
+            console.log("deu errado ai brother: ", error);
+          });
         return;
       }
       alert("O email inserido não é válido.");
@@ -79,8 +89,7 @@ function Formulario({
     }
 
     apiUrl
-      .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
-      // .post(`/${link}`, informations)
+      .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
         console.log(response.data);
         alert(`${title} realizado com sucesso.`);
@@ -98,7 +107,7 @@ function Formulario({
     if (!EDV) return;
 
     apiUrl
-      .get(`/${link}/${EDV}`)
+      .get(`/user/get/${EDV}`)
       .then((response) => {
         setUser(response.data);
       })

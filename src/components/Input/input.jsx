@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './input.module.css';
 
-function Input({ label, type, name, id, values, onChange, style, labelStyle, bgStyle, select = false, options = [] }) {
+function Input({ label, type, name, id, values, onChange, onBlur, style, labelStyle, bgStyle, select = false, options = [] }) {
     const [value, setValue] = useState(localStorage.getItem(name) || '');
 
     useEffect(() => {
@@ -19,7 +19,7 @@ function Input({ label, type, name, id, values, onChange, style, labelStyle, bgS
         <div className={styles.bg} style={bgStyle}>
             <label htmlFor={name} style={labelStyle}>{label}</label>
             {select ? (
-                <select name={name} id={id} onChange={handleChange} style={style} value={value} >
+                <select name={name} id={id} onChange={handleChange} style={style} value={value} onBlur={onBlur}>
                     <option value="" disabled>Selecione</option>
                     {options.map((option, index) => (
                         <option key={index} value={option.value} style={style}>
@@ -28,7 +28,7 @@ function Input({ label, type, name, id, values, onChange, style, labelStyle, bgS
                     ))}
                 </select>
             ) : (
-                <input type={type} name={name} id={id} onChange={handleChange} style={style} value={value} />
+                <input type={type} name={name} id={id} onChange={handleChange} style={style} value={value} onBlur={onBlur}/>
             )}
         </div>
     );

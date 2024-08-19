@@ -77,7 +77,12 @@ function Formulario({
           .post(`/${link}`, { EDV, Email })
           .then((response) => {
             console.log(response);
-            // navigate("/codigo");
+            if (response.data.valid)
+              navigate("/codigo");
+            else {
+              alert("As informações inseridas não são válidas.");
+              return;
+            }
           })
           .catch((error) => {
             console.log("deu errado ai brother: ", error);

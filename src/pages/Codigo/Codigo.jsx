@@ -61,10 +61,10 @@ function CodigoPage() {
   function verifyToken() {
     const token = inputRefs.current.map((input) => input.value).join("");
     console.log("Código inserido: ", token);
-    const Email = localStorage.getItem('Email');
-    console.log('Email: ', Email);
-    const EDV = localStorage.getItem('EDV');
-    console.log('EDV: ', EDV);
+    const Email = localStorage.getItem("Email");
+    console.log("Email: ", Email);
+    const EDV = localStorage.getItem("EDV");
+    console.log("EDV: ", EDV);
 
     if (token.length != 6 || !onlyNumbers) {
       alert("Código Inválido, tente novamente.");
@@ -77,15 +77,15 @@ function CodigoPage() {
     }
 
     apiUrl
-      .post('/auth/validtoken', { EDV, Email, token })
+      .post("/auth/validtoken", { EDV, Email, token })
       .then((response) => {
         console.log(response.data);
+        navigate("/redefine");
       })
       .catch((error) => {
         console.error("Houve um erro na requisição: ", error);
         alert("Um erro ocorreu, tente novamente");
-      })
-    // navigate('/redefine');
+      });
   }
 
   return (

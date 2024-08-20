@@ -93,11 +93,14 @@ function Formulario({
       return;
     }
 
+    console.log(EncryptedBody);
+
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
         console.log(response.data);
         alert(`${title} realizado com sucesso.`);
+        navigate(`/${target}`);
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);

@@ -68,6 +68,7 @@ function Formulario({
 
     const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
+      console.log("user: ", user);
       if (user.Email == informations.Email) {
         const EDV = user.EDV;
         console.log(EDV);
@@ -77,8 +78,7 @@ function Formulario({
           .post(`/${link}`, { EDV, Email })
           .then((response) => {
             console.log(response);
-            if (response.data.valid)
-              navigate("/codigo");
+            if (response.data.valid) navigate("/codigo");
             else {
               alert("As informações inseridas não são válidas.");
               return;
@@ -114,6 +114,7 @@ function Formulario({
     apiUrl
       .get(`/user/get/${EDV}`)
       .then((response) => {
+        console.log(response);
         setUser(response.data);
       })
       .catch((error) => {

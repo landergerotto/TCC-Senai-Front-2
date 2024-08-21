@@ -6,10 +6,11 @@ import styles from './Process.module.css'
 function ProcessPage() {
     const fields = [
         { label: "Nome", type: "text", name: "Name" },
-        { label: "CT", type: "number", name: "CT" },
+        { label: "CT", type: "text", name: "CT" },
         { label: "OEE", type: "number", name: "OEE" },
         { label: "POT", type: "number", name: "POT" },
-        { label: "Quantidade MAE", type: "number", name: "MAEQnt" }
+        { label: "Quantidade MAE", type: "number", name: "MAEQnt" },
+        { label: "Ordem na Linha", type: "number", name: "Order" }
     ];
     const actions = [
         { label: "Cadastrar", type: "normal" },

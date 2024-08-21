@@ -27,7 +27,8 @@ function HomeForm({
   const [data, setData] = useState([]);
   const [link, setLink] = useState(url);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
-  
+  const [optionsPartNumber, setOptionsPartNumber] = useState([]);
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,6 +47,19 @@ function HomeForm({
           listOptions.push(resp.Name);
         });
         setOptionsProcesso(listOptions);
+      })
+      .catch((error) => {
+        console.log("Erro ao buscar dados do processo: ", error);
+      });
+
+    apiUrl
+      .get("partnr/get")
+      .then((response) => {
+        const listOptions = [];
+        response.data.map((resp) => {
+          listOptions.push(resp.Name);
+        });
+        setOptionsPartNumber(listOptions);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
@@ -138,6 +152,12 @@ function HomeForm({
     if (field.label === "Interditado") {
       return (
         <Input {...commonProps} select={true} options={optionsInterditado} />
+      );
+    }
+
+    if (field.label === "PartNumber") {
+      return (
+        <Input {...commonProps} select={true} options={optionsPartNumber} />
       );
     }
 

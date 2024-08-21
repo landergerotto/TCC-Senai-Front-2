@@ -31,6 +31,7 @@ function RedefinePage() {
           actions={actions}
           navigate={navigate}
           url={"auth/email"}
+          target={"login"}
         />
       </Col>
     </Container>

@@ -33,6 +33,7 @@ export function RecuperaPage() {
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
           url={"auth/email"}
+          target={"codigo"}
         />
       </Col>
     </Container>

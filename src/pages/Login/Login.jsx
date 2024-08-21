@@ -44,7 +44,7 @@ function LoginPage() {
           title={"Login"}
           fields={fields}
           actions={actions}
-          target={"/"}
+          target={""}
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
           url={"auth/login"}

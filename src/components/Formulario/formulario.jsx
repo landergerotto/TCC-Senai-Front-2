@@ -94,6 +94,7 @@ function Formulario({
     }
 
     console.log(EncryptedBody);
+    console.log('data: ', cryptoService.decrypt(EncryptedBody));
 
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })

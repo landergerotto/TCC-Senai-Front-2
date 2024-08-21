@@ -5,7 +5,7 @@ import styles from './Partnumber.module.css'
 
 function CadastroPartNumber() {
     const fields = [
-        { label: "Nome", type: "text", name: "id" }
+        { label: "Nome", type: "text", name: "PartNumber" }
     ];
     const actions = [
         { label: "Cadastrar", type: "normal" },
@@ -15,7 +15,7 @@ function CadastroPartNumber() {
     return (
         <Container className={styles.container}>
             <Col lg={6}>
-                <Formulario title={"Cadastro de PartNumber"} fields={fields} actions={actions} target={''} type={'register'} labelStyle={{ marginTop: '0.3em' }} url={"process/create"} />
+                <Formulario title={"Cadastro de PartNumber"} fields={fields} actions={actions} target={''} labelStyle={{ marginTop: '0.3em' }} url={"partnr/create"} />
             </Col>
         </Container>
     )

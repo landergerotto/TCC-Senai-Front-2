@@ -57,7 +57,7 @@ function HomeForm({
       .then((response) => {
         const listOptions = [];
         response.data.map((resp) => {
-          listOptions.push(resp.Name);
+          listOptions.push(resp.PartNumber);
         });
         setOptionsPartNumber(listOptions);
       })

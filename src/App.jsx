@@ -18,7 +18,7 @@ import CadastroPartNumber from './pages/CadastroPartNumber/CadastroPartNumber.js
 
 function App() {
   return (
-    <>
+    <div id='app'>
       <SideNavBar />
       <NavbarComponent />
       <Routes>
@@ -33,7 +33,7 @@ function App() {
         <Route path='/redefine' element={<RedefinePage />}></Route>
         <Route path='*' element={<NotFoundPage />}></Route>
       </Routes>
-    </>
+    </div>
   )
 }
 

@@ -12,6 +12,7 @@ import Button from "../Button/button";
 import styles from "./Homeform.module.css";
 import Tabela from "../Tabela/Tabela";
 import { apiUrl } from "../../Api/apiUrl";
+import ModalComponent from "../Modal/ModalComponent";
 
 function HomeForm({
   title,
@@ -26,6 +27,10 @@ function HomeForm({
   const [data, setData] = useState([]);
   const [link, setLink] = useState(url);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
+  
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const optionsInterditado = ["Sim", "Não"];
 
@@ -93,7 +98,6 @@ function HomeForm({
   }
 
   function confirmClear(option) {
-    console.log("length: ", fields.length);
     switch (option) {
       case "Campos":
         const allFieldsEmpty = fields.every((field) => {
@@ -103,10 +107,11 @@ function HomeForm({
           alert("Campos já estão vazios.");
           return;
         }
+        // setShow(false);
         if (confirm(`Deseja limpar os ${option}?`)) clearInputs();
         break;
       case "Lançamentos":
-        if (localStorage.getItem("data").length < 1) {
+        if (!localStorage.getItem("data")) {
           alert("Não há lançamentos disponíveis.");
           return;
         }
@@ -185,6 +190,7 @@ function HomeForm({
           />
         </Col>
       </Row>
+      <ModalComponent />
     </Container>
   );
 }

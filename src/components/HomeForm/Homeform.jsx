@@ -3,17 +3,17 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Row, Col, Container } from "react-bootstrap";
 
 import Input from "../Input/input";
 import Button from "../Button/button";
-
-import styles from "./Homeform.module.css";
 import Tabela from "../Tabela/Tabela";
-import { apiUrl } from "../../Api/apiUrl";
 import ModalComponent from "../Modal/ModalComponent";
 
+import styles from "./Homeform.module.css";
+import trash from "../../assets/Img/trash.png";
+
+import { apiUrl } from "../../Api/apiUrl";
 function HomeForm({
   title,
   fields,
@@ -29,9 +29,13 @@ function HomeForm({
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [modalFunc, setModalFunc] = useState();
+  const [modalFunc2, setModalFunc2] = useState();
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const optionsInterditado = ["Sim", "Não"];
 
@@ -71,17 +75,43 @@ function HomeForm({
     localStorage.setItem(`${id}`, element.value);
   }
 
-  function clearInputs() {
+  const clearInputs = () => {
     fields.map((field) => {
       localStorage.setItem(field.name, "");
       document.getElementById(field.id).value = "";
     });
-  }
-
-  function clearLancamentos() {
-    localStorage.setItem("data", "");
+    setShowModal(false);
     window.location.reload();
-  }
+  };
+
+  const clearAllLancamentos = () => {
+    localStorage.setItem("data", "");
+    setShowModal(false);
+    window.location.reload();
+  };
+
+  const clearSelectedLancamentos = () => {
+    const currData = JSON.parse(localStorage.getItem("data"));
+    console.log("currData: ", currData);
+
+    const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
+    console.log("selected: ", selectedItems);
+
+    const selectedIds = selectedItems.map(item => item.idLote);
+
+    const updatedData = currData.filter(
+      (item) => !selectedIds.includes(item.idLote)
+    );
+    console.log("updated: ", updatedData);
+
+    localStorage.setItem("data", JSON.stringify(updatedData));
+    localStorage.setItem("selectedItems", "");
+    localStorage.removeItem("selectedItems");
+
+    setData(updatedData);
+    setShowModal(false);
+    window.location.reload();
+};
 
   function sendForm() {
     const storedData = localStorage.getItem("data");
@@ -121,15 +151,33 @@ function HomeForm({
           alert("Campos já estão vazios.");
           return;
         }
-        // setShow(false);
-        if (confirm(`Deseja limpar os ${option}?`)) clearInputs();
+        setModalData({
+          title: "Confirmação",
+          image: <img src={trash} alt="Trash Icon" />,
+          text: "Deseja limpar os Campos?",
+          btnCancel: "Cancelar",
+          btnConfirm: "Limpar",
+        });
+        setShowModal(true);
+        setModalFunc(() => clearInputs);
+
         break;
       case "Lançamentos":
         if (!localStorage.getItem("data")) {
           alert("Não há lançamentos disponíveis.");
           return;
         }
-        if (confirm(`Deseja limpar os ${option}?`)) clearLancamentos();
+        setModalData({
+          title: "Confirmação",
+          image: <img src={trash} alt="Trash Icon" />,
+          text: "Quais Lançamentos deseja limpar?",
+          btnCancel: "Cancelar",
+          btnConfirm: "Todos",
+          btnConfirm2: "Selecionados",
+        });
+        setShowModal(true);
+        setModalFunc(() => clearAllLancamentos);
+        setModalFunc2(() => clearSelectedLancamentos);
         break;
     }
   }
@@ -210,7 +258,13 @@ function HomeForm({
           />
         </Col>
       </Row>
-      <ModalComponent />
+      <ModalComponent
+        isOpened={showModal}
+        onClose={handleCloseModal}
+        data={modalData}
+        confirmOnClick={modalFunc}
+        confirmOnClick2={modalFunc2}
+      />
     </Container>
   );
 }

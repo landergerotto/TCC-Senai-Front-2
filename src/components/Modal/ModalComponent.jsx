@@ -1,34 +1,31 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-function ModalComponent({ isOpened }) {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(isOpened);
+import styles from "./ModalComponent.module.css";
+import Button from "../Button/button";
 
+function ModalComponent({ isOpened, onClose, data, confirmOnClick, confirmOnClick2 }) {
   return (
     <>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+      <Modal show={isOpened} onHide={onClose} keyboard={false} className={styles.modal} size={'lg'}>
+        <Modal.Header closeButton className={styles.header}>
+          <Modal.Title className={styles.title}>{data.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          I will not close if you click outside me. Do not even try to press
-          escape key.
+        <Modal.Body className={styles.body}>
+          <div className={styles.img}>{data.image}</div>
+          <div className={styles.text}>{data.text}</div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary">Understood</Button>
+        <Modal.Footer className={styles.footer}>
+          <Button onClick={confirmOnClick} text={data.btnConfirm} />
+          {
+            data.btnConfirm2 != null ?
+            <Button onClick={confirmOnClick2} text={data.btnConfirm2} />
+            :
+            <></>
+          }
+          <Button onClick={onClose} text={data.btnCancel} type={'cancel'}/>
         </Modal.Footer>
       </Modal>
     </>

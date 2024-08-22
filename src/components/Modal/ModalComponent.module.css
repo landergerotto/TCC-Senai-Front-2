@@ -1,0 +1,32 @@
+.header {
+  background-color: #cccccc;
+  text-align: center;
+}
+
+.title {
+    width: 100%;
+    margin-left: 1em;
+    font-size: 1.5em !important;
+}
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+img {
+    height: 9em;
+    margin-bottom: 1em;
+}
+
+.text {
+    font-size: 1.4em;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+}

@@ -3,8 +3,19 @@ import Table from "react-bootstrap/Table";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import styles from "./Tabela.module.css";
+import { useState } from "react";
 
 function Tabela({ title, fields, data }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleCheckboxChange = (info) => {
+    if (selectedItems.includes(info.idLote)) {
+      setSelectedItems(selectedItems.filter((item) => item !== info.idLote));
+    } else {
+      setSelectedItems([...selectedItems, info.idLote]);
+    }
+  };
+
   return (
     <div className={styles.body}>
       <div className={styles.title}>{title}</div>
@@ -15,7 +26,6 @@ function Tabela({ title, fields, data }) {
               {fields.map((field, index) => {
                 return <th key={index}>{field.label}</th>;
               })}
-              <th>Status</th>
               <th>
                 {" "}
                 <i className="bi bi-trash-fill"></i>{" "}
@@ -37,30 +47,21 @@ function Tabela({ title, fields, data }) {
                   <td>{info.edv}</td>
                   <td>{info.interditado}</td>
                   <td>
-                    {info.status == "waiting" ? (
-                      <button
-                        className={styles.btnDelete}
-                        onClick={() => console.log(info.status)}
-                      >
-                        <i className="bi bi-x-lg"></i>
-                      </button>
-                    ) : (
-                      <button
-                        className={styles.btnConfirm}
-                        onClick={() => console.log(info.status)}
-                      >
-                        <i className="bi bi-check"></i>
-                      </button>
-                    )}
-                  </td>
-                  <td>
-                    <input type="checkbox" className={styles.input} />
+                    <input
+                      type="checkbox"
+                      className={styles.input}
+                      onChange={() => handleCheckboxChange(info)}
+                    />
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+        <div>
+          <strong>Itens Selecionados: </strong>
+          {selectedItems.join(", ")}
+        </div>
       </div>
     </div>
   );

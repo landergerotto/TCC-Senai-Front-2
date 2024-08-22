@@ -3,17 +3,17 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Row, Col, Container } from "react-bootstrap";
 
 import Input from "../Input/input";
 import Button from "../Button/button";
-
-import styles from "./Homeform.module.css";
 import Tabela from "../Tabela/Tabela";
-import { apiUrl } from "../../Api/apiUrl";
 import ModalComponent from "../Modal/ModalComponent";
 
+import styles from "./Homeform.module.css";
+import trash from "../../assets/Img/trash.png";
+
+import { apiUrl } from "../../Api/apiUrl";
 function HomeForm({
   title,
   fields,
@@ -32,6 +32,7 @@ function HomeForm({
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [modalFunc, setModalFunc] = useState();
+  const [modalFunc2, setModalFunc2] = useState();
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -83,7 +84,7 @@ function HomeForm({
     window.location.reload();
   };
 
-  const clearLancamentos = () => {
+  const clearAllLancamentos = () => {
     localStorage.setItem("data", "");
     setShowModal(false);
     window.location.reload();
@@ -129,6 +130,7 @@ function HomeForm({
         }
         setModalData({
           title: "Confirmação",
+          image: <img src={trash} alt="Trash Icon" />,
           text: "Deseja limpar os Campos?",
           btnCancel: "Cancelar",
           btnConfirm: "Limpar",
@@ -144,12 +146,14 @@ function HomeForm({
         }
         setModalData({
           title: "Confirmação",
-          text: "Deseja limpar os Lançamentos?",
+          image: <img src={trash} alt="Trash Icon" />,
+          text: "Quais Lançamentos deseja limpar?",
           btnCancel: "Cancelar",
-          btnConfirm: "Limpar",
+          btnConfirm: "Todos",
+          btnConfirm2: "Selecionados",
         });
         setShowModal(true);
-        setModalFunc(() => clearLancamentos);
+        setModalFunc(() => clearAllLancamentos);
         break;
     }
   }

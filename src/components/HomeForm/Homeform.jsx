@@ -29,9 +29,12 @@ function HomeForm({
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [modalFunc, setModalFunc] = useState();
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const optionsInterditado = ["Sim", "Não"];
 
@@ -71,17 +74,20 @@ function HomeForm({
     localStorage.setItem(`${id}`, element.value);
   }
 
-  function clearInputs() {
+  const clearInputs = () => {
     fields.map((field) => {
       localStorage.setItem(field.name, "");
       document.getElementById(field.id).value = "";
     });
-  }
-
-  function clearLancamentos() {
-    localStorage.setItem("data", "");
+    setShowModal(false);
     window.location.reload();
-  }
+  };
+
+  const clearLancamentos = () => {
+    localStorage.setItem("data", "");
+    setShowModal(false);
+    window.location.reload();
+  };
 
   function sendForm() {
     const storedData = localStorage.getItem("data");
@@ -121,15 +127,29 @@ function HomeForm({
           alert("Campos já estão vazios.");
           return;
         }
-        // setShow(false);
-        if (confirm(`Deseja limpar os ${option}?`)) clearInputs();
+        setModalData({
+          title: "Confirmação",
+          text: "Deseja limpar os Campos?",
+          btnCancel: "Cancelar",
+          btnConfirm: "Limpar",
+        });
+        setShowModal(true);
+        setModalFunc(() => clearInputs);
+
         break;
       case "Lançamentos":
         if (!localStorage.getItem("data")) {
           alert("Não há lançamentos disponíveis.");
           return;
         }
-        if (confirm(`Deseja limpar os ${option}?`)) clearLancamentos();
+        setModalData({
+          title: "Confirmação",
+          text: "Deseja limpar os Lançamentos?",
+          btnCancel: "Cancelar",
+          btnConfirm: "Limpar",
+        });
+        setShowModal(true);
+        setModalFunc(() => clearLancamentos);
         break;
     }
   }
@@ -210,7 +230,12 @@ function HomeForm({
           />
         </Col>
       </Row>
-      <ModalComponent />
+      <ModalComponent
+        isOpened={showModal}
+        onClose={handleCloseModal}
+        data={modalData}
+        confirmOnClick={modalFunc}
+      />
     </Container>
   );
 }

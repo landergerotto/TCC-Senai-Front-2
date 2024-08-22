@@ -4,31 +4,21 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-function ModalComponent({ isOpened }) {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(isOpened);
-
+function ModalComponent({ isOpened, onClose, data, confirmOnClick }) {
   return (
     <>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
+      <Modal show={isOpened} onHide={onClose} keyboard={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>{data.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          I will not close if you click outside me. Do not even try to press
-          escape key.
-        </Modal.Body>
+        <Modal.Body>{data.text}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="secondary" onClick={onClose}>
+            {data.btnCancel}
           </Button>
-          <Button variant="primary">Understood</Button>
+          <Button variant="primary" onClick={confirmOnClick}>
+            {data.btnConfirm}
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

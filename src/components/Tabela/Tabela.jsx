@@ -3,17 +3,23 @@ import Table from "react-bootstrap/Table";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import styles from "./Tabela.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Tabela({ title, fields, data }) {
   const [selectedItems, setSelectedItems] = useState([]);
 
-  const handleCheckboxChange = (info) => {
-    if (selectedItems.includes(info.idLote)) {
-      setSelectedItems(selectedItems.filter((item) => item !== info.idLote));
-    } else {
-      setSelectedItems([...selectedItems, info.idLote]);
-    }
+  useEffect(() => {
+    const savedSelectedItems = JSON.parse(localStorage.getItem("selectedItems")) || [];
+    setSelectedItems(savedSelectedItems);
+  }, []);
+
+  const handleCheckboxChange = (index) => {
+    const updatedSelectedItems = selectedItems.includes(index)
+      ? selectedItems.filter((item) => item !== index)
+      : [...selectedItems, index];
+
+    setSelectedItems(updatedSelectedItems);
+    localStorage.setItem("selectedItems", JSON.stringify(updatedSelectedItems));
   };
 
   return (
@@ -58,10 +64,6 @@ function Tabela({ title, fields, data }) {
             })}
           </tbody>
         </Table>
-        <div>
-          <strong>Itens Selecionados: </strong>
-          {selectedItems.join(", ")}
-        </div>
       </div>
     </div>
   );

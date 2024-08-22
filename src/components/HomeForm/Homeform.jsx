@@ -90,6 +90,29 @@ function HomeForm({
     window.location.reload();
   };
 
+  const clearSelectedLancamentos = () => {
+    const currData = JSON.parse(localStorage.getItem("data"));
+    console.log("currData: ", currData);
+
+    const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
+    console.log("selected: ", selectedItems);
+
+    const selectedIds = selectedItems.map(item => item.idLote);
+
+    const updatedData = currData.filter(
+      (item) => !selectedIds.includes(item.idLote)
+    );
+    console.log("updated: ", updatedData);
+
+    localStorage.setItem("data", JSON.stringify(updatedData));
+    localStorage.setItem("selectedItems", "");
+    localStorage.removeItem("selectedItems");
+
+    setData(updatedData);
+    setShowModal(false);
+    window.location.reload();
+};
+
   function sendForm() {
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
@@ -154,6 +177,7 @@ function HomeForm({
         });
         setShowModal(true);
         setModalFunc(() => clearAllLancamentos);
+        setModalFunc2(() => clearSelectedLancamentos);
         break;
     }
   }
@@ -239,6 +263,7 @@ function HomeForm({
         onClose={handleCloseModal}
         data={modalData}
         confirmOnClick={modalFunc}
+        confirmOnClick2={modalFunc2}
       />
     </Container>
   );

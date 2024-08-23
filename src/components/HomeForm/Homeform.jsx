@@ -124,7 +124,12 @@ function HomeForm({
       const info = localStorage.getItem(`${field.name}`);
 
       if (!info || info.trim().length < 1) {
-        alert(`É necessário preencher o campo ${field.label}`);
+        setModalData({
+          title: "Erro",
+          text: `É necessário preencher o campo ${field.label}`,
+          btnCancel: "Fechar"
+        });
+        setShowModal(true);
         return;
       }
       informations[field.name] = info;
@@ -137,8 +142,12 @@ function HomeForm({
 
     localStorage.setItem("data", JSON.stringify([...data, informations]));
 
-    navigate(`${target}`);
-    alert(`${title} realizado com sucesso.`);
+    setModalData({
+      title: "Confirmação",
+      text: `${title} realizado com sucesso.`,
+      btnCancel: "Fechar"
+    });
+    setShowModal(true);    
   }
 
   function confirmClear(option) {
@@ -148,7 +157,12 @@ function HomeForm({
           return document.getElementById(field.id).value.length < 1;
         });
         if (allFieldsEmpty) {
-          alert("Campos já estão vazios.");
+          setModalData({
+            title: "Alerta",
+            text: "Campos já estão vazios.",
+            btnCancel: "Fechar"
+          });
+          setShowModal(true);    
           return;
         }
         setModalData({
@@ -164,7 +178,12 @@ function HomeForm({
         break;
       case "Lançamentos":
         if (!localStorage.getItem("data")) {
-          alert("Não há lançamentos disponíveis.");
+          setModalData({
+            title: "Erro",
+            text: 'Não há lançamentos disponíveis.',
+            btnCancel: "Fechar"
+          });
+          setShowModal(true);
           return;
         }
         setModalData({

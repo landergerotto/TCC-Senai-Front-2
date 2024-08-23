@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
@@ -14,6 +15,7 @@ import styles from "./Homeform.module.css";
 import trash from "../../assets/Img/trash.png";
 
 import { apiUrl } from "../../Api/apiUrl";
+import cryptoService from "../../service/cryptoService";
 function HomeForm({
   title,
   fields,
@@ -27,6 +29,7 @@ function HomeForm({
   const [data, setData] = useState([]);
   const [link, setLink] = useState(url);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
+  const [idProcesso, setIdProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -47,10 +50,13 @@ function HomeForm({
       .get("process/get")
       .then((response) => {
         const listOptions = [];
+        const idList = [];
         response.data.map((resp) => {
           listOptions.push(resp.Name);
+          idList.push(resp.id);
         });
         setOptionsProcesso(listOptions);
+        idProcesso(idList);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
@@ -97,10 +103,10 @@ function HomeForm({
     const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
     console.log("selected: ", selectedItems);
 
-    const selectedIds = selectedItems.map(item => item.idLote);
+    const selectedIds = selectedItems.map((item) => item.BatchId);
 
     const updatedData = currData.filter(
-      (item) => !selectedIds.includes(item.idLote)
+      (item) => !selectedIds.includes(item.BatchId)
     );
     console.log("updated: ", updatedData);
 
@@ -111,7 +117,7 @@ function HomeForm({
     setData(updatedData);
     setShowModal(false);
     window.location.reload();
-};
+  };
 
   function sendForm() {
     const storedData = localStorage.getItem("data");
@@ -127,7 +133,7 @@ function HomeForm({
         setModalData({
           title: "Erro",
           text: `É necessário preencher o campo ${field.label}`,
-          btnCancel: "Fechar"
+          btnCancel: "Fechar",
         });
         setShowModal(true);
         return;
@@ -145,9 +151,9 @@ function HomeForm({
     setModalData({
       title: "Confirmação",
       text: `${title} realizado com sucesso.`,
-      btnCancel: "Fechar"
+      btnCancel: "Fechar",
     });
-    setShowModal(true);    
+    setShowModal(true);
   }
 
   function confirmClear(option) {
@@ -160,9 +166,9 @@ function HomeForm({
           setModalData({
             title: "Alerta",
             text: "Campos já estão vazios.",
-            btnCancel: "Fechar"
+            btnCancel: "Fechar",
           });
-          setShowModal(true);    
+          setShowModal(true);
           return;
         }
         setModalData({
@@ -180,8 +186,8 @@ function HomeForm({
         if (!localStorage.getItem("data")) {
           setModalData({
             title: "Erro",
-            text: 'Não há lançamentos disponíveis.',
-            btnCancel: "Fechar"
+            text: "Não há lançamentos disponíveis.",
+            btnCancel: "Fechar",
           });
           setShowModal(true);
           return;
@@ -199,6 +205,31 @@ function HomeForm({
         setModalFunc2(() => clearSelectedLancamentos);
         break;
     }
+  }
+
+  function saveOnCloud() {
+    const data = localStorage.getItem("data");
+
+    if (!data) {
+      setModalData({
+        title: "Erro",
+        text: "Não há lançamentos disponíveis.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
+      return;
+    }
+
+    const encryptedBody = cryptoService.encryptData(data);
+
+    apiUrl
+      .post("poc/create", { EncryptedBody: encryptedBody })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("Erro ao salvar os dados: ", error);
+      })
   }
 
   const renderInput = (field) => {
@@ -272,7 +303,7 @@ function HomeForm({
         <Col className={styles.col}>
           <Button
             text={"Salvar na Nuvem"}
-            onClick={() => console.log("ta fazendo ainda calma")}
+            onClick={() => saveOnCloud()}
             style={styles.btn}
           />
         </Col>

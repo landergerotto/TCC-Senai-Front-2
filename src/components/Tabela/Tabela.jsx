@@ -43,15 +43,15 @@ function Tabela({ title, fields, data }) {
               return (
                 <tr key={index}>
                   <td className={styles.firstTd}>
-                    <div className={styles.tdText}>{info.processo}</div>
+                    <div className={styles.tdText}>{info.ProcessId}</div>
                   </td>
-                  <td>{info.idLote}</td>
-                  <td>{info.qntdLote}</td>
-                  <td>{info.qntdRefugo}</td>
-                  <td>{info.partnumber}</td>
-                  <td>{info.movimentacao}</td>
-                  <td>{info.edv}</td>
-                  <td>{info.interditado}</td>
+                  <td>{info.BatchId}</td>
+                  <td>{info.BatchQnt}</td>
+                  <td>{info.ScrapQnt}</td>
+                  <td>{info.PartNumber}</td>
+                  <td>{info.Movement}</td>
+                  <td>{info.OperatorEDV}</td>
+                  <td>{info.Interditated}</td>
                   <td>
                     <input
                       type="checkbox"

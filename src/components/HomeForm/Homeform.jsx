@@ -152,7 +152,10 @@ function HomeForm({
 
       if (field.name == "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
-        if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
+        if (selectedProcessId) {
+          informations["ProcessId"] = selectedProcessId;
+          console.log('informations: ', informations);
+        }
       } else {
         informations[field.name] = info;
       }
@@ -261,12 +264,12 @@ function HomeForm({
       labelStyle: { fontWeight: "600", fontSize: "1.3em", marginLeft: "0.6em" },
     };
 
-    if (field.label === "Processo") {
+    if (field.label == "Processo") {
       const processoOptions = optionsProcesso.map((item) => item.Name);
       return <Input {...commonProps} select={true} options={processoOptions} />;
     }
 
-    if (field.label === "Interditado") {
+    if (field.label == "Interditado") {
       return (
         <Input {...commonProps} select={true} options={optionsInterditado} />
       );

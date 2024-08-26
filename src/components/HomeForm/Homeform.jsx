@@ -48,7 +48,7 @@ function HomeForm({
       .then((response) => {
         const listOptions = [];
         response.data.map((resp) => {
-          listOptions.push(resp.Name);
+          listOptions.push(resp);
         });
         setOptionsProcesso(listOptions);
       })
@@ -72,6 +72,20 @@ function HomeForm({
 
   function getValue(id) {
     const element = document.getElementById(id);
+    const value = element.value;
+
+    if (id === "processo") {
+      const selectedProcesso = optionsProcesso.find(
+        (processo) => processo.Name === value
+      );
+
+      console.log('selected: ', selectedProcesso);
+  
+      if (selectedProcesso) {
+        localStorage.setItem("selectedProcessoId", selectedProcesso.id);
+      }
+    }
+
     localStorage.setItem(`${id}`, element.value);
   }
 
@@ -97,7 +111,7 @@ function HomeForm({
     const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
     console.log("selected: ", selectedItems);
 
-    const selectedIds = selectedItems.map(item => item.idLote);
+    const selectedIds = selectedItems.map((item) => item.idLote);
 
     const updatedData = currData.filter(
       (item) => !selectedIds.includes(item.idLote)
@@ -111,7 +125,7 @@ function HomeForm({
     setData(updatedData);
     setShowModal(false);
     window.location.reload();
-};
+  };
 
   function sendForm() {
     const storedData = localStorage.getItem("data");
@@ -194,7 +208,8 @@ function HomeForm({
     };
 
     if (field.label === "Processo") {
-      return <Input {...commonProps} select={true} options={optionsProcesso} />;
+      const processoOptions = optionsProcesso.map((item) => item.Name);
+      return <Input {...commonProps} select={true} options={processoOptions} />;
     }
 
     if (field.label === "Interditado") {

@@ -3,8 +3,25 @@ import Table from "react-bootstrap/Table";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import styles from "./Tabela.module.css";
+import { useEffect, useState } from "react";
 
 function Tabela({ title, fields, data }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  useEffect(() => {
+    const savedSelectedItems = JSON.parse(localStorage.getItem("selectedItems")) || [];
+    setSelectedItems(savedSelectedItems);
+  }, []);
+
+  const handleCheckboxChange = (index) => {
+    const updatedSelectedItems = selectedItems.includes(index)
+      ? selectedItems.filter((item) => item !== index)
+      : [...selectedItems, index];
+
+    setSelectedItems(updatedSelectedItems);
+    localStorage.setItem("selectedItems", JSON.stringify(updatedSelectedItems));
+  };
+
   return (
     <div className={styles.body}>
       <div className={styles.title}>{title}</div>
@@ -15,7 +32,6 @@ function Tabela({ title, fields, data }) {
               {fields.map((field, index) => {
                 return <th key={index}>{field.label}</th>;
               })}
-              <th>Status</th>
               <th>
                 {" "}
                 <i className="bi bi-trash-fill"></i>{" "}
@@ -37,24 +53,11 @@ function Tabela({ title, fields, data }) {
                   <td>{info.edv}</td>
                   <td>{info.interditado}</td>
                   <td>
-                    {info.status == "waiting" ? (
-                      <button
-                        className={styles.btnDelete}
-                        onClick={() => console.log(info.status)}
-                      >
-                        <i className="bi bi-x-lg"></i>
-                      </button>
-                    ) : (
-                      <button
-                        className={styles.btnConfirm}
-                        onClick={() => console.log(info.status)}
-                      >
-                        <i className="bi bi-check"></i>
-                      </button>
-                    )}
-                  </td>
-                  <td>
-                    <input type="checkbox" className={styles.input} />
+                    <input
+                      type="checkbox"
+                      className={styles.input}
+                      onChange={() => handleCheckboxChange(info)}
+                    />
                   </td>
                 </tr>
               );

@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CIcon from '@coreui/icons-react';
-import { cilHome, cilChartLine, cilAccountLogout, cilPlus, cilFactory } from '@coreui/icons';
+import { cilHome, cilChartLine, cilAccountLogout, cilPlus, cilFactory, cilTag } from '@coreui/icons';
 
 import styles from "./Sidebar.module.css";
-import { CSidebar, CSidebarHeader, CSidebarBrand, CSidebarNav, CNavTitle, CNavItem, CBadge, CNavGroup, CSidebarFooter, CSidebarToggler } from '@coreui/react';
+import { CSidebar, CSidebarNav, CNavItem } from '@coreui/react';
 import '@coreui/coreui/dist/css/coreui.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -29,6 +29,7 @@ function SideNavBar(props) {
                     <CNavItem href="/"><CIcon customClassName="nav-icon" icon={cilHome} /> Home </CNavItem>
                     <CNavItem href="/login"><CIcon customClassName="nav-icon" icon={cilAccountLogout} /> Login </CNavItem>
                     <CNavItem href="/create"><CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar Processo </CNavItem>
+                    <CNavItem href="/partnumber"><CIcon customClassName="nav-icon" icon={cilTag} /> Cadastrar PartNumber </CNavItem>
                     <CNavItem href="/vsm"><CIcon customClassName="nav-icon" icon={cilFactory} /> VSM </CNavItem>
                     <CNavItem href="/relatorio"><CIcon customClassName="nav-icon" icon={cilChartLine} /> Relatório </CNavItem>
                     {/* <CNavGroup

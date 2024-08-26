@@ -23,10 +23,12 @@ function Formulario({
   labelStyle,
   url,
   bgStyle,
+  onClickButton,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [link, setLink] = useState(url);
+  const [user, setUser] = useState();
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -34,7 +36,7 @@ function Formulario({
   }
 
   function confirmPassword() {
-    if (type != "register") return true;
+    if (!localStorage.getItem("confirm")) return true;
 
     let senha = localStorage.getItem("Password");
     let confirma = localStorage.getItem("confirm");
@@ -63,28 +65,66 @@ function Formulario({
     }
 
     setData(informations);
-    console.log("informations", informations);
-    const EncryptedInfo = cryptoService.encryptData(informations);
-    console.log("encrypted: ", EncryptedInfo);
 
-    // REGISTRO : https://tcc-senai-back.vercel.app/user/create
-    // LOGIN : https://tcc-senai-back.vercel.app/user/login
+    const EncryptedBody = cryptoService.encryptData(informations);
+    if (user) {
+      console.log("user: ", user);
+      if (user.Email == informations.Email) {
+        const EDV = user.EDV;
+        console.log(EDV);
+        const Email = user.Email;
+        console.log(Email);
+        apiUrl
+          .post(`/${link}`, { EDV, Email })
+          .then((response) => {
+            console.log(response);
+            if (response.data.valid) navigate("/codigo");
+            else {
+              alert("As informações inseridas não são válidas.");
+              return;
+            }
+          })
+          .catch((error) => {
+            console.log("deu errado ai brother: ", error);
+          });
+        return;
+      }
+      alert("O email inserido não é válido.");
+      return;
+    }
+
+    console.log(EncryptedBody);
+    console.log('data: ', cryptoService.decrypt(EncryptedBody));
 
     apiUrl
-      .post(`/${link}`, { EncryptedInfo: EncryptedInfo })
-      // .post(`/${link}`, informations)
+      .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
         console.log(response.data);
         alert(`${title} realizado com sucesso.`);
+        navigate(`/${target}`);
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
-        alert(`An error occured when trying to create the process.`);
+        alert("Um erro ocorreu, tente novamente.");
       });
-
-    // navigate(`${target}`);
-    // localStorage.clear();
   }
+
+  const validateField = () => {
+    if (title != "Recuperar Senha") return;
+
+    const EDV = localStorage.getItem("EDV");
+    if (!EDV) return;
+
+    apiUrl
+      .get(`/user/get/${EDV}`)
+      .then((response) => {
+        console.log(response);
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Houve um erro na requisição: ", error);
+      });
+  };
 
   return (
     <Card className={styles.card}>
@@ -105,10 +145,16 @@ function Formulario({
                   onChange={() => getValue(field.name)}
                   labelStyle={labelStyle}
                   bgStyle={bgStyle}
+                  onBlur={() => validateField()}
                 />
                 {field.underTextAction && (
-                  <div style={field.underTextStyle}>
-                    <p onClick={field.underTextAction} >{field.underText}</p>
+                  <div>
+                    <p
+                      onClick={field.underTextAction}
+                      style={field.underTextStyle}
+                    >
+                      {field.underText}
+                    </p>
                   </div>
                 )}
               </>

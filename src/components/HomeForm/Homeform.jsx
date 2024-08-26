@@ -48,13 +48,11 @@ function HomeForm({
     apiUrl
       .get("process/get")
       .then((response) => {
-        console.log(response);
         const listOptions = [];
         response.data.map((resp) => {
           listOptions.push(resp);
         });
         setOptionsProcesso(listOptions);
-        console.log('process list: ', listOptions);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
@@ -79,7 +77,6 @@ function HomeForm({
     const value = element.value;
 
     if (id == "ProcessName") {
-      console.log("id: ", id);
       const selectedProcesso = optionsProcesso.find(
         (processo) => processo.Name === value
       );
@@ -150,12 +147,13 @@ function HomeForm({
         return;
       }
 
-      if (field.name == "ProcessName") {
+      if (field.name === "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) {
           informations["ProcessId"] = selectedProcessId;
-          console.log('informations: ', informations);
         }
+      } else if (field.name === "Interditated") {
+        informations[field.name] = info === "Sim" ? true : false;
       } else {
         informations[field.name] = info;
       }
@@ -229,7 +227,6 @@ function HomeForm({
 
   function saveOnCloud() {
     const data = localStorage.getItem("data");
-    console.log("data: ", data);
 
     if (!data) {
       setModalData({
@@ -241,6 +238,7 @@ function HomeForm({
       return;
     }
 
+    console.log("data sent: ", data);
     const encryptedBody = cryptoService.encryptData(data);
 
     apiUrl

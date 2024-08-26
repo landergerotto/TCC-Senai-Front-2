@@ -8,6 +8,7 @@ import { Card, CardBody, CardTitle } from "react-bootstrap";
 
 import Input from "../Input/input";
 import Button from "../Button/button";
+import ModalComponent from "../Modal/ModalComponent";
 
 import styles from "./formulario.module.css";
 import { apiUrl } from "../../Api/apiUrl";
@@ -29,6 +30,13 @@ function Formulario({
   const [data, setData] = useState();
   const [link, setLink] = useState(url);
   const [user, setUser] = useState();
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [modalFunc, setModalFunc] = useState();
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -53,13 +61,23 @@ function Formulario({
       const info = localStorage.getItem(`${field.name}`);
 
       if (!info || info.trim().length < 1) {
-        alert(`É necessário preencher o campo ${field.label}`);
+        setModalData({
+          title: "Erro",
+          text: `É necessário preencher o campo ${field.label}`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
         return;
       }
       if (confirmPassword() == true) {
         if (field.name != "confirm") informations[field.name] = info;
       } else {
-        alert("As senham não coincidem.");
+        setModalData({
+          title: "Erro",
+          text: "As senhas não coincidem.",
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
         return;
       }
     }
@@ -68,7 +86,6 @@ function Formulario({
 
     const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
-      console.log("user: ", user);
       if (user.Email == informations.Email) {
         const EDV = user.EDV;
         console.log(EDV);
@@ -80,7 +97,12 @@ function Formulario({
             console.log(response);
             if (response.data.valid) navigate("/codigo");
             else {
-              alert("As informações inseridas não são válidas.");
+              setModalData({
+                title: "Erro",
+                text: "As informações inseridas não são válidas",
+                btnCancel: "Fechar",
+              });
+              setShowModal(true);
               return;
             }
           })
@@ -89,23 +111,38 @@ function Formulario({
           });
         return;
       }
-      alert("O email inserido não é válido.");
+      setModalData({
+        title: "Erro",
+        text: "O email inserido não é válido",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
       return;
     }
 
     console.log(EncryptedBody);
-    console.log('data: ', cryptoService.decrypt(EncryptedBody));
+    console.log("data: ", cryptoService.decrypt(EncryptedBody));
 
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
         console.log(response.data);
-        alert(`${title} realizado com sucesso.`);
-        navigate(`/${target}`);
+        setModalData({
+          title: "Confirmação",
+          text: `${title} realizado com sucesso`,
+          btnConfirm: "Fechar",
+        });
+        setShowModal(true);
+        setModalFunc(() => () => navigate(`/${target}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
-        alert("Um erro ocorreu, tente novamente.");
+        setModalData({
+          title: "Erro",
+          text: "Ouve um erro com a requisição, tente novamente",
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
       });
   }
 
@@ -195,6 +232,12 @@ function Formulario({
           })}
         </div>
       </CardBody>
+      <ModalComponent
+        isOpened={showModal}
+        onClose={handleCloseModal}
+        data={modalData}
+        confirmOnClick={modalFunc}
+      />
     </Card>
   );
 }

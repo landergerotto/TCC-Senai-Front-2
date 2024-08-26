@@ -13,14 +13,14 @@ import HomeForm from '../../components/HomeForm/Homeform';
 
 function HomePage() {
     const fields = [
-        { label: "Processo", type: "text", name: "processo", id: "processo" },
-        { label: "ID Lote", type: "number", name: "idLote", id: "idLote" },
-        { label: "Qntd Lote", type: "number", name: "qntdLote", id: "qntdLote" },
-        { label: "Qntd de Refugo", type: "number", name: "qntdRefugo", id: "qntdRefugo" },
-        { label: "PartNumber", type: "text", name: "partnumber", id: "partnumber" },
-        { label: "Movimentação", type: "text", name: "movimentacao", id: "movimentacao" },
-        { label: "EDV", type: "text", name: "edv", id: "edv" },
-        { label: "Interditado", type: "text", name: "interditado", id: "interditado" }
+        { label: "Processo", type: "text", name: "ProcessName", id: "ProcessName" },
+        { label: "ID Lote", type: "number", name: "BatchId", id: "BatchId" },
+        { label: "Qntd Lote", type: "number", name: "BatchQnt", id: "BatchQnt" },
+        { label: "Qntd de Refugo", type: "number", name: "ScrapQnt", id: "ScrapQnt" },
+        { label: "PartNumber", type: "text", name: "PartNumber", id: "PartNumber" },
+        { label: "Movimentação", type: "text", name: "Movement", id: "Movement" },
+        { label: "EDV", type: "text", name: "OperatorEDV", id: "OperatorEDV" },
+        { label: "Interditado", type: "text", name: "Interditated", id: "Interditated" }
     ]
     
     return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
@@ -14,6 +15,7 @@ import styles from "./Homeform.module.css";
 import trash from "../../assets/Img/trash.png";
 
 import { apiUrl } from "../../Api/apiUrl";
+import cryptoService from "../../service/cryptoService";
 function HomeForm({
   title,
   fields,
@@ -46,11 +48,13 @@ function HomeForm({
     apiUrl
       .get("process/get")
       .then((response) => {
+        console.log(response);
         const listOptions = [];
         response.data.map((resp) => {
           listOptions.push(resp);
         });
         setOptionsProcesso(listOptions);
+        console.log('process list: ', listOptions);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
@@ -61,7 +65,7 @@ function HomeForm({
       .then((response) => {
         const listOptions = [];
         response.data.map((resp) => {
-          listOptions.push(resp.PartNumber);
+          listOptions.push(resp);
         });
         setOptionsPartNumber(listOptions);
       })
@@ -74,19 +78,18 @@ function HomeForm({
     const element = document.getElementById(id);
     const value = element.value;
 
-    if (id === "processo") {
+    if (id == "ProcessName") {
+      console.log("id: ", id);
       const selectedProcesso = optionsProcesso.find(
         (processo) => processo.Name === value
       );
 
-      console.log('selected: ', selectedProcesso);
-  
       if (selectedProcesso) {
-        localStorage.setItem("selectedProcessoId", selectedProcesso.id);
+        localStorage.setItem("ProcessId", selectedProcesso.id);
       }
     }
 
-    localStorage.setItem(`${id}`, element.value);
+    localStorage.setItem(`${id}`, value);
   }
 
   const clearInputs = () => {
@@ -114,7 +117,7 @@ function HomeForm({
     const selectedIds = selectedItems.map((item) => item.idLote);
 
     const updatedData = currData.filter(
-      (item) => !selectedIds.includes(item.idLote)
+      (item) => !selectedIds.includes(item.BatchId)
     );
     console.log("updated: ", updatedData);
 
@@ -135,13 +138,24 @@ function HomeForm({
 
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i];
-      const info = localStorage.getItem(`${field.name}`);
+      let info = localStorage.getItem(`${field.name}`);
 
       if (!info || info.trim().length < 1) {
-        alert(`É necessário preencher o campo ${field.label}`);
+        setModalData({
+          title: "Erro",
+          text: `É necessário preencher o campo ${field.label}`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
         return;
       }
-      informations[field.name] = info;
+
+      if (field.name == "ProcessName") {
+        const selectedProcessId = localStorage.getItem("ProcessId");
+        if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
+      } else {
+        informations[field.name] = info;
+      }
     }
 
     setData((prevData) => {
@@ -151,8 +165,12 @@ function HomeForm({
 
     localStorage.setItem("data", JSON.stringify([...data, informations]));
 
-    navigate(`${target}`);
-    alert(`${title} realizado com sucesso.`);
+    setModalData({
+      title: "Confirmação",
+      text: `${title} realizado com sucesso.`,
+      btnCancel: "Fechar",
+    });
+    setShowModal(true);
   }
 
   function confirmClear(option) {
@@ -162,7 +180,12 @@ function HomeForm({
           return document.getElementById(field.id).value.length < 1;
         });
         if (allFieldsEmpty) {
-          alert("Campos já estão vazios.");
+          setModalData({
+            title: "Alerta",
+            text: "Campos já estão vazios.",
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
           return;
         }
         setModalData({
@@ -178,7 +201,12 @@ function HomeForm({
         break;
       case "Lançamentos":
         if (!localStorage.getItem("data")) {
-          alert("Não há lançamentos disponíveis.");
+          setModalData({
+            title: "Erro",
+            text: "Não há lançamentos disponíveis.",
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
           return;
         }
         setModalData({
@@ -194,6 +222,32 @@ function HomeForm({
         setModalFunc2(() => clearSelectedLancamentos);
         break;
     }
+  }
+
+  function saveOnCloud() {
+    const data = localStorage.getItem("data");
+    console.log("data: ", data);
+
+    if (!data) {
+      setModalData({
+        title: "Erro",
+        text: "Não há lançamentos disponíveis.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
+      return;
+    }
+
+    const encryptedBody = cryptoService.encryptData(data);
+
+    apiUrl
+      .post("poc/create", { EncryptedBody: encryptedBody })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("Erro ao salvar os dados: ", error);
+      });
   }
 
   const renderInput = (field) => {
@@ -219,8 +273,11 @@ function HomeForm({
     }
 
     if (field.label === "PartNumber") {
+      const partnumberOptions = optionsPartNumber.map(
+        (item) => item.PartNumber
+      );
       return (
-        <Input {...commonProps} select={true} options={optionsPartNumber} />
+        <Input {...commonProps} select={true} options={partnumberOptions} />
       );
     }
 
@@ -268,7 +325,7 @@ function HomeForm({
         <Col className={styles.col}>
           <Button
             text={"Salvar na Nuvem"}
-            onClick={() => console.log("ta fazendo ainda calma")}
+            onClick={() => saveOnCloud()}
             style={styles.btn}
           />
         </Col>

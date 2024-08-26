@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-wrap: nowrap; /* Keeps all cards in a single row */
+    gap: 10px;
+    overflow-x: auto;
+  }
+  
+  .flex {
+    flex: 1 1 auto; /* Allows the cards to resize dynamically */
+    min-width: 150px; /* Set a minimum width so the cards don't get too small */
+    max-width: 300px; /* Set a maximum width for each card */
+  }
+  
+  @media (max-width: 1200px) {
+    .flex {
+      max-width: 200px; /* Reduce max width on smaller screens */
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .flex {
+      max-width: 150px; /* Further reduce width on even smaller screens */
+    }
+  }
+  

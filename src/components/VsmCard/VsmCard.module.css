@@ -1,25 +1,27 @@
-.card-container {
-  border-top: 2px solid black !important;
-}
-
-.section {
-  margin-bottom: 15px;
+.cardContainer {
+  border: 2px solid black !important;
 }
 
 .title {
+  border-bottom: 2px solid black;
+  text-align: center;
   font-size: 18px;
-  padding: 2px;
-  margin-bottom: 10px;
+  padding: 5px;
   text-transform: uppercase;
   font-weight: bold;
-  border: 2px solid black;
-  border-radius: 5px;
+  margin: 0;
+}
+
+.element {
+  padding: 5px;
+  text-align: center;
+  border-bottom: 2px solid black;
+  margin: 0;
 }
 
 .footer {
-  margin-top: 10px;
-  border-top: 2px solid black;
   padding-top: 5px;
+  padding-bottom: 5px;
   font-weight: bold;
   text-align: center;
 }

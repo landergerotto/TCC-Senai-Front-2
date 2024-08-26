@@ -8,8 +8,8 @@ function Vsm() {
 
   useEffect(() => {
     apiUrl
-      .get("/vsm/get")
-      // .get("/process/get")
+      // .get("/vsm/get")
+      .get("/process/get")
       .then((response) => {
         setData(response.data);
         console.log(response.data);
@@ -26,8 +26,8 @@ function Vsm() {
       ) : (
         <>
           {data.map((item) => (
-            <div key={item.id}>
-              <VsmCard POC={item} Process={item.Process} User={item.User}/>
+            <div className={styles.flex} key={item.id}>
+              <VsmCard POC={item} Process={item} User={item.User}/>
             </div>
           ))}
         </>

@@ -150,7 +150,9 @@ function HomeForm({
       if (field.name === "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
-      } else if (field.name === "Interditated")
+      } 
+      // else
+       if (field.name === "Interditated")
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;
     }

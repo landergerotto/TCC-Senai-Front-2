@@ -222,7 +222,9 @@ function HomeForm({
   }
 
   function saveOnCloud() {
-    const data = localStorage.getItem("data");
+    let data = localStorage.getItem("data");
+    data = JSON.parse(data);
+    console.log('227 - data: ', data);
 
     if (!data) {
       setModalData({
@@ -235,16 +237,30 @@ function HomeForm({
     }
 
     console.log("data sent: ", data);
-    const encryptedBody = cryptoService.encryptData(data);
-
-    apiUrl
-      .post("poc/create", { EncryptedBody: encryptedBody })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log("Erro ao salvar os dados: ", error);
-      });
+    data.forEach(poc => {
+      const encryptedBody = cryptoService.encryptData(poc);
+      apiUrl
+        .post("poc/create", { EncryptedBody: encryptedBody })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          setModalData({
+            title: "Erro",
+            text: "Houve um erro com a sua solicitação.",
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
+          console.log("Erro ao salvar os dados: ", error);
+          return;
+        });
+    });
+    setModalData({
+      title: "Sucesso",
+      text: "Os lançamentos foram salvos na nuvem.",
+      btnCancel: "Fechar",
+    });
+    setShowModal(true);
   }
 
   const renderInput = (field) => {

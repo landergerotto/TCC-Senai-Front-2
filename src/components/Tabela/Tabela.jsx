@@ -36,30 +36,27 @@ function Tabela({ title, fields, data }) {
             </tr>
           </thead>
           <tbody className={styles.tabela} id="tableBody">
-            {data.map((info, index) => {
-              console.log("75 - info: ", info);
-              data.forEach((info) => (
-                <tr key={index}>
-                  <td className={styles.firstTd}>
-                    <div className={styles.tdText}>{info.ProcessName}</div>
-                  </td>
-                  <td>{info.BatchId}</td>
-                  <td>{info.BatchQnt}</td>
-                  <td>{info.ScrapQnt}</td>
-                  <td>{info.PartNumber}</td>
-                  <td>{info.Movement}</td>
-                  <td>{info.OperatorEDV}</td>
-                  <td>{formatInterditated(info.Interditated)}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      className={styles.input}
-                      onChange={() => handleCheckboxChange(info)}
-                    />
-                  </td>
-                </tr>
-              ));
-            })}
+            {data.map((info, index) => (
+              <tr key={index}>
+                <td className={styles.firstTd}>
+                  <div className={styles.tdText}>{info.ProcessName}</div>
+                </td>
+                <td>{info.BatchId}</td>
+                <td>{info.BatchQnt}</td>
+                <td>{info.ScrapQnt}</td>
+                <td>{info.PartNumber}</td>
+                <td>{info.Movement}</td>
+                <td>{info.OperatorEDV}</td>
+                <td>{formatInterditated(info.Interditated)}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    className={styles.input}
+                    onChange={() => handleCheckboxChange(info)}
+                  />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>

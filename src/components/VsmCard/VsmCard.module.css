@@ -1,5 +1,7 @@
 .cardContainer {
   border: 2px solid black !important;
+  min-width: 200px; /* Set a minimum width so the cards don't get too small */
+  max-width: 600px; /* Set a maximum width for each card */
 }
 
 .title {

@@ -111,7 +111,7 @@ function HomeForm({
     const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
     console.log("selected: ", selectedItems);
 
-    const selectedIds = selectedItems.map((item) => item.idLote);
+    const selectedIds = selectedItems.map((item) => item.BatchId);
 
     const updatedData = currData.filter(
       (item) => !selectedIds.includes(item.BatchId)
@@ -151,7 +151,6 @@ function HomeForm({
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
       } 
-      // else
        if (field.name === "Interditated")
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;

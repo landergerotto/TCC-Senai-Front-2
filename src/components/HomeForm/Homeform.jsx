@@ -2,6 +2,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import xlsx from "json-as-xlsx";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
@@ -16,6 +17,7 @@ import trash from "../../assets/Img/trash.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import cryptoService from "../../service/cryptoService";
+
 function HomeForm({
   title,
   fields,
@@ -150,8 +152,8 @@ function HomeForm({
       if (field.name === "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
-      } 
-       if (field.name === "Interditated")
+      }
+      if (field.name === "Interditated")
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;
     }
@@ -221,10 +223,10 @@ function HomeForm({
     }
   }
 
-  function saveOnCloud() {
+  function getData() {
     let data = localStorage.getItem("data");
     data = JSON.parse(data);
-    console.log('227 - data: ', data);
+    console.log("227 - data: ", data);
 
     if (!data) {
       setModalData({
@@ -236,8 +238,13 @@ function HomeForm({
       return;
     }
 
-    console.log("data sent: ", data);
-    data.forEach(poc => {
+    return data;
+  }
+
+  function saveOnCloud() {
+    let data = getData();
+
+    data.forEach((poc) => {
       const encryptedBody = cryptoService.encryptData(poc);
       apiUrl
         .post("poc/create", { EncryptedBody: encryptedBody })
@@ -262,6 +269,98 @@ function HomeForm({
     });
     setShowModal(true);
   }
+
+  function saveOnExcel() {
+    let data = getData();
+    console.log("273 - data: ", data);
+
+    const currDate = new Date();
+
+    let settings = {
+      fileName:
+        "Lançamentos" +
+        "_" +
+        currDate.getDate() +
+        "_" +
+        (currDate.getMonth() + 1) +
+        "_" +
+        currDate.getFullYear() +
+        "_" +
+        currDate.getHours() +
+        "-" +
+        currDate.getMinutes(),
+      extraLength: 5,
+      writeMode: "writeFile",
+      writeOptions: {},
+    };
+
+    let sheetData = [
+      {
+        sheet: "Lançamentos",
+        columns: [
+          {
+            label: "Processo",
+            value: "Processo",
+          },
+          {
+            label: "ID_Lote",
+            value: "ID_Lote",
+          },
+          {
+            label: "Quantidade_Lote",
+            value: "Quantidade_Lote",
+          },
+          {
+            label: "Quantidade_Refugo",
+            value: "Quantidade_Refugo",
+          },
+          {
+            label: "PartNumber",
+            value: "PartNumber",
+          },
+          {
+            label: "Movimentação",
+            value: "Movimentação",
+          },
+          {
+            label: "EDV_Operador",
+            value: "EDV_Operador",
+          },
+          {
+            label: "Interditado",
+            value: "Interditado",
+          },
+        ],
+        content: [
+          ...data.map((item) => ({
+            Processo: item.ProcessName,
+            ID_Lote: item.BatchId,
+            Quantidade_Lote: item.BatchQnt,
+            Quantidade_Refugo: item.ScrapQnt,
+            PartNumber: item.PartNumber,
+            Movimentação: item.Movement,
+            EDV_Operador: item.OperatorEDV,
+            Interditado: item.Interditated == true ? "Sim" : "Não",
+          })),
+        ],
+      },
+    ];
+
+    xlsx(sheetData, settings);
+  }
+
+  const modalSave = () => {
+    setModalData({
+      title: "Confirmar",
+      text: "Onde deseja salvar os lançamentos?",
+      btnCancel: "Fechar",
+      btnConfirm: "Nuvem",
+      btnConfirm2: "Excel",
+    });
+    setModalFunc(() => saveOnCloud);
+    setModalFunc2(() => saveOnExcel);
+    setShowModal(true);
+  };
 
   const renderInput = (field) => {
     const commonProps = {
@@ -337,8 +436,8 @@ function HomeForm({
         </Col>
         <Col className={styles.col}>
           <Button
-            text={"Salvar na Nuvem"}
-            onClick={() => saveOnCloud()}
+            text={"Salvar"}
+            onClick={() => modalSave()}
             style={styles.btn}
           />
         </Col>

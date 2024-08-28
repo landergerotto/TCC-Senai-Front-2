@@ -5,13 +5,15 @@
   overflow-x: auto;
 }
 
-.flex {
-  flex: 1 1 auto; /* Allows the cards to resize dynamically */
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .flexTables {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
   align-items: stretch;
 }
@@ -31,18 +33,18 @@
   word-wrap: break-word; /* Ensures content stays within the fixed width */
 }
 
-.hrContainer {
+.center {
   text-align: center;
+}
+
+.entrance {
+  margin-top: 100px;
+}
+
+.arrow {
+  margin-top: 80px;
+}
+
+.machine {
   margin-top: 10px;
 }
-
-.customHr {
-  width: 100%;
-  border: 1px solid #000;
-}
-
-.machineTime {
-  display: block;
-  margin-top: 5px;
-}
-

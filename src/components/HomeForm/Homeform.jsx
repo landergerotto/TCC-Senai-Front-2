@@ -150,8 +150,8 @@ function HomeForm({
       if (field.name === "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) informations["ProcessId"] = selectedProcessId;
-      } 
-       if (field.name === "Interditated")
+      }
+      if (field.name === "Interditated")
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;
     }
@@ -224,7 +224,7 @@ function HomeForm({
   function saveOnCloud() {
     let data = localStorage.getItem("data");
     data = JSON.parse(data);
-    console.log('227 - data: ', data);
+    console.log("227 - data: ", data);
 
     if (!data) {
       setModalData({
@@ -237,7 +237,7 @@ function HomeForm({
     }
 
     console.log("data sent: ", data);
-    data.forEach(poc => {
+    data.forEach((poc) => {
       const encryptedBody = cryptoService.encryptData(poc);
       apiUrl
         .post("poc/create", { EncryptedBody: encryptedBody })
@@ -262,6 +262,20 @@ function HomeForm({
     });
     setShowModal(true);
   }
+
+  const modalSave = () => {
+    // saveOnCloud()
+    setModalData({
+      title: "Confirmar",
+      text: "Onde deseja salvar os lançamentos?",
+      btnCancel: "Fechar",
+      btnConfirm: "Nuvem",
+      btnConfirm2: "Excel",
+    });
+    setModalFunc(() => saveOnCloud);
+    setModalFunc2(() => saveOnCloud); // mudar aq pra salvar no excel
+    setShowModal(true);
+  };
 
   const renderInput = (field) => {
     const commonProps = {
@@ -337,8 +351,8 @@ function HomeForm({
         </Col>
         <Col className={styles.col}>
           <Button
-            text={"Salvar na Nuvem"}
-            onClick={() => saveOnCloud()}
+            text={"Salvar"}
+            onClick={() => modalSave()}
             style={styles.btn}
           />
         </Col>

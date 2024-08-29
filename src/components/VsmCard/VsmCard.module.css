@@ -1,0 +1,29 @@
+.cardContainer {
+  border: 2px solid black !important;
+  min-width: 200px; /* Set a minimum width so the cards don't get too small */
+  max-width: 600px; /* Set a maximum width for each card */
+}
+
+.title {
+  border-bottom: 2px solid black;
+  text-align: center;
+  font-size: 18px;
+  padding: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0;
+}
+
+.element {
+  padding: 5px;
+  text-align: center;
+  border-bottom: 2px solid black;
+  margin: 0;
+}
+
+.footer {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-weight: bold;
+  text-align: center;
+}

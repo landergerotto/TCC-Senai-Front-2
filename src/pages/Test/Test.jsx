@@ -1,11 +1,12 @@
-import SideNavBar from "../../components/Sidebar/Sidebar";
-
+import { Container } from "react-bootstrap";
+import styles from './Test.module.css'
+import Vsm from "../../components/Vsm/Vsm";
 
 function TestPage() {
     return (
-        <>
-            {/* <SideNavBar></SideNavBar> */}
-        </>
+        <Container className={styles.container}>
+            <Vsm />
+        </Container>
     )
 }
 

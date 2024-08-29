@@ -1,3 +1,8 @@
+.filterRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .container {
   display: flex;
   flex-wrap: nowrap; /* Keeps all cards in a single row */

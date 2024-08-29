@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import styles from "./Vsm.module.css"; // Make sure you have this CSS file
 import { apiUrl } from "../../Api/apiUrl";
 import VsmCard from "../VsmCard/VsmCard";
-import CIcon from '@coreui/icons-react';
-import { cilArrowThickFromLeft } from '@coreui/icons';
+import CIcon from "@coreui/icons-react";
+import { cilArrowThickFromLeft } from "@coreui/icons";
+import { Row } from "react-bootstrap";
+import FactoryIcon from "../FactoryIcon/FactoryIcon";
 
 function Vsm() {
   const [data, setData] = useState([]);
@@ -30,49 +32,58 @@ function Vsm() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      {data.length === 0 ? (
-        <p>Loading data...</p>
-      ) : (
-        <>
-          {data.map((item) => (
-            <div key={item.id} className={styles.cardWrapper}>
-              <div className={styles.flexTables}>
-                <div className={styles.center}>
-                  <div>
-                    Batch Qnt
+    <>
+      <Row>
+        <div className={styles.filterRow}>Filtros aqui</div>
+      </Row>
+      <Row style={{ height: '15em' }}>
+        <FactoryIcon
+         number={ 50 }
+         individual={"Cliente"}
+        />
+      </Row>
+      {/* <div className={styles.container}>
+        {data.length === 0 ? (
+          <p>Loading data...</p>
+        ) : (
+          <>
+            {data.map((item) => (
+              <div key={item.id} className={styles.cardWrapper}>
+                <div className={styles.flexTables}>
+                  <div className={styles.center}>
+                    <div>Batch Qnt</div>
+                    <div>Placas</div>
+                    <div className={styles.arrow}>
+                      <img
+                        src="https://cdn3.iconfinder.com/data/icons/pyconic-icons-2-1/512/arrow-stripes-right-512.png"
+                        alt=""
+                      />
+                      <CIcon icon={cilArrowThickFromLeft} />
+                    </div>
+                    <div className={styles.entrance}>
+                      0.00
+                      <hr />
+                    </div>
                   </div>
-                  <div>
-                    Placas
-                  </div>
-                  <div className={styles.arrow}>
-                    <img src="https://cdn3.iconfinder.com/data/icons/pyconic-icons-2-1/512/arrow-stripes-right-512.png" alt="" />
-                    <CIcon icon={cilArrowThickFromLeft} />
-                  </div>
-                  <div className={styles.entrance}>
-                    0.00
-                    <hr />
-                  </div>
-                </div>
-                <div className={styles.center}>
-                  <VsmCard
-                    POC={item}
-                    Process={item}
-                    User={item.User}
-                    className={styles.vsmCard}
-                  />
-                  <div className={styles.machine}>
-                    <span >0.00</span>
-                    <hr />
-
+                  <div className={styles.center}>
+                    <VsmCard
+                      POC={item}
+                      Process={item}
+                      User={item.User}
+                      className={styles.vsmCard}
+                    />
+                    <div className={styles.machine}>
+                      <span>0.00</span>
+                      <hr />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </>
-      )}
-    </div>
+            ))}
+          </>
+        )}
+      </div> */}
+    </>
   );
 }
 

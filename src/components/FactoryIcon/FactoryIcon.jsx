@@ -6,7 +6,7 @@ import icon from "../../assets/Img/factoryIcon.png";
 /* eslint-disable react/prop-types */
 function FactoryIcon({ number = null, entity = null }) {
   return (
-    <Col>
+    <Col className={styles.col}>
       <div
         className={styles.iconContainer}
         style={{

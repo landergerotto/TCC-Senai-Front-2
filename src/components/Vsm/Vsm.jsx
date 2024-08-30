@@ -6,6 +6,8 @@ import CIcon from "@coreui/icons-react";
 import { cilArrowThickFromLeft } from "@coreui/icons";
 import { Col, Row } from "react-bootstrap";
 import FactoryIcon from "../FactoryIcon/FactoryIcon";
+import SAPicon from "../SAPicon/SAPicon";
+import Arrow from "../Arrow/Arrow";
 
 function Vsm() {
   const [data, setData] = useState([]);
@@ -37,8 +39,18 @@ function Vsm() {
         <div className={styles.filterRow}>Filtros aqui</div>
       </Row>
       <Row style={{ height: "15em" }}>
+        <FactoryIcon entity={"Supplier"} />
+        <Col className={styles.col}>
+          <Arrow />
+        </Col>
+        <SAPicon />
+        <Col className={styles.col}>
+          <Arrow />
+        </Col>
         <FactoryIcon number={50} entity={"Cliente"} />
       </Row>
+      <Row>{/*  */}</Row>
+      <Row></Row>
       {/* <div className={styles.container}>
         {data.length === 0 ? (
           <p>Loading data...</p>

@@ -53,3 +53,10 @@
 .machine {
   margin-top: 10px;
 }
+
+/* ------------------------ */
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

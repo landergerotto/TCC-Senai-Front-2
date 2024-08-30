@@ -1,11 +1,18 @@
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .iconContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   background-repeat: no-repeat;
   background-position: center;
+  background-size: 100%;
 }
 
 .text {

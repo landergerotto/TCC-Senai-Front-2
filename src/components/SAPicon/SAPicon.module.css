@@ -1,0 +1,32 @@
+.col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.bg {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.erp {
+    width: 60%;
+    height: 100px;
+    border: solid 2px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sap {
+    border: solid 2px black;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -2px;
+    font-size: 1.25em;
+}

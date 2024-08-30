@@ -1,23 +1,25 @@
-import { Image } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import styles from "./FactoryIcon.module.css";
 
 import icon from "../../assets/Img/factoryIcon.png";
 
 /* eslint-disable react/prop-types */
-function FactoryIcon({ number = null, individual = null }) {
+function FactoryIcon({ number = null, entity = null }) {
   return (
-    <div className={styles.iconContainer}>
+    <Col>
       <div
-        className={styles.textOverImg}
-        style={{ backgroundImage: `url(${icon})` }}
+        className={styles.iconContainer}
+        style={{
+          backgroundImage: `url(${icon})`,
+        }}
       >
-        {number} {individual}
+        <div className={styles.text}>
+          <div className={styles.number}>{number}</div>
+          <div className={styles.entity}>{entity}</div>
+        </div>
       </div>
-    </div>
+    </Col>
   );
-}
-{
-  /* <Image className={styles.iconImg} src={icon} /> */
 }
 
 export default FactoryIcon;

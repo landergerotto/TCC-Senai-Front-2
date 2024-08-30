@@ -4,7 +4,7 @@ import { apiUrl } from "../../Api/apiUrl";
 import VsmCard from "../VsmCard/VsmCard";
 import CIcon from "@coreui/icons-react";
 import { cilArrowThickFromLeft } from "@coreui/icons";
-import { Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import FactoryIcon from "../FactoryIcon/FactoryIcon";
 
 function Vsm() {
@@ -36,11 +36,8 @@ function Vsm() {
       <Row>
         <div className={styles.filterRow}>Filtros aqui</div>
       </Row>
-      <Row style={{ height: '15em' }}>
-        <FactoryIcon
-         number={ 50 }
-         individual={"Cliente"}
-        />
+      <Row style={{ height: "15em" }}>
+        <FactoryIcon number={50} entity={"Cliente"} />
       </Row>
       {/* <div className={styles.container}>
         {data.length === 0 ? (

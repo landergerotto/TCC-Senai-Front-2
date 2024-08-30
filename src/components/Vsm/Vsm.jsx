@@ -1,13 +1,21 @@
-import { useEffect, useState } from "react";
-import styles from "./Vsm.module.css"; // Make sure you have this CSS file
-import { apiUrl } from "../../Api/apiUrl";
-import VsmCard from "../VsmCard/VsmCard";
 import CIcon from "@coreui/icons-react";
-import { cilArrowThickFromLeft } from "@coreui/icons";
 import { Col, Row } from "react-bootstrap";
-import FactoryIcon from "../FactoryIcon/FactoryIcon";
-import SAPicon from "../SAPicon/SAPicon";
+import { useEffect, useState } from "react";
+import { cilArrowThickFromLeft } from "@coreui/icons";
+
+import styles from "./Vsm.module.css"; // Make sure you have this CSS file
+
 import Arrow from "../Arrow/Arrow";
+import VsmCard from "../VsmCard/VsmCard";
+import SAPicon from "../SAPicon/SAPicon";
+import FactoryIcon from "../FactoryIcon/FactoryIcon";
+import Button from "../Button/button";
+
+import TruckArrowUp from "../../assets/Img/TruckArrowUp.png";
+import TruckArrowDown from "../../assets/Img/TruckArrowDown.png";
+
+import { apiUrl } from "../../Api/apiUrl";
+import ProductionOrders from "../ProductionOrders/ProductionOrders";
 
 function Vsm() {
   const [data, setData] = useState([]);
@@ -38,7 +46,7 @@ function Vsm() {
       <Row>
         <div className={styles.filterRow}>Filtros aqui</div>
       </Row>
-      <Row style={{ height: "15em" }}>
+      <Row style={{ height: "9em" }}>
         <FactoryIcon entity={"Supplier"} />
         <Col className={styles.col}>
           <Arrow />
@@ -49,8 +57,17 @@ function Vsm() {
         </Col>
         <FactoryIcon number={50} entity={"Cliente"} />
       </Row>
-      <Row>{/*  */}</Row>
-      <Row></Row>
+      <Row>
+        <Col sm={2} className={styles.col}>
+          <img src={TruckArrowDown} className={styles.truckLineUp}></img>
+        </Col>
+        <Col sm={8}>
+          <ProductionOrders numOrders={50}/>
+        </Col>
+        <Col sm={2} className={styles.col}>
+          <img src={TruckArrowUp} className={styles.truckLineDown}></img>
+        </Col>
+      </Row>
       {/* <div className={styles.container}>
         {data.length === 0 ? (
           <p>Loading data...</p>

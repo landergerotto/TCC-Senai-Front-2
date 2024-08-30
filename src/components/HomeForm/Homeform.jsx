@@ -2,7 +2,8 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import xlsx from "json-as-xlsx";
+import * as xlsx from "xlsx";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
@@ -157,6 +158,14 @@ function HomeForm({
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;
     }
+
+    const currentDate = new Date();
+    const date = currentDate.toLocaleDateString("pt-BR");
+    const time = currentDate.toLocaleTimeString("pt-BR");
+
+    informations["Data"] = date;
+    informations["Hora"] = time;
+
     setData((prevData) => {
       const updatedData = Array.isArray(prevData) ? prevData : [];
       return [...updatedData, informations];
@@ -274,24 +283,19 @@ function HomeForm({
     let data = getData();
     console.log("273 - data: ", data);
 
-    const currDate = new Date();
-
     let settings = {
-      fileName:
-        "Lançamentos" +
-        "_" +
-        currDate.getDate() +
-        "_" +
-        (currDate.getMonth() + 1) +
-        "_" +
-        currDate.getFullYear() +
-        "_" +
-        currDate.getHours() +
-        "-" +
-        currDate.getMinutes(),
+      fileName: "POC Cicle.xlsx",
       extraLength: 5,
       writeMode: "writeFile",
       writeOptions: {},
+    };
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const workbook = xlsx.read(e.target.result, { type: "binary" });
+      const worksheet =
+        workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
     };
 
     let sheetData = [
@@ -347,6 +351,83 @@ function HomeForm({
     ];
 
     xlsx(sheetData, settings);
+  }
+
+  function saveOnExcel() {
+    let data = getData();
+    console.log("273 - data: ", data);
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx, .xls";
+
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      let settings = {
+        fileName: "POC Cicle.xlsx",
+      };
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const workbook = xlsx.read(e.target.result, { type: "binary" });
+
+        const worksheet =
+          workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
+
+        let existingData = xlsx.utils.sheet_to_json(worksheet);
+
+        const newData = data.map((item) => ({
+          Processo: item.ProcessName,
+          Quantidade_Lote: item.BatchQnt,
+          ID_Lote: item.BatchId,
+          PartNumber: item.PartNumber,
+          Movimentação: item.Movement,
+          Data: item.Data,
+          Hora: item.Hora,
+          EDV_Operador: item.OperatorEDV,
+          Quantidade_Refugo: item.ScrapQnt,
+          Interditado: item.Interditated === true ? "Sim" : "Não",
+        }));
+
+        existingData = existingData.concat(newData);
+
+        const newWorksheet = xlsx.utils.json_to_sheet(existingData);
+        workbook.Sheets["Lançamentos"] = newWorksheet;
+
+        const wbout = xlsx.write(workbook, {
+          bookType: "xlsx",
+          type: "binary",
+        });
+
+        const blob = new Blob([s2ab(wbout)], {
+          type: "application/octet-stream",
+        });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = settings.fileName;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      };
+
+      reader.readAsBinaryString(file);
+    };
+
+    input.click();
+  }
+
+  function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+      view[i] = s.charCodeAt(i) & 0xff;
+    }
+    return buf;
   }
 
   const modalSave = () => {

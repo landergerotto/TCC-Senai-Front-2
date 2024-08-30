@@ -1,3 +1,8 @@
+.filterRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .container {
   display: flex;
   flex-wrap: nowrap; /* Keeps all cards in a single row */
@@ -47,4 +52,23 @@
 
 .machine {
   margin-top: 10px;
+}
+
+/* ------------------------ */
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.truckLineUp {
+  height: 100%;
+  width: 80px;
+  /* margin-left: -10px; */
+}
+
+.truckLineDown {
+  height: 100%;
+  width: 80px;
+  /* margin-right: -30px; */
 }

@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../Api/apiUrl";
 import styles from "./VsmCard.module.css"; // Make sure you have this CSS file

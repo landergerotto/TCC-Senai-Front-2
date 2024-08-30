@@ -1,0 +1,29 @@
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow {
+  background-color: black;
+  width: 100%;
+  height: 20%;
+  stroke: black;
+  clip-path: polygon(
+    0% 50%,
+    10% 40%,
+    10% 47%,
+    30% 47%,
+    20% 20%,
+    100% 20%,
+    100% 30%,
+    20% 30%,
+    30% 57%,
+    10% 57%,
+    10% 65%,
+    0% 50%
+  );
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+}

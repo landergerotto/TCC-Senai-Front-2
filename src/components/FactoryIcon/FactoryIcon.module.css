@@ -1,0 +1,33 @@
+.col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.number {
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.entity {
+  font-size: 1.2em;
+  font-weight: 700;
+}

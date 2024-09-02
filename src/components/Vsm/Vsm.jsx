@@ -1,5 +1,6 @@
 import CIcon from "@coreui/icons-react";
 import { Col, Row } from "react-bootstrap";
+import Image from "react-bootstrap/Image";
 import { useEffect, useState } from "react";
 import { cilArrowThickFromLeft } from "@coreui/icons";
 
@@ -13,6 +14,8 @@ import Button from "../Button/button";
 
 import TruckArrowUp from "../../assets/Img/TruckArrowUp.png";
 import TruckArrowDown from "../../assets/Img/TruckArrowDown.png";
+import triangle from "../../assets/Img/triangle2.png";
+import right_arrow from "../../assets/Img/right-arrow.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import ProductionOrders from "../ProductionOrders/ProductionOrders";
@@ -62,13 +65,13 @@ function Vsm() {
           <img src={TruckArrowDown} className={styles.truckLineUp}></img>
         </Col>
         <Col sm={8}>
-          <ProductionOrders numOrders={50}/>
+          <ProductionOrders numOrders={50} />
         </Col>
         <Col sm={2} className={styles.col}>
           <img src={TruckArrowUp} className={styles.truckLineDown}></img>
         </Col>
       </Row>
-      {/* <div className={styles.container}>
+      <div className={styles.container}>
         {data.length === 0 ? (
           <p>Loading data...</p>
         ) : (
@@ -77,14 +80,19 @@ function Vsm() {
               <div key={item.id} className={styles.cardWrapper}>
                 <div className={styles.flexTables}>
                   <div className={styles.center}>
-                    <div>Batch Qnt</div>
-                    <div>Placas</div>
+                    <Image src={triangle} width={50} fluid />
+                    <div className={styles.placa}>
+                      <div>
+                        <span>Batch Qnt</span>
+                      </div>
+                      <div>Placas</div>
+                    </div>
                     <div className={styles.arrow}>
-                      <img
-                        src="https://cdn3.iconfinder.com/data/icons/pyconic-icons-2-1/512/arrow-stripes-right-512.png"
-                        alt=""
+                      <Image
+                        src={right_arrow} fluid
+                        width={70}
                       />
-                      <CIcon icon={cilArrowThickFromLeft} />
+                      {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>
                       0.00
@@ -108,7 +116,7 @@ function Vsm() {
             ))}
           </>
         )}
-      </div> */}
+      </div>
     </>
   );
 }

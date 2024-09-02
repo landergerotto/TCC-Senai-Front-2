@@ -27,8 +27,9 @@ function Vsm() {
     apiUrl
       .get("/process/get")
       .then((response) => {
-        setData(response.data);
         console.log(response.data);
+        setData(response.data.sort((a, b) => a.Order - b.Order));
+        console.log(data)
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);

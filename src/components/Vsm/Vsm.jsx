@@ -22,18 +22,20 @@ import { apiUrl } from "../../Api/apiUrl";
 import ProductionOrders from "../ProductionOrders/ProductionOrders";
 
 function Vsm() {
-  const [data, setData] = useState([]);
-  const [selected, setSelected] = useState('Days')
   let type = null;
   let options = null;
-  
+  const [data, setData] = useState([]);
+  const [multiplier, setMultiplier] = useState(1);
+  const [selected, setSelected] = useState('Days');
+  const [period, setPeriod] = useState(1);
+
   useEffect(() => {
     apiUrl
       .get("/process/get")
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data.sort((a, b) => a.Order - b.Order));
-        console.log(data)
+        // console.log(data);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
@@ -42,25 +44,54 @@ function Vsm() {
     apiUrl
       .get("/vsm/get")
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
       });
 
     var today = new Date();
-    var priorDate = new Date(new Date().setDate(today.getDate() - 5 * 365));
-    console.log(priorDate)
+    var priorDate = new Date(new Date().setDate(today.getDate() - 12 * 30));
+    console.log(priorDate);
   }, []);
 
-  const days = Array.from({length: 30}, (_, i) => i + 1)
-  const months = Array.from({length: 12}, (_, i) => i + 1)
-  const years = Array.from({length: 5}, (_, i) => i + 1);
+  useEffect(() => {
+    console.log('data refresh')
+  }, [period, selected]);
+
+
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const years = Array.from({ length: 5 }, (_, i) => i + 1);
 
   const changeSelectOptionHandler = (event) => {
-    setSelected(event.target.value);
+    const newSelection = event.target.value;
+    setSelected(newSelection);
+
+    // Adjust period based on the new selection
+    let maxPeriod;
+    if (newSelection === "Days") {
+      maxPeriod = days.length;
+    } else if (newSelection === "Months") {
+      maxPeriod = months.length;
+    } else if (newSelection === "Years") {
+      maxPeriod = years.length;
+    }
+
+    // Ensure the period value is valid for the new selection
+    if (period > maxPeriod) {
+      console.log("atualizou pra 1")
+      setPeriod(1); // Set to a default value if the current period is not valid
+    }
   };
 
+  const changePeriodOptionHandler = (event) => {
+    const newPeriod = Number(event.target.value);
+    console.log(newPeriod)
+    setPeriod(newPeriod);
+  };
+
+  // Define options based on the selected unit
   if (selected === "Days") {
     type = days;
   } else if (selected === "Months") {
@@ -70,22 +101,29 @@ function Vsm() {
   }
 
   if (type) {
-    options = type.map((el) => <option key={el}>{el}</option>);
+    options = type.map((el) => <option key={el} value={el}>{el}</option>);
   }
+
   return (
     <>
       <Row>
         <div className={styles.filterRow}>
           Filtros aqui
-          <Form.Select aria-label="Default select example">
-            {
-              options
-            }
+          <Form.Select
+            value={period} // Ensure the current period is selected in the dropdown
+            onChange={changePeriodOptionHandler}
+            aria-label="Select period"
+          >
+            {options}
           </Form.Select>
-          <Form.Select onChange={changeSelectOptionHandler} aria-label="Default select example">
-            <option>Days</option>
-            <option>Months</option>
-            <option>Years</option>
+          <Form.Select
+            value={selected}
+            onChange={changeSelectOptionHandler}
+            aria-label="Select time unit"
+          >
+            <option value="Days">Days</option>
+            <option value="Months">Months</option>
+            <option value="Years">Years</option>
           </Form.Select>
         </div>
       </Row>
@@ -102,13 +140,13 @@ function Vsm() {
       </Row>
       <Row>
         <Col sm={2} className={styles.col}>
-          <img src={TruckArrowDown} className={styles.truckLineUp}></img>
+          <img src={TruckArrowDown} className={styles.truckLineUp} alt="Truck Arrow Down" />
         </Col>
         <Col sm={8}>
           <ProductionOrders numOrders={50} />
         </Col>
         <Col sm={2} className={styles.col}>
-          <img src={TruckArrowUp} className={styles.truckLineDown}></img>
+          <img src={TruckArrowUp} className={styles.truckLineDown} alt="Truck Arrow Up" />
         </Col>
       </Row>
       <div className={styles.container}>
@@ -120,7 +158,7 @@ function Vsm() {
               <div key={item.id} className={styles.cardWrapper}>
                 <div className={styles.flexTables}>
                   <div className={styles.center}>
-                    <Image src={triangle} width={50} fluid />
+                    <Image src={triangle} width={50} fluid alt="Triangle" />
                     <div className={styles.placa}>
                       <div>
                         <span>Batch Qnt</span>
@@ -128,10 +166,7 @@ function Vsm() {
                       <div>Placas</div>
                     </div>
                     <div className={styles.arrow}>
-                      <Image
-                        src={right_arrow} fluid
-                        width={70}
-                      />
+                      <Image src={right_arrow} fluid width={70} alt="Right Arrow" />
                       {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>

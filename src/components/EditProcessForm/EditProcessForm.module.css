@@ -1,0 +1,24 @@
+.card {
+    margin-bottom: 2em;
+  }
+  
+  .cardTitle {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .cardBody {
+    padding: 0.5em 4em 2.5em;
+  }
+  
+  .title {
+    font-size: 2.2em !important;
+  }
+  
+  .inputs {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  

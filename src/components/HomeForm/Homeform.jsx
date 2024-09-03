@@ -2,7 +2,9 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import xlsx from "json-as-xlsx";
+import * as xlsx from "xlsx";
+import { saveAs } from "file-saver";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
@@ -27,9 +29,7 @@ function HomeForm({
   labelStyle,
   url,
 }) {
-  const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [link, setLink] = useState(url);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
@@ -37,6 +37,8 @@ function HomeForm({
   const [modalData, setModalData] = useState({});
   const [modalFunc, setModalFunc] = useState();
   const [modalFunc2, setModalFunc2] = useState();
+
+  const [workbook, setWorkbook] = useState(null);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -157,6 +159,14 @@ function HomeForm({
         informations[field.name] = info === "Sim" ? true : false;
       else informations[field.name] = info;
     }
+
+    const currentDate = new Date();
+    const date = currentDate.toLocaleDateString("pt-BR");
+    const time = currentDate.toLocaleTimeString("pt-BR");
+
+    informations["Data"] = date;
+    informations["Hora"] = time;
+
     setData((prevData) => {
       const updatedData = Array.isArray(prevData) ? prevData : [];
       return [...updatedData, informations];
@@ -274,24 +284,19 @@ function HomeForm({
     let data = getData();
     console.log("273 - data: ", data);
 
-    const currDate = new Date();
-
     let settings = {
-      fileName:
-        "Lançamentos" +
-        "_" +
-        currDate.getDate() +
-        "_" +
-        (currDate.getMonth() + 1) +
-        "_" +
-        currDate.getFullYear() +
-        "_" +
-        currDate.getHours() +
-        "-" +
-        currDate.getMinutes(),
+      fileName: "POC Cicle.xlsx",
       extraLength: 5,
       writeMode: "writeFile",
       writeOptions: {},
+    };
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const workbook = xlsx.read(e.target.result, { type: "binary" });
+      const worksheet =
+        workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
     };
 
     let sheetData = [
@@ -327,6 +332,14 @@ function HomeForm({
             value: "EDV_Operador",
           },
           {
+            label: "Data",
+            value: "Data",
+          },
+          {
+            label: "Hora",
+            value: "Hora",
+          },
+          {
             label: "Interditado",
             value: "Interditado",
           },
@@ -339,6 +352,8 @@ function HomeForm({
             Quantidade_Refugo: item.ScrapQnt,
             PartNumber: item.PartNumber,
             Movimentação: item.Movement,
+            Data: item.Data,
+            Hora: item.Hora,
             EDV_Operador: item.OperatorEDV,
             Interditado: item.Interditated == true ? "Sim" : "Não",
           })),
@@ -347,6 +362,188 @@ function HomeForm({
     ];
 
     xlsx(sheetData, settings);
+  }
+
+  function saveOnExcel2() {
+    let data = getData();
+    console.log("368 - data: ", data);
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx, .xls";
+
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      let settings = {
+        fileName: "POC Cicle.xlsx",
+      };
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const workbook = xlsx.read(e.target.result, { type: "binary" });
+
+        const worksheet =
+          workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
+
+        let existingData = xlsx.utils.sheet_to_json(worksheet);
+
+        const newData = data.map((item) => ({
+          Processo: item.ProcessName,
+          Quantidade_Lote: item.BatchQnt,
+          ID_Lote: item.BatchId,
+          PartNumber: item.PartNumber,
+          Movimentação: item.Movement,
+          Data: item.Data,
+          Hora: item.Hora,
+          EDV_Operador: item.OperatorEDV,
+          Quantidade_Refugo: item.ScrapQnt,
+          Interditado: item.Interditated === true ? "Sim" : "Não",
+        }));
+
+        existingData = existingData.concat(newData);
+
+        const newWorksheet = xlsx.utils.json_to_sheet(existingData);
+        workbook.Sheets["Lançamentos"] = newWorksheet;
+
+        const wbout = xlsx.write(workbook, {
+          bookType: "xlsx",
+          type: "binary",
+        });
+
+        const blob = new Blob([s2ab(wbout)], {
+          type: "application/octet-stream",
+        });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = settings.fileName;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      };
+
+      reader.readAsBinaryString(file);
+    };
+
+    input.click();
+  }
+
+  function loadExcelFile(event) {
+    console.log("436 - entrou");
+
+    return new Promise((resolve, reject) => {
+      const file = event.target.files[0];
+      if (!file) {
+        reject("Nenhum arquivo selecionado.");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const loadedWorkbook = xlsx.read(data, { type: "array" });
+          setWorkbook(loadedWorkbook);
+          resolve(loadedWorkbook);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  async function saveExcelFile(workbook) {
+    let data = getData();
+
+    if (workbook) {
+      console.log("467 - workbook existe");
+      const ws = workbook.Sheets[workbook.SheetNames[0]];
+      xlsx.utils.sheet_add_aoa(ws, [
+        [
+          "Processo",
+          "Quantidade Lote",
+          "ID Lote",
+          "Partnumber",
+          "Movimentação",
+          "Data",
+          "Hora",
+          "EDV Operador",
+          "Quantidade de Refugo",
+          "Interditado",
+        ],
+      ]);
+
+      data.forEach((info) => {
+        xlsx.utils.sheet_add_aoa(
+          ws,
+          [
+            [
+              info.ProcessName,
+              info.BatchQnt,
+              info.BatchId,
+              info.PartNumber,
+              info.Movement,
+              info.Data,
+              info.Hora,
+              info.OperatorEDV,
+              info.ScrapQnt,
+              info.Interditated === true ? "Sim" : "Não",
+            ],
+          ],
+          { origin: -1 }
+        );
+      });
+
+      const wbout = xlsx.write(workbook, { bookType: "xlsx", type: "binary" });
+      saveAs(
+        new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+        "POC Cicle.xlsx"
+      );
+      
+      alert("Dados salvos no arquivo");
+    } else {
+      console.log("Por favor, selecione um arquivo Excel antes de salvar.");
+    }
+  }
+
+  function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+      view[i] = s.charCodeAt(i) & 0xff;
+    }
+    return buf;
+  }
+
+  async function createFileInput() {
+    console.log("528 - clicou");
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx, .xls";
+    input.style = "display: none"
+
+    input.onchange = async (event) => {
+      try {
+        const workbook = await loadExcelFile(event);
+        saveExcelFile(workbook);
+      } catch (error) {
+        alert("Houve um problema ao salvar: " + error.message);
+      }
+
+      document.body.removeChild(input);
+    };
+
+    document.body.appendChild(input);
+
+    input.click();
   }
 
   const modalSave = () => {
@@ -358,7 +555,7 @@ function HomeForm({
       btnConfirm2: "Excel",
     });
     setModalFunc(() => saveOnCloud);
-    setModalFunc2(() => saveOnExcel);
+    setModalFunc2(() => createFileInput);
     setShowModal(true);
   };
 

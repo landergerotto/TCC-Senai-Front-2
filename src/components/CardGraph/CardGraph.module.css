@@ -1,0 +1,11 @@
+.cardBg {
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 1.4em;
+  font-weight: 600;
+}

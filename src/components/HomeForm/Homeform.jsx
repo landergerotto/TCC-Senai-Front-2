@@ -44,6 +44,7 @@ function HomeForm({
   const handleCloseModal = () => setShowModal(false);
 
   const optionsInterditado = ["Sim", "Não"];
+  const optionsMovimentacao = ["Entrada", "Saída"];
 
   useEffect(() => {
     const storedData = localStorage.getItem("data");
@@ -578,6 +579,12 @@ function HomeForm({
     if (field.label == "Interditado") {
       return (
         <Input {...commonProps} select={true} options={optionsInterditado} />
+      );
+    }
+
+    if (field.label == "Movimentação") {
+      return (
+        <Input {...commonProps} select={true} options={optionsMovimentacao} />
       );
     }
 

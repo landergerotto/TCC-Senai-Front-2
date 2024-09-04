@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
@@ -119,7 +120,15 @@ function EditProcessForm({
     apiUrl
       .get(`/process/get/${id}`)
       .then((response) => {
-        console.log(response);
+        console.log("response data - ", response.data);
+        let informations = response.data;
+        for (const key in informations) {
+          if (informations.hasOwnProperty(key)) {
+            const value = informations[key];
+            console.log(`${key}: `, value)
+            localStorage.setItem(`${key}`, value);
+          }
+        }
       })
       .catch((error) => {
         console.error("Algo deu errado na sua requisição: ", error);
@@ -147,15 +156,17 @@ function EditProcessForm({
     }
 
     return <Input {...commonProps} />;
-  }
+  };
 
   function handleProcessChange(event) {
     const selectedName = event.target.value;
-    const selectedProcess = optionsProcesso.find((item) => item.Name === selectedName);
-  
+    const selectedProcess = optionsProcesso.find(
+      (item) => item.Name === selectedName
+    );
+
     if (selectedProcess) {
-      localStorage.setItem('Nome', selectedProcess.Name);
-      localStorage.setItem('NomeId', selectedProcess.id);
+      localStorage.setItem("Nome", selectedProcess.Name);
+      localStorage.setItem("NomeId", selectedProcess.id);
       getProcessById(selectedProcess.id);
     }
   }

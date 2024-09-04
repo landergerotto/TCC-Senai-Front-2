@@ -54,9 +54,18 @@ function EditProcessForm({
       });
   }, []);
 
-  function getValue(id) {
-    const element = document.getElementById(id);
-    localStorage.setItem(`${id}`, element.value);
+  function getValue(name, event) {
+    const selectedName = event.target.value;
+    const selectedProcess = optionsProcesso.find(
+      (item) => item.Name === selectedName
+    );
+
+    if (selectedProcess) {
+      localStorage.setItem(`${name}`, selectedProcess.Name);
+      localStorage.setItem(`${name}Id`, selectedProcess.id);
+    } else {
+      localStorage.setItem(`${name}`, selectedName);
+    }
   }
 
   function sendForm() {
@@ -106,23 +115,50 @@ function EditProcessForm({
       });
   }
 
+  function getProcessById(id) {
+    apiUrl
+      .get(`/process/get/${id}`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Algo deu errado na sua requisição: ", error);
+      });
+  }
+
   const renderInput = (field) => {
     const commonProps = {
       label: field.label,
       type: field.type,
       name: field.name,
       id: field.name,
-      onChange: () => getValue(field.name),
+      onChange: (event) => handleProcessChange(event),
       style: { labelStyleEdit, bgStyleEdit },
     };
 
-    if (field.label == "Nome") {
-      const processoOptions = optionsProcesso.map((item) => item.Name);
-      return <Input {...commonProps} select={true} options={processoOptions} />;
+    if (field.label === "Nome") {
+      return (
+        <Input
+          {...commonProps}
+          select={true}
+          options={optionsProcesso.map((item) => item.Name)}
+        />
+      );
     }
 
     return <Input {...commonProps} />;
-  };
+  }
+
+  function handleProcessChange(event) {
+    const selectedName = event.target.value;
+    const selectedProcess = optionsProcesso.find((item) => item.Name === selectedName);
+  
+    if (selectedProcess) {
+      localStorage.setItem('Nome', selectedProcess.Name);
+      localStorage.setItem('NomeId', selectedProcess.id);
+      getProcessById(selectedProcess.id);
+    }
+  }
 
   return (
     <Card className={styles.card}>
@@ -134,7 +170,7 @@ function EditProcessForm({
           {fieldsEdit.map((field, index) => {
             return (
               <>
-                <div>{renderInput(field)}</div>
+                <div key={index}>{renderInput(field)}</div>
               </>
             );
           })}

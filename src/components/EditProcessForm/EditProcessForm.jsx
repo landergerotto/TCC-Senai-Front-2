@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
@@ -29,6 +30,7 @@ function EditProcessForm({
   const [link, setLink] = useState(urlEdit);
 
   const [optionsProcesso, setOptionsProcesso] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -125,7 +127,7 @@ function EditProcessForm({
         for (const key in informations) {
           if (informations.hasOwnProperty(key)) {
             const value = informations[key];
-            console.log(`${key}: `, value)
+            console.log(`${key}: `, value);
             localStorage.setItem(`${key}`, value);
           }
         }
@@ -136,6 +138,7 @@ function EditProcessForm({
   }
 
   const renderInput = (field) => {
+    const storedValue = localStorage.getItem(field.name) || "";
     const commonProps = {
       label: field.label,
       type: field.type,
@@ -143,6 +146,7 @@ function EditProcessForm({
       id: field.name,
       onChange: (event) => handleProcessChange(event),
       style: { labelStyleEdit, bgStyleEdit },
+      value: inputValue,
     };
 
     if (field.label === "Nome") {
@@ -151,6 +155,7 @@ function EditProcessForm({
           {...commonProps}
           select={true}
           options={optionsProcesso.map((item) => item.Name)}
+          value={storedValue}
         />
       );
     }
@@ -169,6 +174,7 @@ function EditProcessForm({
       localStorage.setItem("NomeId", selectedProcess.id);
       getProcessById(selectedProcess.id);
     }
+    window.location.reload;
   }
 
   return (

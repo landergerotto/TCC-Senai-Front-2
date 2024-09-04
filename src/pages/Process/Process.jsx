@@ -9,6 +9,12 @@ import styles from "./Process.module.css";
 import EditProcessForm from "../../components/EditProcessForm/EditProcessForm";
 
 function ProcessPage() {
+  let tab = localStorage.getItem("tab");
+
+  if (tab == "" || !tab) {
+    tab = "cadastro";
+  }
+
   const fields = [
     { label: "Nome", type: "text", name: "Name" },
     { label: "CT", type: "text", name: "CT" },
@@ -26,12 +32,16 @@ function ProcessPage() {
     <Container className={styles.container}>
       <Col lg={6}>
         <Tabs
-          defaultActiveKey="cadastro"
+          defaultActiveKey={`${tab}`}
           id="justify-tab-example"
           className="mb-3"
           justify
         >
-          <Tab eventKey="cadastro" title="Cadastro">
+          <Tab
+            eventKey="cadastro"
+            title="Cadastro"
+            onClick={() => localStorage.setItem("tab", "cadastro")}
+          >
             <Formulario
               title={"Cadastro de Processo"}
               fields={fields}
@@ -42,8 +52,12 @@ function ProcessPage() {
               url={"process/create"}
             />
           </Tab>
-          <Tab eventKey="editar" title="Editar">
-          <EditProcessForm
+          <Tab
+            eventKey="editar"
+            title="Editar"
+            onClick={() => localStorage.setItem("tab", "editar")}
+          >
+            <EditProcessForm
               titleEdit={"Editar Processo"}
               fieldsEdit={fields}
               actionsEdit={actions}

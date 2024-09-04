@@ -25,6 +25,8 @@ function Vsm() {
   let type = null;
   let options = null;
   const [data, setData] = useState([]);
+  const [vsm, setVsm] = useState([]);
+  const [processedVsm, setProcessedVsm] = useState([]);
   const [multiplier, setMultiplier] = useState(1);
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
@@ -56,9 +58,49 @@ function Vsm() {
   }, []);
 
   useEffect(() => {
-    console.log('data refresh')
-  }, [period, selected]);
+    if (vsm.length > 0) {
+      const calculateBatchQnt = () => {
+        let processed = Array(data.length).fill(0);
+        let previousBatchQnt = 0;
+  
+        // Iterate over each process, sorted by the `Order` attribute
+        vsm.forEach((item, index) => {
+          let currentBatchQnt = 0;
+  
+          if (item.Process.Order === 1 && item.Process.Movement == 'Entrada') {
+            // First process: Sum of all 'Entrada' movements in VSM data
+            processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
+          } else {
+            // Subsequent processes: Sum of 'Saída' movements of the previous process order
+            if (item.Process.Movement == 'Saída')
+              processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
 
+          }
+  
+          // Save the current calculated BatchQnt for the current process order
+          processed.push({
+            ...process,
+            BatchQnt: currentBatchQnt,
+          });
+  
+          // Update the previousBatchQnt for the next iteration
+          previousBatchQnt = currentBatchQnt;
+        });
+  
+        return processed;
+      };
+  
+      const newProcessedVsm = calculateBatchQnt();
+      setProcessedVsm(newProcessedVsm);
+    }
+  }, [vsm, data]);
+  
+  useEffect(() => {
+    console.log('data refresh')
+    var today = new Date();
+    var priorDate = new Date(new Date().setDate(today.getDate() - period * multiplier));
+    console.log(priorDate);
+  }, [period, selected]);
 
   const days = Array.from({ length: 30 }, (_, i) => i + 1);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -72,10 +114,13 @@ function Vsm() {
     let maxPeriod;
     if (newSelection === "Days") {
       maxPeriod = days.length;
+      setMultiplier(1)
     } else if (newSelection === "Months") {
       maxPeriod = months.length;
+      setMultiplier(30)
     } else if (newSelection === "Years") {
       maxPeriod = years.length;
+      setMultiplier(365)
     }
 
     // Ensure the period value is valid for the new selection

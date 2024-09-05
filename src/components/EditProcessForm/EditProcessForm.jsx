@@ -118,23 +118,21 @@ function EditProcessForm({
       });
   }
 
-  function getProcessById(id) {
-    apiUrl
-      .get(`/process/get/${id}`)
-      .then((response) => {
-        console.log("response data - ", response.data);
-        let informations = response.data;
-        for (const key in informations) {
-          if (informations.hasOwnProperty(key)) {
-            const value = informations[key];
-            console.log(`${key}: `, value);
-            localStorage.setItem(`${key}`, value);
-          }
+  async function getProcessById(id) {
+    try {
+      const response = await apiUrl.get(`/process/get/${id}`);
+      console.log("response data - ", response.data);
+      let informations = response.data;
+      for (const key in informations) {
+        if (informations.hasOwnProperty(key)) {
+          const value = informations[key];
+          console.log(`${key}: `, value);
+          localStorage.setItem(`${key}`, value);
         }
-      })
-      .catch((error) => {
-        console.error("Algo deu errado na sua requisição: ", error);
-      });
+      }
+    } catch (error) {
+      console.error("Algo deu errado na sua requisição: ", error);
+    }
   }
 
   const renderInput = (field) => {
@@ -163,7 +161,7 @@ function EditProcessForm({
     return <Input {...commonProps} />;
   };
 
-  function handleProcessChange(event) {
+  async function handleProcessChange(event) {
     const selectedName = event.target.value;
     const selectedProcess = optionsProcesso.find(
       (item) => item.Name === selectedName
@@ -172,9 +170,9 @@ function EditProcessForm({
     if (selectedProcess) {
       localStorage.setItem("Nome", selectedProcess.Name);
       localStorage.setItem("NomeId", selectedProcess.id);
-      getProcessById(selectedProcess.id);
+      await getProcessById(selectedProcess.id);
+      window.location.reload();
     }
-    window.location.reload;
   }
 
   return (

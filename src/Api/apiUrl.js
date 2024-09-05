@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const apiUrl = axios.create({
-    baseURL: "http://localhost:8080"
+    baseURL: "https://tcc-senai-back.vercel.app"
 })

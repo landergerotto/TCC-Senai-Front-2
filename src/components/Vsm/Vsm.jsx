@@ -46,10 +46,10 @@ function Vsm() {
     apiUrl
       .get("/vsm/get")
       .then((response) => {
-        // console.log(response.data);
+        setVsm(response.data)
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
+        console.log("Erro ao buscar dados do vsm: ", error);
       });
 
     var today = new Date();
@@ -61,36 +61,28 @@ function Vsm() {
     if (vsm.length > 0) {
       const calculateBatchQnt = () => {
         let processed = Array(data.length).fill(0);
-        let previousBatchQnt = 0;
-  
+
         // Iterate over each process, sorted by the `Order` attribute
         vsm.forEach((item, index) => {
-          let currentBatchQnt = 0;
-  
-          if (item.Process.Order === 1 && item.Process.Movement == 'Entrada') {
+          
+          if (item.Process.Order === 1 && item.Movement == 'Entrada') {
+            console.log('PROCESSO', item.Process)
             // First process: Sum of all 'Entrada' movements in VSM data
             processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
           } else {
             // Subsequent processes: Sum of 'Saída' movements of the previous process order
-            if (item.Process.Movement == 'Saída')
-              processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
+            if (item.Movement == 'Saída')
+              processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
 
           }
-  
-          // Save the current calculated BatchQnt for the current process order
-          processed.push({
-            ...process,
-            BatchQnt: currentBatchQnt,
-          });
-  
-          // Update the previousBatchQnt for the next iteration
-          previousBatchQnt = currentBatchQnt;
+
         });
   
         return processed;
       };
   
       const newProcessedVsm = calculateBatchQnt();
+      console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
     }
   }, [vsm, data]);
@@ -199,14 +191,14 @@ function Vsm() {
           <p>Loading data...</p>
         ) : (
           <>
-            {data.map((item) => (
+            {data.map((item, index) => (
               <div key={item.id} className={styles.cardWrapper}>
                 <div className={styles.flexTables}>
                   <div className={styles.center}>
                     <Image src={triangle} width={50} fluid alt="Triangle" />
                     <div className={styles.placa}>
                       <div>
-                        <span>Batch Qnt</span>
+                        <span>{processedVsm[index]}</span>
                       </div>
                       <div>Placas</div>
                     </div>

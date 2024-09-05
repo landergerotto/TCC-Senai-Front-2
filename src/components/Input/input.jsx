@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './input.module.css';
 
-function Input({ label, type, name, id, onChange, onBlur, style, labelStyle, bgStyle, select = false, options = [] }) {
+function Input({ label, type, name, id, onChange, onBlur, style, labelStyle, bgStyle, select = false, options = [], disabled = false }) {
     const [value, setValue] = useState(localStorage.getItem(name) || '');
 
     useEffect(() => {
@@ -28,7 +28,7 @@ function Input({ label, type, name, id, onChange, onBlur, style, labelStyle, bgS
                     ))}
                 </select>
             ) : (
-                <input type={type} name={name} id={id} onChange={handleChange} style={style} value={value} onBlur={onBlur}/>
+                <input type={type} name={name} id={id} onChange={handleChange} style={style} value={value} onBlur={onBlur} disabled={disabled} />
             )}
         </div>
     );

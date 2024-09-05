@@ -12,23 +12,23 @@ import Input from "../Input/input";
 import Button from "../Button/button";
 import ModalComponent from "../Modal/ModalComponent";
 
-import styles from "./EditProcessForm.module.css";
+import styles from "./DeleteProcessForm.module.css";
 import { apiUrl } from "../../Api/apiUrl";
 
 import cryptoService from "../../service/cryptoService";
 
-function EditProcessForm({
-  titleEdit,
-  fieldsEdit,
-  actionsEdit = [],
-  labelStyleEdit,
-  urlEdit,
-  bgStyleEdit,
-  targetEdit,
+function DeleteProcessForm({
+  titleDelete,
+  fieldsDelete,
+  actionsDelete = [],
+  labelStyleDelete,
+  urlDelete,
+  bgStyleDelete,
+  targetDelete,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
-  const [link, setLink] = useState(urlEdit);
+  const [link, setLink] = useState(urlDelete);
 
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -62,8 +62,8 @@ function EditProcessForm({
     let informations = {};
 
     informations["id"] = localStorage.getItem("id");
-    for (let i = 0; i < fieldsEdit.length; i++) {
-      const field = fieldsEdit[i];
+    for (let i = 0; i < fieldsDelete.length; i++) {
+      const field = fieldsDelete[i];
       const info = localStorage.getItem(`${field.name}`);
 
       if (!info || info.trim().length < 1) {
@@ -81,15 +81,15 @@ function EditProcessForm({
     const EncryptedBody = cryptoService.encryptData(informations);
 
     apiUrl
-      .put("process/put", { EncryptedBody: EncryptedBody })
+      .delete(`process/delete/${informations["id"]}`)
       .then((response) => {
         setModalData({
           title: "Confirmação",
-          text: "Processo atualizado com sucesso.",
+          text: "Processo excluído com sucesso.",
           btnConfirm: "Fechar",
         });
         setShowModal(true);
-        setModalFunc(() => () => navigate(`/${targetEdit}`));
+        setModalFunc(() => () => navigate(`/${targetDelete}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
@@ -125,7 +125,7 @@ function EditProcessForm({
       name: field.name,
       id: field.name,
       onChange: (event) => handleProcessChange(event),
-      style: { labelStyleEdit, bgStyleEdit },
+      style: { labelStyleDelete, bgStyleDelete },
       value: inputValue,
     };
 
@@ -140,7 +140,7 @@ function EditProcessForm({
       );
     }
 
-    return <Input {...commonProps} />;
+    return <Input {...commonProps} disabled={true} />;
   };
 
   async function handleProcessChange(event) {
@@ -154,7 +154,6 @@ function EditProcessForm({
       localStorage.setItem("NomeId", selectedProcess.id);
       await getProcessById(selectedProcess.id);
       window.location.reload();
-      localStorage.setItem('tab', 'editar');
     }
   }
 
@@ -162,10 +161,10 @@ function EditProcessForm({
     <Card className={styles.card}>
       <CardBody className={styles.cardBody}>
         <div className={styles.cardTitle}>
-          <CardTitle className={styles.title}>{titleEdit}</CardTitle>
+          <CardTitle className={styles.title}>{titleDelete}</CardTitle>
         </div>
-        <div className={titleEdit == "Registro" ? styles.inputs : ""}>
-          {fieldsEdit.map((field, index) => {
+        <div className={titleDelete == "Registro" ? styles.inputs : ""}>
+          {fieldsDelete.map((field, index) => {
             return (
               <>
                 <div key={index}>{renderInput(field)}</div>
@@ -174,7 +173,7 @@ function EditProcessForm({
           })}
         </div>
         <div className={styles.btn}>
-          {actionsEdit.map((action, index) => {
+          {actionsDelete.map((action, index) => {
             if (action.label === "Cancelar") {
               return (
                 <Button
@@ -208,4 +207,4 @@ function EditProcessForm({
   );
 }
 
-export default EditProcessForm;
+export default DeleteProcessForm;

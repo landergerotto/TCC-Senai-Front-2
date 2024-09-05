@@ -7,13 +7,12 @@ import Formulario from "../../components/Formulario/formulario";
 
 import styles from "./Process.module.css";
 import EditProcessForm from "../../components/EditProcessForm/EditProcessForm";
+import DeleteProcessForm from "../../components/DeleteProcessForm/DeleteProcessForm";
 
 function ProcessPage() {
   let tab = localStorage.getItem("tab");
 
-  if (tab == "" || !tab) {
-    tab = "cadastro";
-  }
+  if (tab == "" || !tab) tab = "cadastro";
 
   const fields = [
     { label: "Nome", type: "text", name: "Name" },
@@ -24,9 +23,35 @@ function ProcessPage() {
     { label: "Ordem na Linha", type: "number", name: "Order" },
   ];
   const actions = [
+    { label: "Cadastrar", type: "normal" },
+    { label: "Cancelar", type: "cancel" },
+  ];
+  const actionsEdit = [
     { label: "Atualizar", type: "normal" },
     { label: "Cancelar", type: "cancel" },
   ];
+  const actionsDelete = [
+    { label: "Deletar", type: "normal" },
+    { label: "Cancelar", type: "cancel" },
+  ];
+
+  function handleSelect(key) {
+    switch (key) {
+      case "cadastro":
+        localStorage.setItem("tab", "cadastro");
+        break;
+
+      case "editar":
+        localStorage.setItem("tab", "editar");
+        console.log(tab);
+        break;
+
+      case "excluir":
+        localStorage.setItem("tab", "excluir");
+        console.log(tab);
+        break;
+    }
+  }
 
   return (
     <Container className={styles.container}>
@@ -36,12 +61,9 @@ function ProcessPage() {
           id="justify-tab-example"
           className="mb-3"
           justify
+          onSelect={(eventKey) => handleSelect(eventKey)}
         >
-          <Tab
-            eventKey="cadastro"
-            title="Cadastro"
-            onClick={() => localStorage.setItem("tab", "cadastro")}
-          >
+          <Tab eventKey="cadastro" title="Cadastro">
             <Formulario
               title={"Cadastro de Processo"}
               fields={fields}
@@ -52,19 +74,26 @@ function ProcessPage() {
               url={"process/create"}
             />
           </Tab>
-          <Tab
-            eventKey="editar"
-            title="Editar"
-            onClick={() => localStorage.setItem("tab", "editar")}
-          >
+          <Tab eventKey="editar" title="Editar">
             <EditProcessForm
               titleEdit={"Editar Processo"}
               fieldsEdit={fields}
-              actionsEdit={actions}
+              actionsEdit={actionsEdit}
               targetEdit={""}
               typeEdit={"register"}
               labelStyleEdit={{ marginTop: "0.3em" }}
               urlEdit={"process/put"}
+            />
+          </Tab>
+          <Tab eventKey="excluir" title="Excluir">
+            <DeleteProcessForm
+              titleDelete={"Excluir Processo"}
+              fieldsDelete={fields}
+              actionsDelete={actionsDelete}
+              targetDelete={""}
+              typeDelete={"register"}
+              labelStyleDelete={{ marginTop: "0.3em" }}
+              urlDelete={"process/delete"}
             />
           </Tab>
         </Tabs>

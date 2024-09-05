@@ -24,6 +24,7 @@ function EditProcessForm({
   labelStyleEdit,
   urlEdit,
   bgStyleEdit,
+  targetEdit,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
@@ -74,6 +75,7 @@ function EditProcessForm({
   function sendForm() {
     let informations = {};
 
+    informations["id"] = localStorage.getItem("id");
     for (let i = 0; i < fieldsEdit.length; i++) {
       const field = fieldsEdit[i];
       const info = localStorage.getItem(`${field.name}`);
@@ -87,25 +89,21 @@ function EditProcessForm({
         setShowModal(true);
         return;
       }
+      informations[field.name] = info;
     }
 
-    setData(informations);
     const EncryptedBody = cryptoService.encryptData(informations);
 
-    console.log(EncryptedBody);
-    console.log("data: ", cryptoService.decrypt(EncryptedBody));
-
     apiUrl
-      .post(`/${link}`, { EncryptedBody: EncryptedBody })
+      .put("process/put", { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log(response.data);
         setModalData({
           title: "Confirmação",
-          text: `${title} realizado com sucesso`,
+          text: "Processo atualizado com sucesso.",
           btnConfirm: "Fechar",
         });
         setShowModal(true);
-        setModalFunc(() => () => navigate(`/${target}`));
+        setModalFunc(() => () => navigate(`/${targetEdit}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
@@ -121,12 +119,10 @@ function EditProcessForm({
   async function getProcessById(id) {
     try {
       const response = await apiUrl.get(`/process/get/${id}`);
-      console.log("response data - ", response.data);
       let informations = response.data;
       for (const key in informations) {
         if (informations.hasOwnProperty(key)) {
           const value = informations[key];
-          console.log(`${key}: `, value);
           localStorage.setItem(`${key}`, value);
         }
       }

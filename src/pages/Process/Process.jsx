@@ -64,7 +64,7 @@ function ProcessPage() {
               targetEdit={""}
               typeEdit={"register"}
               labelStyleEdit={{ marginTop: "0.3em" }}
-              urlEdit={"process/update"}
+              urlEdit={"process/put"}
             />
           </Tab>
         </Tabs>

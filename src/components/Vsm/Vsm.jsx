@@ -1,9 +1,7 @@
-import CIcon from "@coreui/icons-react";
 import { Col, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from "react";
-import { cilArrowThickFromLeft } from "@coreui/icons";
 
 import styles from "./Vsm.module.css"; // Make sure you have this CSS file
 
@@ -11,7 +9,7 @@ import Arrow from "../Arrow/Arrow";
 import VsmCard from "../VsmCard/VsmCard";
 import SAPicon from "../SAPicon/SAPicon";
 import FactoryIcon from "../FactoryIcon/FactoryIcon";
-import Button from "../Button/button";
+
 
 import TruckArrowUp from "../../assets/Img/TruckArrowUp.png";
 import TruckArrowDown from "../../assets/Img/TruckArrowDown.png";
@@ -20,6 +18,8 @@ import right_arrow from "../../assets/Img/right-arrow.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import ProductionOrders from "../ProductionOrders/ProductionOrders";
+
+import cryptoService from "../../service/cryptoService";
 
 function Vsm() {
   let type = null;
@@ -44,17 +44,13 @@ function Vsm() {
       });
 
     apiUrl
-      .get("/vsm/get")
+      .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
         setVsm(response.data)
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do vsm: ", error);
       });
-
-    var today = new Date();
-    var priorDate = new Date(new Date().setDate(today.getDate() - 12 * 30));
-    console.log(priorDate);
   }, []);
 
   useEffect(() => {
@@ -88,10 +84,14 @@ function Vsm() {
   }, [vsm, data]);
   
   useEffect(() => {
-    console.log('data refresh')
-    var today = new Date();
-    var priorDate = new Date(new Date().setDate(today.getDate() - period * multiplier));
-    console.log(priorDate);
+    apiUrl
+      .get(`/vsm/filtered/${period * multiplier}`)
+      .then((response) => {
+        setVsm(response.data)
+      })
+      .catch((error) => {
+        console.log("Erro ao buscar dados do vsm: ", error);
+      });
   }, [period, selected]);
 
   const days = Array.from({ length: 30 }, (_, i) => i + 1);

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
@@ -22,12 +24,14 @@ function EditProcessForm({
   labelStyleEdit,
   urlEdit,
   bgStyleEdit,
+  targetEdit,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
   const [link, setLink] = useState(urlEdit);
 
   const [optionsProcesso, setOptionsProcesso] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -54,14 +58,24 @@ function EditProcessForm({
       });
   }, []);
 
-  function getValue(id) {
-    const element = document.getElementById(id);
-    localStorage.setItem(`${id}`, element.value);
+  function getValue(name, event) {
+    const selectedName = event.target.value;
+    const selectedProcess = optionsProcesso.find(
+      (item) => item.Name === selectedName
+    );
+
+    if (selectedProcess) {
+      localStorage.setItem(`${name}`, selectedProcess.Name);
+      localStorage.setItem(`${name}Id`, selectedProcess.id);
+    } else {
+      localStorage.setItem(`${name}`, selectedName);
+    }
   }
 
   function sendForm() {
     let informations = {};
 
+    informations["id"] = localStorage.getItem("id");
     for (let i = 0; i < fieldsEdit.length; i++) {
       const field = fieldsEdit[i];
       const info = localStorage.getItem(`${field.name}`);
@@ -75,25 +89,21 @@ function EditProcessForm({
         setShowModal(true);
         return;
       }
+      informations[field.name] = info;
     }
 
-    setData(informations);
     const EncryptedBody = cryptoService.encryptData(informations);
 
-    console.log(EncryptedBody);
-    console.log("data: ", cryptoService.decrypt(EncryptedBody));
-
     apiUrl
-      .post(`/${link}`, { EncryptedBody: EncryptedBody })
+      .put("process/put", { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log(response.data);
         setModalData({
           title: "Confirmação",
-          text: `${title} realizado com sucesso`,
+          text: "Processo atualizado com sucesso.",
           btnConfirm: "Fechar",
         });
         setShowModal(true);
-        setModalFunc(() => () => navigate(`/${target}`));
+        setModalFunc(() => () => navigate(`/${targetEdit}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
@@ -106,23 +116,60 @@ function EditProcessForm({
       });
   }
 
+  async function getProcessById(id) {
+    try {
+      const response = await apiUrl.get(`/process/get/${id}`);
+      let informations = response.data;
+      for (const key in informations) {
+        if (informations.hasOwnProperty(key)) {
+          const value = informations[key];
+          localStorage.setItem(`${key}`, value);
+        }
+      }
+    } catch (error) {
+      console.error("Algo deu errado na sua requisição: ", error);
+    }
+  }
+
   const renderInput = (field) => {
+    const storedValue = localStorage.getItem(field.name) || "";
     const commonProps = {
       label: field.label,
       type: field.type,
       name: field.name,
       id: field.name,
-      onChange: () => getValue(field.name),
+      onChange: (event) => handleProcessChange(event),
       style: { labelStyleEdit, bgStyleEdit },
+      value: inputValue,
     };
 
-    if (field.label == "Nome") {
-      const processoOptions = optionsProcesso.map((item) => item.Name);
-      return <Input {...commonProps} select={true} options={processoOptions} />;
+    if (field.label === "Nome") {
+      return (
+        <Input
+          {...commonProps}
+          select={true}
+          options={optionsProcesso.map((item) => item.Name)}
+          value={storedValue}
+        />
+      );
     }
 
     return <Input {...commonProps} />;
   };
+
+  async function handleProcessChange(event) {
+    const selectedName = event.target.value;
+    const selectedProcess = optionsProcesso.find(
+      (item) => item.Name === selectedName
+    );
+
+    if (selectedProcess) {
+      localStorage.setItem("Nome", selectedProcess.Name);
+      localStorage.setItem("NomeId", selectedProcess.id);
+      await getProcessById(selectedProcess.id);
+      window.location.reload();
+    }
+  }
 
   return (
     <Card className={styles.card}>
@@ -134,7 +181,7 @@ function EditProcessForm({
           {fieldsEdit.map((field, index) => {
             return (
               <>
-                <div>{renderInput(field)}</div>
+                <div key={index}>{renderInput(field)}</div>
               </>
             );
           })}

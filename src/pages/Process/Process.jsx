@@ -53,6 +53,12 @@ function ProcessPage() {
     }
   }
 
+  function clearLocalStorage() {
+    fields.forEach(field => {
+      localStorage.removeItem(`${field.name}`)
+    });
+  }
+
   return (
     <Container className={styles.container}>
       <Col lg={6}>
@@ -72,6 +78,7 @@ function ProcessPage() {
               type={"register"}
               labelStyle={{ marginTop: "0.3em" }}
               url={"process/create"}
+              onSubmit={() => clearLocalStorage()}
             />
           </Tab>
           <Tab eventKey="editar" title="Editar">
@@ -94,6 +101,7 @@ function ProcessPage() {
               typeDelete={"register"}
               labelStyleDelete={{ marginTop: "0.3em" }}
               urlDelete={"process/delete"}
+              onSubmit={() => clearLocalStorage()}
             />
           </Tab>
         </Tabs>

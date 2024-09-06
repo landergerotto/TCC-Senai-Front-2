@@ -25,6 +25,7 @@ function Formulario({
   url,
   bgStyle,
   onClickButton,
+  onSubmit = null
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
@@ -107,7 +108,13 @@ function Formulario({
             }
           })
           .catch((error) => {
-            console.log("deu errado ai brother: ", error);
+            console.log("Erro: ", error);
+            setModalData({
+              title: "Erro",
+              text: "Houve um erro com a sua requisição, tente novamente.",
+              btnCancel: "Fechar",
+            });
+            setShowModal(true);
           });
         return;
       }
@@ -133,6 +140,7 @@ function Formulario({
           btnConfirm: "Fechar",
         });
         setShowModal(true);
+        if(onSubmit) onSubmit();
         setModalFunc(() => () => navigate(`/${target}`));
       })
       .catch((error) => {

@@ -128,9 +128,6 @@ function Formulario({
       return;
     }
 
-    console.log(EncryptedBody);
-    console.log("data: ", cryptoService.decrypt(EncryptedBody));
-
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
@@ -141,7 +138,10 @@ function Formulario({
           btnConfirm: "Fechar",
         });
         setShowModal(true);
-        if (title == "Login") cryptoService.decrypt(response.data.data);
+        if (title == "Login") {
+          console.log('informations: ', informations);
+          cryptoService.decrypt(response.data.data, informations.email);
+        }
 
         if (onSubmit) onSubmit();
         setModalFunc(() => () => navigate(`/${target}`));

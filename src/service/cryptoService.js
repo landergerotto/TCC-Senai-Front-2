@@ -7,16 +7,17 @@ function encryptData(data) {
   return encryptedData;
 }
 
-function decrypt(encryptedData) {
-  console.log('11 - encrypted: ', encryptedData);
+function decrypt(encryptedData, email) {
   const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET);
   const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
-  
-  console.log('15 - Decrypted String:', decryptedString);
 
   const decryptedData = JSON.parse(decryptedString);
 
-  sessionStorage.setItem('token', decryptedData)
+  if (!decryptedData || !email)
+    throw new Error("Algo deu errado tentando desencriptar as informações.");
+
+  sessionStorage.setItem("token", decryptedData);
+  sessionStorage.setItem("email", email);
 
   return decryptedData;
 }

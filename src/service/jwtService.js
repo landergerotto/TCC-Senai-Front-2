@@ -1,40 +1,29 @@
-import jwt from 'jsonwebtoken';
+import { jwtDecode } from "jwt-decode";
+import { apiUrl } from "../Api/apiUrl";
+
 const SECRET = "../env.js";
-
-function generateJWT(payload) {
-  return jwt.sign(payload, SECRET, { expiresIn: "1h" });
-}
-
-function verifyJWT(token) {
-  try {
-    jwt.verify(token, SECRET);
-    return { valid: true };
-  } catch (error) {
-    return { valid: false, error: error.message };
-  }
-}
-
-function verifyAndDecodeJWT(token) {
-  try {
-    const decoded = jwt.verify(token, SECRET);
-    return { valid: true, payload: decoded };
-  } catch (error) {
-    return { valid: false, error: error.message };
-  }
-}
 
 function decodeJWT(token) {
   try {
-    const decoded = jwt.decode(token);
+    const decoded = jwtDecode(token);
     return decoded;
   } catch (error) {
     return null;
   }
 }
 
-export default {
-  generateJWT,
-  verifyJWT,
-  verifyAndDecodeJWT,
-  decodeJWT,
-};
+function validadeJWT(token, email) {
+  apiUrl
+    .post('/auth/validatetoken')
+    .then((response) => {
+      console.log(response.data);
+      if(response.data.valid == true) {
+        console.log("User Válido");
+      }
+    })
+    .catch((error) => {
+      console.error("Houve um erro com a requisição: ", error);
+    })
+}
+
+export { decodeJWT };

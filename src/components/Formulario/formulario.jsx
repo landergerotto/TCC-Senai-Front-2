@@ -14,6 +14,7 @@ import styles from "./formulario.module.css";
 import { apiUrl } from "../../Api/apiUrl";
 
 import cryptoService from "../../service/cryptoService";
+import { decodeJWT } from "../../service/jwtService";
 
 function Formulario({
   title,
@@ -25,6 +26,7 @@ function Formulario({
   url,
   bgStyle,
   onClickButton,
+  onSubmit = null,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
@@ -107,7 +109,13 @@ function Formulario({
             }
           })
           .catch((error) => {
-            console.log("deu errado ai brother: ", error);
+            console.log("Erro: ", error);
+            setModalData({
+              title: "Erro",
+              text: "Houve um erro com a sua requisição, tente novamente.",
+              btnCancel: "Fechar",
+            });
+            setShowModal(true);
           });
         return;
       }
@@ -120,19 +128,22 @@ function Formulario({
       return;
     }
 
-    console.log(EncryptedBody);
-    console.log("data: ", cryptoService.decrypt(EncryptedBody));
-
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log(response.data);
+        console.log("137 - data: ", response.data);
         setModalData({
           title: "Confirmação",
           text: `${title} realizado com sucesso`,
           btnConfirm: "Fechar",
         });
         setShowModal(true);
+        if (title == "Login") {
+          console.log('informations: ', informations);
+          cryptoService.decrypt(response.data.data, informations.email);
+        }
+
+        if (onSubmit) onSubmit();
         setModalFunc(() => () => navigate(`/${target}`));
       })
       .catch((error) => {
@@ -172,9 +183,8 @@ function Formulario({
         <div className={title == "Registro" ? styles.inputs : ""}>
           {fields.map((field, index) => {
             return (
-              <>
+              <div key={index}>
                 <Input
-                  key={index}
                   label={field.label}
                   type={field.type}
                   name={field.name}
@@ -194,7 +204,7 @@ function Formulario({
                     </p>
                   </div>
                 )}
-              </>
+              </div>
             );
           })}
         </div>

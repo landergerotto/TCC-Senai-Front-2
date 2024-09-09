@@ -31,6 +31,27 @@ function Vsm() {
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
 
+  const calculateBatchQnt = () => {
+    let processed = Array(data.length).fill(0);
+
+    // Iterate over each process, sorted by the `Order` attribute
+    vsm.forEach((item, index) => {
+      
+      if (item.Process.Order === 1 && item.Movement == 'Entrada') {
+        console.log('PROCESSO', item.Process)
+        // First process: Sum of all 'Entrada' movements in VSM data
+        processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
+      } else {
+        // Subsequent processes: Sum of 'Saída' movements of the previous process order
+        if (item.Movement == 'Saída')
+          processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
+      }
+    });
+
+    return processed;
+  };
+
+  //initial data get
   useEffect(() => {
     apiUrl
       .get("/process/get")
@@ -44,8 +65,9 @@ function Vsm() {
       });
 
     apiUrl
-      .get(`/vsm/filtered/${period * multiplier}`)
+      .get(`/vsm/filtered/${1}`)
       .then((response) => {
+        console.log(response.data)
         setVsm(response.data)
       })
       .catch((error) => {
@@ -53,36 +75,15 @@ function Vsm() {
       });
   }, []);
 
+
+  // calculate 
   useEffect(() => {
-    if (vsm.length > 0) {
-      const calculateBatchQnt = () => {
-        let processed = Array(data.length).fill(0);
-
-        // Iterate over each process, sorted by the `Order` attribute
-        vsm.forEach((item, index) => {
-          
-          if (item.Process.Order === 1 && item.Movement == 'Entrada') {
-            console.log('PROCESSO', item.Process)
-            // First process: Sum of all 'Entrada' movements in VSM data
-            processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
-          } else {
-            // Subsequent processes: Sum of 'Saída' movements of the previous process order
-            if (item.Movement == 'Saída')
-              processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
-
-          }
-
-        });
-  
-        return processed;
-      };
-  
       const newProcessedVsm = calculateBatchQnt();
       console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
-    }
   }, [vsm, data]);
   
+  // refresh data
   useEffect(() => {
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)

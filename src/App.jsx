@@ -16,6 +16,7 @@ import CodigoPage from './pages/Codigo/Codigo.jsx';
 import RedefinePage from './pages/Redefine/Redefine.jsx';
 import CadastroPartNumber from './pages/CadastroPartNumber/CadastroPartNumber.jsx';
 import RelatoriosPage from './pages/Relatorios/Relatorios.jsx';
+import VsmPage from './pages/Vsm/VsmPage.jsx';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path='/register' element={<RegisterPage />}></Route>
         <Route path='/create' element={<ProcessPage />}></Route>
         <Route path='/partnumber' element={<CadastroPartNumber />}></Route>
+        <Route path='/vsm' element={<VsmPage />}></Route>
         <Route path='/recupera' element={<RecuperaPage />}></Route>
         <Route path='/codigo' element={<CodigoPage />}></Route>
         <Route path='/redefine' element={<RedefinePage />}></Route>

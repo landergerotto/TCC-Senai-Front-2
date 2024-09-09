@@ -19,6 +19,7 @@ import trash from "../../assets/Img/trash.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import cryptoService from "../../service/cryptoService";
+import { jwtDecode } from "jwt-decode";
 
 function HomeForm({
   title,
@@ -32,8 +33,6 @@ function HomeForm({
   const [data, setData] = useState([]);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
-
-  const [userEdv, setUserEdv] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -49,6 +48,7 @@ function HomeForm({
   const optionsMovimentacao = ["Entrada", "Saída"];
 
   useEffect(() => {
+    getUser();
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
 
@@ -79,25 +79,16 @@ function HomeForm({
       });
   }, []);
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
   function getUser() {
     let userEmail = sessionStorage.getItem("email");
 
     if (!userEmail) return;
 
-    apiUrl
-      .get(`/user/get/${userEmail}`)
-      .then((response) => {
-        console.log("88 - ", response);
-        setUserEdv(response.data.EDV);
-        localStorage.setItem("EDV", userEdv);
-      })
-      .catch((error) => {
-        console.error("Houve um erro com a requisição: ", error);
-      });
+    const user = jwtDecode(sessionStorage.getItem("token"));
+
+    if (!user) return;
+
+    localStorage.setItem("EDV", user.EDV);
   }
 
   function getValue(id) {
@@ -472,8 +463,8 @@ function HomeForm({
       return (
         <Input
           {...commonProps}
-          defaultValue={userEdv || ""}
-          disabled={!!userEdv}
+          defaultValue={localStorage.getItem("EDV") || ""}
+          disabled={!!localStorage.getItem("EDV")}
         />
       );
     }

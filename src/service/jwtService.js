@@ -1,8 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { apiUrl } from "../Api/apiUrl";
 
-const SECRET = "../env.js";
-
 function decodeJWT(token) {
   try {
     const decoded = jwtDecode(token);
@@ -13,17 +11,21 @@ function decodeJWT(token) {
 }
 
 function validadeJWT(token, email) {
+  console.log('token: ', token);
+  console.log('email: ', email);
   apiUrl
-    .post('/auth/validatetoken')
+    .post('/auth/validtoken', {Email: email, token: token})
     .then((response) => {
       console.log(response.data);
       if(response.data.valid == true) {
         console.log("User Válido");
+        return response.data;
       }
     })
     .catch((error) => {
       console.error("Houve um erro com a requisição: ", error);
+      return false;
     })
 }
 
-export { decodeJWT };
+export { decodeJWT, validadeJWT };

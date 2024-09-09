@@ -34,6 +34,9 @@ function HomeForm({
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
+  const [hasLoaded, setHasLoaded] = useState(false);
+  localStorage.setItem('hasLoaded', false);
+
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [modalFunc, setModalFunc] = useState();
@@ -81,14 +84,15 @@ function HomeForm({
 
   function getUser() {
     let userEmail = sessionStorage.getItem("email");
-
+  
     if (!userEmail) return;
-
+  
     const user = jwtDecode(sessionStorage.getItem("token"));
-
+  
     if (!user) return;
-
+  
     localStorage.setItem("EDV", user.EDV);
+    setHasLoaded(true);
   }
 
   function getValue(id) {
@@ -460,6 +464,9 @@ function HomeForm({
     }
 
     if (field.label === "EDV") {
+      if (!hasLoaded) {
+        getUser();
+      }
       return (
         <Input
           {...commonProps}

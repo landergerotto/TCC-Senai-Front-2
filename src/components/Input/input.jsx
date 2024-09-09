@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import styles from './input.module.css';
 
-function Input({ label, type, name, id, onChange, onBlur, style, labelStyle, bgStyle, select = false, options = [], disabled = false }) {
-    const [value, setValue] = useState(localStorage.getItem(name) || '');
+function Input({ label, type, name, id, onChange, onBlur, style, labelStyle, bgStyle, select = false, options = [], disabled = false, defaultValue = '' }) {
+    const [value, setValue] = useState(defaultValue || localStorage.getItem(name) || '');
 
     useEffect(() => {
         localStorage.setItem(name, value);

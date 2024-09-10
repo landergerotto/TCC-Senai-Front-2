@@ -35,7 +35,7 @@ function HomeForm({
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
 
   const [hasLoaded, setHasLoaded] = useState(false);
-  localStorage.setItem('hasLoaded', false);
+  localStorage.setItem("hasLoaded", false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -82,15 +82,24 @@ function HomeForm({
       });
   }, []);
 
+  useEffect(() => {
+    const hasReloaded = localStorage.getItem("hasReloaded");
+
+    if (hasReloaded === "false" || hasReloaded === null) {
+      localStorage.setItem("hasReloaded", "true");
+      window.location.reload();
+    }
+  }, []);
+
   function getUser() {
     let userEmail = sessionStorage.getItem("email");
-  
+
     if (!userEmail) return;
-  
+
     const user = jwtDecode(sessionStorage.getItem("token"));
-  
+
     if (!user) return;
-  
+
     localStorage.setItem("EDV", user.EDV);
     setHasLoaded(true);
   }

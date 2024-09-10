@@ -35,30 +35,6 @@ function SideNavBar() {
     window.location.reload();
   }
 
-  function isLogged() {
-    const token = sessionStorage.getItem("token");
-    const email = sessionStorage.getItem("email");
-
-    console.log("Token:", token);
-    console.log("Email:", email);
-
-    if (!token || !email) {
-      console.log("Token ou email não encontrado");
-      return false;
-    }
-
-    const user = validateJWT(token, email);
-
-    if (!user) {
-      console.log("Usuário inválido (JWT inválido)");
-      return false;
-    }
-
-    const decoded = decodeJWT(token);
-    console.log("Usuário decodificado:", decoded);
-    return decoded;
-  }
-
   function confirmLeave() {
     setModalData({
       title: "Sair?",
@@ -72,7 +48,6 @@ function SideNavBar() {
 
   useEffect(() => {
     async function checkLoggedUser() {
-      console.log("Iniciando verificação do usuário logado...");
       const token = sessionStorage.getItem("token");
       const email = sessionStorage.getItem("email");
 
@@ -82,33 +57,21 @@ function SideNavBar() {
         return;
       }
 
-      console.log("Token:", token);
-      console.log("Email:", email);
-
       const isValidUser = await validateJWT(token, email);
       if (isValidUser) {
         const decodedUser = decodeJWT(token);
-        console.log("Usuário decodificado:", decodedUser);
         setUser(decodedUser);
       } else {
         setUser(null);
       }
 
       setIsLoading(false);
-      console.log("Estado do usuário após a verificação:", user);
     }
 
     checkLoggedUser();
   }, []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("Estado do usuário após a verificação:", user);
-    }
-  }, [user, isLoading]);
-
   if (isLoading) {
-    console.log("Carregando...");
     return <div>Carregando...</div>;
   }
 
@@ -130,7 +93,7 @@ function SideNavBar() {
               <CIcon customClassName="nav-icon" icon={cilAccountLogout} /> Login{" "}
             </CNavItem>
           )}
-          {user || !user && ( // remover !user
+          {user && (
             <>
               <CNavItem href="/create">
                 <CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar

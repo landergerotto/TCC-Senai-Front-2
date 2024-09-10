@@ -65,7 +65,7 @@ function Vsm() {
       });
 
     apiUrl
-      .get(`/vsm/filtered/${1}`)
+      .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
         console.log(response.data)
         setVsm(response.data)

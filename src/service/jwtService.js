@@ -10,22 +10,20 @@ function decodeJWT(token) {
   }
 }
 
-function validadeJWT(token, email) {
-  console.log('token: ', token);
-  console.log('email: ', email);
-  apiUrl
-    .post('/auth/validtoken', {Email: email, token: token})
-    .then((response) => {
-      console.log(response.data);
-      if(response.data.valid == true) {
-        console.log("User Válido");
-        return response.data;
-      }
-    })
-    .catch((error) => {
-      console.error("Houve um erro com a requisição: ", error);
+async function validateJWT(token, email) {
+  try {
+    const response = await apiUrl.post('/auth/validate', { Email: email, token: token });
+    if (response.data.valid) {
+      console.log("User Válido");
+      return true;
+    } else {
+      console.log("Usuário inválido (JWT inválido)");
       return false;
-    })
+    }
+  } catch (error) {
+    console.error("Houve um erro com a requisição: ", error);
+    return false;
+  }
 }
 
-export { decodeJWT, validadeJWT };
+export { decodeJWT, validateJWT };

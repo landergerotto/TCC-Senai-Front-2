@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { validadeJWT } from "../../service/jwtService";
+import { validateJWT } from "../../service/jwtService";
 
 function ProtectedRoute({ errorPage, targetPage, roles = [] }) {
   const [page, setPage] = useState(<></>);
@@ -8,7 +8,7 @@ function ProtectedRoute({ errorPage, targetPage, roles = [] }) {
   function renderPage() {
     const token = sessionStorage.getItem("token");
     const email = sessionStorage.getItem("email");
-    const user = validadeJWT(token, email);
+    const user = validateJWT(token, email);
     console.log("user: ", user);
 
     if (

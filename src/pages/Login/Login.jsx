@@ -37,6 +37,12 @@ function LoginPage() {
     { label: "Cancelar", type: "cancel" },
   ];
 
+  function clearLocalStorage() {
+    fields.forEach(field => {
+      localStorage.removeItem(`${field.name}`)
+    });
+  }
+
   return (
     <Container className={styles.container}>
       <Col lg={6}>
@@ -48,6 +54,7 @@ function LoginPage() {
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
           url={"auth/login"}
+          onSubmit={() => clearLocalStorage()}
         />
       </Col>
     </Container>

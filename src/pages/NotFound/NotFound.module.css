@@ -1,94 +1,137 @@
 .container {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .card {
-    -webkit-animation: cardAnimation 0.8s both;
-    animation: cardAnimation 0.8s both;
-    width: 40%;
-    padding: 1em;
+  -webkit-animation: cardAnimation 0.8s both;
+  animation: cardAnimation 0.8s both;
+  width: 40%;
+  padding: 1em;
 }
 
 .title {
-    text-align: center;
-    color: red;
-    font-weight: 700;
-    font-size: 4em;
+  text-align: center;
+  color: red;
+  font-weight: 700;
+  font-size: 4em;
 }
 
 .text {
-    text-align: justify;
-    font-weight: 400;
-    font-size: 2em;
+  text-align: justify;
+  font-weight: 400;
+  font-size: 2em;
+}
+
+.waving {
+  text-align: center;
+  font-size: 2em;
 }
 
 @-webkit-keyframes cardAnimation {
-    0%,
-    100% {
-        -webkit-transform: translateX(0%);
-        transform: translateX(0%);
-        -webkit-transform-origin: 50% 50%;
-        transform-origin: 50% 50%;
-    }
+  0%,
+  100% {
+    -webkit-transform: translateX(0%);
+    transform: translateX(0%);
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+  }
 
-    15% {
-        -webkit-transform: translateX(-30px) rotate(-6deg);
-        transform: translateX(-30px) rotate(-6deg);
-    }
+  15% {
+    -webkit-transform: translateX(-30px) rotate(-6deg);
+    transform: translateX(-30px) rotate(-6deg);
+  }
 
-    30% {
-        -webkit-transform: translateX(15px) rotate(6deg);
-        transform: translateX(15px) rotate(6deg);
-    }
+  30% {
+    -webkit-transform: translateX(15px) rotate(6deg);
+    transform: translateX(15px) rotate(6deg);
+  }
 
-    45% {
-        -webkit-transform: translateX(-15px) rotate(-3.6deg);
-        transform: translateX(-15px) rotate(-3.6deg);
-    }
+  45% {
+    -webkit-transform: translateX(-15px) rotate(-3.6deg);
+    transform: translateX(-15px) rotate(-3.6deg);
+  }
 
-    60% {
-        -webkit-transform: translateX(9px) rotate(2.4deg);
-        transform: translateX(9px) rotate(2.4deg);
-    }
+  60% {
+    -webkit-transform: translateX(9px) rotate(2.4deg);
+    transform: translateX(9px) rotate(2.4deg);
+  }
 
-    75% {
-        -webkit-transform: translateX(-6px) rotate(-1.2deg);
-        transform: translateX(-6px) rotate(-1.2deg);
-    }
+  75% {
+    -webkit-transform: translateX(-6px) rotate(-1.2deg);
+    transform: translateX(-6px) rotate(-1.2deg);
+  }
 }
 
 @keyframes cardAnimation {
-    0%,
-    100% {
-        -webkit-transform: translateX(0%);
-        transform: translateX(0%);
-        -webkit-transform-origin: 50% 50%;
-        transform-origin: 50% 50%;
-    }
+  0%,
+  100% {
+    -webkit-transform: translateX(0%);
+    transform: translateX(0%);
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+  }
 
-    15% {
-        -webkit-transform: translateX(-30px) rotate(-6deg);
-        transform: translateX(-30px) rotate(-6deg);
-    }
+  15% {
+    -webkit-transform: translateX(-30px) rotate(-6deg);
+    transform: translateX(-30px) rotate(-6deg);
+  }
 
-    30% {
-        -webkit-transform: translateX(15px) rotate(6deg);
-        transform: translateX(15px) rotate(6deg);
-    }
+  30% {
+    -webkit-transform: translateX(15px) rotate(6deg);
+    transform: translateX(15px) rotate(6deg);
+  }
 
-    45% {
-        -webkit-transform: translateX(-15px) rotate(-3.6deg);
-        transform: translateX(-15px) rotate(-3.6deg);
-    }
+  45% {
+    -webkit-transform: translateX(-15px) rotate(-3.6deg);
+    transform: translateX(-15px) rotate(-3.6deg);
+  }
 
-    60% {
-        -webkit-transform: translateX(9px) rotate(2.4deg);
-        transform: translateX(9px) rotate(2.4deg);
-    }
+  60% {
+    -webkit-transform: translateX(9px) rotate(2.4deg);
+    transform: translateX(9px) rotate(2.4deg);
+  }
 
-    75% {
-        -webkit-transform: translateX(-6px) rotate(-1.2deg);
-        transform: translateX(-6px) rotate(-1.2deg);
-    }
+  75% {
+    -webkit-transform: translateX(-6px) rotate(-1.2deg);
+    transform: translateX(-6px) rotate(-1.2deg);
+  }
+}
+
+.waving:before {
+  content: attr(data-hover);
+}
+
+.waving:hover {
+  animation-name: wave-animation;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(8deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(8deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }

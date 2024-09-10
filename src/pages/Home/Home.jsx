@@ -10,6 +10,7 @@ import Formulario from "../../components/Formulario/formulario";
 
 import { useNavigate } from "react-router-dom";
 import HomeForm from '../../components/HomeForm/Homeform';
+import { useEffect, useState } from 'react';
 
 function HomePage() {
     const fields = [

@@ -139,7 +139,7 @@ function Formulario({
         });
         setShowModal(true);
         if (title == "Login") {
-          console.log('informations: ', informations);
+          console.log("informations: ", informations);
           cryptoService.decrypt(response.data.data, informations.email);
         }
 

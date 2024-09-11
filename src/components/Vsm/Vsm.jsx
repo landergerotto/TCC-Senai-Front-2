@@ -51,6 +51,46 @@ function Vsm() {
     return processed;
   };
 
+  const calculateMachineTimes = () => {
+    let machineTime = Array(9).fill(0);  // Assuming 9 processes
+    let machineEntranceTime = Array(9).fill(0);  // Same length as processes
+  
+    // Group by Process Order
+    data.forEach((processItem, index) => {
+      const processOrder = processItem.Order;
+      const batches = [...new Set(vsm
+        .filter(item => item.Process.Order === processOrder)
+        .map(item => item.BatchId))]; // Unique Batch IDs per process
+  
+      let timeDiffs = [];
+  
+      batches.forEach(batchId => {
+        // Get first 'Entrada' and last 'Saída' for this batchId
+        const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
+        const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
+        const saida = batchRecords.filter(item => item.Movement === 'Saída').sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+        
+        if (entrada && saida) {
+          const entradaTime = new Date(entrada.created_at);
+          const saidaTime = new Date(saida.created_at);
+          const diffInMilliseconds = saidaTime - entradaTime;
+          const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
+  
+          timeDiffs.push(diffInHours);
+        }
+      });
+  
+      if (timeDiffs.length > 0) {
+        // Calculate average time for this process order
+        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        machineTime[processOrder - 1] = avgTime;
+      }
+    });
+  
+    return { machineTime, machineEntranceTime };
+  };
+  
+
   //initial data get
   useEffect(() => {
     apiUrl
@@ -81,6 +121,9 @@ function Vsm() {
       const newProcessedVsm = calculateBatchQnt();
       console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
+
+      const teste = calculateMachineTimes();
+      console.log(teste)
   }, [vsm, data]);
   
   // refresh data

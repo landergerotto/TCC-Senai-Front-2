@@ -5,30 +5,16 @@ import { Col, Container, Row } from "react-bootstrap";
 import CardGraph from "../../components/CardGraph/CardGraph";
 
 import { apiUrl } from "../../Api/apiUrl";
+import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
 
 function RelatoriosPage() {
-  const [data, setData] = useState({});
-
-  const card1Data = {
-    label: "Total de Peças",
-    value: "100",
-  };
-
-  const card2Data = {
-    label: "Peças em Refugo",
-    value: "2",
-  };
-
-  const card3Data = {
-    label: "Tempo Total Parado",
-    value: "1",
-  };
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     apiUrl
       .get("poc/get")
       .then((response) => {
-        console.log("response: ", response.data);
+        console.log("pocs: ", response.data);
         setData(response.data);
       })
       .catch((error) => {
@@ -40,15 +26,16 @@ function RelatoriosPage() {
     <>
       <Container>
         <Row>
-          <Col>
-            <CardGraph data={card1Data} />
-          </Col>
-          <Col>
-            <CardGraph data={card2Data} />
-          </Col>
-          <Col>
-            <CardGraph data={card3Data} />
-          </Col>
+          {data.map((item, index) => {
+            console.log("item ", item);
+            return (
+              <Col key={index}>
+                <LancamentoCard item={item} />
+              </Col>
+            );
+          })}
+          <Col>{/* <CardGraph data={card2Data} /> */}</Col>
+          <Col>{/* <CardGraph data={card3Data} /> */}</Col>
         </Row>
       </Container>
     </>

@@ -29,7 +29,7 @@ function RelatoriosPage() {
           {data.map((item, index) => {
             console.log("item ", item);
             return (
-              <Col key={index}>
+              <Col key={index} sm={10} md={4} style={{marginBottom: '1.5em'}}>
                 <LancamentoCard item={item} />
               </Col>
             );

@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { apiUrl } from "../../Api/apiUrl";
 
 import styles from "./LancamentoCard.module.css";
+import { colors } from "@mui/material";
 
 function LancamentoCard({ item }) {
   const [processName, setProcessName] = useState({});
@@ -45,21 +46,27 @@ function LancamentoCard({ item }) {
   return (
     <div className={styles.cardBg}>
       <div className={styles.cardTitle}>
-        <EditIcon />
-        <div className={styles.cardText}>{processName[item.ProcessId]}</div>
-        <DeleteIcon />
+        <div className={styles.btnEdit}>
+          <EditIcon sx={{ color: "white" }} />
+        </div>
+        <div className={styles.processName}>{processName[item.ProcessId]}</div>
+        <div className={styles.btnDelete}>
+          <DeleteIcon sx={{ color: "white" }} />
+        </div>
       </div>
       <hr />
-      <div className={styles.cardText}>{date}</div>
+      <div className={styles.data}>
+        <div className={styles.cardText}>{date}</div>
+      </div>
+      <div className={styles.cardText}>PartNumber: {item.PartNumber}</div>
       <div className={styles.cardText}>Id Lote: {item.BatchId}</div>
       <div className={styles.cardText}>Quantidade Lote: {item.BatchQnt}</div>
       <div className={styles.cardText}>Quantidade Refugo: {item.ScrapQnt}</div>
-      <div className={styles.cardText}>PartNumber: {item.PartNumber}</div>
       <div className={styles.cardText}>Movimentação: {item.Movement}</div>
-      <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
       <div className={styles.cardText}>
         Interditado: {item.Interditated == true ? "Sim" : "Não"}
       </div>
+      <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
     </div>
   );
 }

@@ -21,15 +21,23 @@ import ProductionOrders from "../ProductionOrders/ProductionOrders";
 
 import cryptoService from "../../service/cryptoService";
 
+
+
 function Vsm() {
   let type = null;
   let options = null;
   const [data, setData] = useState([]);
   const [vsm, setVsm] = useState([]);
   const [processedVsm, setProcessedVsm] = useState([]);
+  const [processTime, setProcessTime] = useState([]);
   const [multiplier, setMultiplier] = useState(1);
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
+
+  function roundTo(num, places) {
+    const factor = Math.pow(10, places);
+    return Math.round(num * factor) / factor;
+  }
 
   const calculateBatchQnt = () => {
     let processed = Array(data.length).fill(0);
@@ -85,10 +93,11 @@ function Vsm() {
       if (timeDiffs.length > 0) {
         // Calculate average time for this process order
         const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
-        machineTime[processOrder - 1] = avgTime;
+        machineTime[processOrder - 1] = roundTo(avgTime, 2);
       }
     });
-  
+    
+    setProcessTime(machineTime);
     return { machineTime, machineEntranceTime };
   };
   
@@ -265,7 +274,7 @@ function Vsm() {
                       className={styles.vsmCard}
                     />
                     <div className={styles.machine}>
-                      <span>0.00</span>
+                      <span>{processTime[index]}</span>
                       <hr />
                     </div>
                   </div>

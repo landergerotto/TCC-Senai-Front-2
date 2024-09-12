@@ -2,6 +2,8 @@
 
 // eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { apiUrl } from "../../Api/apiUrl";
 
@@ -26,16 +28,38 @@ function LancamentoCard({ item }) {
     fetchProcessName();
   }, [item]);
 
+  function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year} - ${hours}:${minutes}`;
+  }
+
+  const date = formatDateTime(item.created_at);
+
   return (
     <div className={styles.cardBg}>
-        <p>Processo: {processName[item.ProcessId]}</p>
-        <p>Id Lote: {item.BatchId}</p>
-        <p>Quantidade Lote: {item.BatchQnt}</p>
-        <p>Quantidade Refugo: {item.ScrapQnt}</p>
-        <p>PartNumber: {item.PartNumber}</p>
-        <p>Movimentação: {item.Movement}</p>
-        <p>EDV Operador: {item.EDV}</p>
-        <p>Interditado: {item.Interditated == true ? "Sim" : "Não"}</p>
+      <div className={styles.cardTitle}>
+        <EditIcon />
+        <div className={styles.cardText}>{processName[item.ProcessId]}</div>
+        <DeleteIcon />
+      </div>
+      <hr />
+      <div className={styles.cardText}>{date}</div>
+      <div className={styles.cardText}>Id Lote: {item.BatchId}</div>
+      <div className={styles.cardText}>Quantidade Lote: {item.BatchQnt}</div>
+      <div className={styles.cardText}>Quantidade Refugo: {item.ScrapQnt}</div>
+      <div className={styles.cardText}>PartNumber: {item.PartNumber}</div>
+      <div className={styles.cardText}>Movimentação: {item.Movement}</div>
+      <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
+      <div className={styles.cardText}>
+        Interditado: {item.Interditated == true ? "Sim" : "Não"}
+      </div>
     </div>
   );
 }

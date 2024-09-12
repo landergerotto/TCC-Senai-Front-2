@@ -1,5 +1,16 @@
 .cardBg {
-    background-color: lightgray;
+    background-color: #F0F0F0;
     border-radius: 15px;
     padding: 1em;
+    border: 1px solid black;
+}
+
+.cardTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.cardText {
+    margin: 0.2em;
 }

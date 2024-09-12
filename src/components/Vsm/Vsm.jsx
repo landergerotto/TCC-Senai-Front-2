@@ -67,8 +67,10 @@ function Vsm() {
       batches.forEach(batchId => {
         // Get first 'Entrada' and last 'Saída' for this batchId
         const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
-        const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
-        const saida = batchRecords.filter(item => item.Movement === 'Saída').sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+        const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort()[0];
+        const saida = batchRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
+        console.log('Entrada: ', entrada)
+        console.log('Saida: ', saida)
         
         if (entrada && saida) {
           const entradaTime = new Date(entrada.created_at);

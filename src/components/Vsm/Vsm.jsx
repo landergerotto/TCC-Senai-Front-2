@@ -61,7 +61,6 @@ function Vsm() {
 
   const calculateMachineTimes = () => {
     let machineTime = Array(9).fill(0);  // Assuming 9 processes
-    let machineEntranceTime = Array(9).fill(0);  // Same length as processes
   
     // Group by Process Order
     data.forEach((processItem, index) => {
@@ -98,9 +97,51 @@ function Vsm() {
     });
     
     setProcessTime(machineTime);
-    return { machineTime, machineEntranceTime };
+    return { machineTime };
   };
   
+  const calculateProcessEntranceTimes = () => {
+    let processEntranceTime = Array(9).fill(0); // Assuming 9 processes
+  
+    data.forEach((processItem, index) => {
+      const processOrder = processItem.Order;
+      const nextProcessOrder = processOrder + 1;
+  
+      if (nextProcessOrder > data.length) return; // No next process for the last one
+  
+      const batches = [...new Set(vsm
+        .filter(item => item.Process.Order === processOrder)
+        .map(item => item.BatchId))]; // Unique Batch IDs for current process
+  
+      let timeDiffs = [];
+  
+      batches.forEach(batchId => {
+        // Get last 'Saída' for the current process
+        const currentProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
+        const lastSaida = currentProcessRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
+        
+        // Get first 'Entrada' for the next process
+        const nextProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === nextProcessOrder);
+        const firstEntrada = nextProcessRecords.filter(item => item.Movement === 'Entrada').sort()[0];
+  
+        if (lastSaida && firstEntrada) {
+          const saidaTime = new Date(lastSaida.created_at);
+          const entradaTime = new Date(firstEntrada.created_at);
+          const diffInMilliseconds = entradaTime - saidaTime;
+          const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
+  
+          timeDiffs.push(diffInHours);
+        }
+      });
+  
+      if (timeDiffs.length > 0) {
+        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        processEntranceTime[processOrder - 1] = roundTo(avgTime, 2);
+      }
+    });
+  
+    return processEntranceTime;
+  };
 
   //initial data get
   useEffect(() => {

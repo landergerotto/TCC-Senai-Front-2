@@ -36,7 +36,7 @@ function LancamentoCard({ item }) {
     },
     { label: "PartNumber", type: "text", name: "PartNumber", id: "PartNumber" },
     { label: "Movimentação", type: "text", name: "Movement", id: "Movement" },
-    { label: "EDV", type: "text", name: "OperatorEDV", id: "OperatorEDV" },
+    { label: "EDV", type: "text", name: "EDV", id: "EDV" },
     {
       label: "Interditado",
       type: "text",
@@ -85,9 +85,9 @@ function LancamentoCard({ item }) {
 
   function handleEdit() {
     fields.map((field) => {
-      if (item.hasOwnProperty(field.id)) {
+      if (field.id == "ProcessName") localStorage.setItem(field.id, processName[item.ProcessId]);
+      if (item.hasOwnProperty(field.id))
         localStorage.setItem(field.id, item[field.id]);
-      }
     });
     setModalData({
       title: "Atualizar",
@@ -99,7 +99,12 @@ function LancamentoCard({ item }) {
   }
 
   function updateForm() {
-    return <Formulario fields={fields} />;
+    return (
+      <Formulario
+        fields={fields}
+        labelStyle={{ textAlign: "left", fontSize: "1em", marginTop: "0.5em" }}
+      />
+    );
   }
 
   return (

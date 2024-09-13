@@ -115,7 +115,7 @@ function LancamentoCard({ item }) {
       <EditProcessForm
         fieldsEdit={fields}
         labelStyleEdit={{
-          textAlign: "left",
+          textAlign: "left !important",
           fontSize: "1em",
           marginTop: "0.5em",
         }}

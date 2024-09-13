@@ -138,7 +138,7 @@ function EditProcessForm({
       name: field.name,
       id: field.name,
       onChange: (event) => handleProcessChange(event),
-      style: { labelStyleEdit, bgStyleEdit },
+      style: labelStyleEdit,
       value: inputValue,
     };
 

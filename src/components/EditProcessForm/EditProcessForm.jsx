@@ -40,6 +40,8 @@ function EditProcessForm({
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
+  const optionsInterditado = ["Sim", "Não"];
+
   useEffect(() => {
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
@@ -68,8 +70,7 @@ function EditProcessForm({
 
     for (let i = 0; i < fieldsEdit.length; i++) {
       const field = fieldsEdit[i];
-      const info = localStorage.getItem(`${field.name}`);
-      console.log(field.name);
+      let info = localStorage.getItem(`${field.name}`);
 
       if (!info || info.trim().length < 1) {
         setModalData({
@@ -80,9 +81,12 @@ function EditProcessForm({
         setShowModal(true);
         return;
       }
-      informations[field.name] = info;
+      console.log("info - ", info);
+      if ((field.id = "Interditated"))
+        info == "Sim" ? (info = true) : (info = false);
+      else informations[field.name] = info;
     }
-    console.log("info: ", informations);
+    console.log("informations: ", informations);
     const EncryptedBody = cryptoService.encryptData(informations);
 
     apiUrl
@@ -149,6 +153,12 @@ function EditProcessForm({
       );
     }
 
+    if (field.label === "Interditado") {
+      return (
+        <Input {...commonProps} select={true} options={optionsInterditado} />
+      );
+    }
+
     return <Input {...commonProps} />;
   };
 
@@ -175,11 +185,7 @@ function EditProcessForm({
         </div>
         <div className={titleEdit == "Registro" ? styles.inputs : ""}>
           {fieldsEdit.map((field, index) => {
-            return (
-              <>
-                <div key={index}>{renderInput(field)}</div>
-              </>
-            );
+            return <div key={index}>{renderInput(field)}</div>;
           })}
         </div>
         <div className={styles.btn}>

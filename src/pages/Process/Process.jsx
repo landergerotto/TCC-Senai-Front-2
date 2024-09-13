@@ -89,7 +89,8 @@ function ProcessPage() {
               targetEdit={""}
               typeEdit={"register"}
               labelStyleEdit={{ marginTop: "0.3em" }}
-              urlEdit={"process/put"}
+              urlEdit={"process"}
+              btnStyle={{ marginTop: '1em' }}
             />
           </Tab>
           <Tab eventKey="excluir" title="Excluir">

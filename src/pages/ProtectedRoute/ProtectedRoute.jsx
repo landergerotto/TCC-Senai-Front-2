@@ -9,7 +9,6 @@ function ProtectedRoute({ errorPage, targetPage, roles = [] }) {
     const token = sessionStorage.getItem("token");
     const email = sessionStorage.getItem("email");
     const user = validateJWT(token, email);
-    console.log("user: ", user);
 
     if (
       !token ||

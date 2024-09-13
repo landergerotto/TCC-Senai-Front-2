@@ -14,7 +14,6 @@ function RelatoriosPage() {
     apiUrl
       .get("poc/get")
       .then((response) => {
-        console.log("pocs: ", response.data);
         setData(response.data);
       })
       .catch((error) => {
@@ -27,9 +26,8 @@ function RelatoriosPage() {
       <Container>
         <Row>
           {data.map((item, index) => {
-            console.log("item ", item);
             return (
-              <Col key={index} sm={10} md={4} style={{marginBottom: '1.5em'}}>
+              <Col key={index} sm={10} md={4} style={{ marginBottom: "1.5em" }}>
                 <LancamentoCard item={item} />
               </Col>
             );

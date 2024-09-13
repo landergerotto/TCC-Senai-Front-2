@@ -165,11 +165,7 @@ function DeleteProcessForm({
         </div>
         <div className={titleDelete == "Registro" ? styles.inputs : ""}>
           {fieldsDelete.map((field, index) => {
-            return (
-              <>
-                <div key={index}>{renderInput(field)}</div>
-              </>
-            );
+            return <div key={index}>{renderInput(field)}</div>;
           })}
         </div>
         <div className={styles.btn}>

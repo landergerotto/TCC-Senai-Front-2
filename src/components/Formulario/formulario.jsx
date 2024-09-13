@@ -189,6 +189,13 @@ function Formulario({
                   type={field.type}
                   name={field.name}
                   id={field.name}
+                  value={
+                    field.name === "Interditated"
+                      ? localStorage.getItem("Interditated") === "true"
+                        ? "Sim"
+                        : "Não"
+                      : localStorage.getItem(field.name) || ""
+                  }
                   onChange={() => getValue(field.name)}
                   labelStyle={labelStyle}
                   bgStyle={bgStyle}

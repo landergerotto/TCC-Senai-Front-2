@@ -61,3 +61,7 @@ hr {
   text-align: center;
   font-size: 1.15em;
 }
+
+.btn {
+  height: 3em;
+}

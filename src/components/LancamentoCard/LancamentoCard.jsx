@@ -1,3 +1,6 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 // eslint-disable-next-line no-unused-vars
@@ -12,6 +15,7 @@ import { apiUrl } from "../../Api/apiUrl";
 
 import styles from "./LancamentoCard.module.css";
 import ModalComponent from "../Modal/ModalComponent";
+import EditProcessForm from "../EditProcessForm/EditProcessForm";
 
 function LancamentoCard({ item }) {
   const [processName, setProcessName] = useState({});
@@ -44,6 +48,8 @@ function LancamentoCard({ item }) {
       id: "Interditated",
     },
   ];
+
+  const actionsEdit = [{ label: "Atualizar", type: "normal" }];
 
   useEffect(() => {
     fields.map((field) => {
@@ -85,14 +91,21 @@ function LancamentoCard({ item }) {
 
   function handleEdit() {
     fields.map((field) => {
-      if (field.id == "ProcessName") localStorage.setItem(field.id, processName[item.ProcessId]);
+      localStorage.setItem("id", item.id);
+      localStorage.setItem('ProcessId', item.id);
+      if (field.id == "ProcessName")
+        localStorage.setItem(field.id, processName[item.ProcessId]);
       if (item.hasOwnProperty(field.id))
         localStorage.setItem(field.id, item[field.id]);
+      if (field.id == "Interditated") {
+        const interditatedValue = item.Interditated ? "Sim" : "Não";
+        console.log("93 - ", interditatedValue);
+        localStorage.setItem(field.id, interditatedValue);
+      }
     });
     setModalData({
       title: "Atualizar",
       text: updateForm(),
-      btnConfirm: "Atualizar",
       btnCancel: "Fechar",
     });
     setShowModal(true);
@@ -100,9 +113,17 @@ function LancamentoCard({ item }) {
 
   function updateForm() {
     return (
-      <Formulario
-        fields={fields}
-        labelStyle={{ textAlign: "left", fontSize: "1em", marginTop: "0.5em" }}
+      <EditProcessForm
+        fieldsEdit={fields}
+        labelStyleEdit={{
+          textAlign: "left",
+          fontSize: "1em",
+          marginTop: "0.5em",
+        }}
+        actionsEdit={actionsEdit}
+        btnStyle={styles.btn}
+        targetEdit={"/relatorio"}
+        urlEdit={"poc"}
       />
     );
   }

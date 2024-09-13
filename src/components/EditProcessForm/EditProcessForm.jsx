@@ -25,10 +25,10 @@ function EditProcessForm({
   urlEdit,
   bgStyleEdit,
   targetEdit,
+  btnStyle,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
-  const [link, setLink] = useState(urlEdit);
 
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -45,7 +45,7 @@ function EditProcessForm({
     if (storedData) setData(JSON.parse(storedData));
 
     apiUrl
-      .get("process/get")
+      .get(`${urlEdit}/get`)
       .then((response) => {
         const listOptions = [];
         response.data.map((resp) => {
@@ -62,9 +62,14 @@ function EditProcessForm({
     let informations = {};
 
     informations["id"] = localStorage.getItem("id");
+    const ProcessId = localStorage.getItem("ProcessId");
+
+    if (ProcessId) informations["ProcessId"] = ProcessId;
+
     for (let i = 0; i < fieldsEdit.length; i++) {
       const field = fieldsEdit[i];
       const info = localStorage.getItem(`${field.name}`);
+      console.log(field.name);
 
       if (!info || info.trim().length < 1) {
         setModalData({
@@ -77,19 +82,23 @@ function EditProcessForm({
       }
       informations[field.name] = info;
     }
-
+    console.log("info: ", informations);
     const EncryptedBody = cryptoService.encryptData(informations);
 
     apiUrl
-      .put("process/put", { EncryptedBody: EncryptedBody })
+      .put(`${urlEdit}/put`, { EncryptedBody: EncryptedBody })
       .then((response) => {
+        console.log(response);
         setModalData({
           title: "Confirmação",
           text: "Processo atualizado com sucesso.",
           btnConfirm: "Fechar",
         });
         setShowModal(true);
-        setModalFunc(() => () => navigate(`/${targetEdit}`));
+        setModalFunc(() => () => {
+          if (targetEdit != null) navigate(`/${targetEdit}`);
+          else return;
+        });
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);
@@ -154,7 +163,7 @@ function EditProcessForm({
       localStorage.setItem("NomeId", selectedProcess.id);
       await getProcessById(selectedProcess.id);
       window.location.reload();
-      localStorage.setItem('tab', 'editar');
+      localStorage.setItem("tab", "editar");
     }
   }
 
@@ -181,7 +190,7 @@ function EditProcessForm({
                   key={index}
                   text={action.label}
                   type={action.type}
-                  style={{ marginTop: "1em" }}
+                  style={btnStyle}
                   onClick={() => navigate("/")}
                 />
               );
@@ -190,7 +199,7 @@ function EditProcessForm({
                 <Button
                   key={index}
                   text={action.label}
-                  style={{ marginTop: "1em" }}
+                  style={btnStyle}
                   onClick={sendForm}
                 />
               );

@@ -12,6 +12,7 @@ function Input({
   onBlur,
   style,
   labelStyle,
+  fieldStyle,
   bgStyle,
   select = false,
   options = [],

@@ -26,6 +26,8 @@ function EditProcessForm({
   bgStyleEdit,
   targetEdit,
   btnStyle,
+  inputFieldStyle,
+  cardStyle
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState();
@@ -138,7 +140,8 @@ function EditProcessForm({
       name: field.name,
       id: field.name,
       onChange: (event) => handleProcessChange(event),
-      style: labelStyleEdit,
+      labelStyle: labelStyleEdit,
+      style: inputFieldStyle,
       value: inputValue,
     };
 
@@ -149,19 +152,20 @@ function EditProcessForm({
           select={true}
           options={optionsProcesso.map((item) => item.Name)}
           value={storedValue}
+          style={inputFieldStyle}
         />
       );
     }
 
     if (field.label === "Interditado") {
       return (
-        <Input {...commonProps} select={true} options={optionsInterditado} />
+        <Input {...commonProps} select={true} options={optionsInterditado} style={inputFieldStyle} />
       );
     }
 
     if (field.label == "Processo") {
       return (
-        <Input {...commonProps} disabled={"disabled"} />
+        <Input {...commonProps} disabled={"disabled"} style={inputFieldStyle}/>
       );
     }
 
@@ -184,7 +188,7 @@ function EditProcessForm({
   }
 
   return (
-    <Card className={styles.card}>
+    <Card className={styles.card} style={cardStyle}>
       <CardBody className={styles.cardBody}>
         <div className={styles.cardTitle}>
           <CardTitle className={styles.title}>{titleEdit}</CardTitle>

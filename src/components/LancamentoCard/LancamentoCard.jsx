@@ -103,7 +103,7 @@ function LancamentoCard({ item }) {
       }
     });
     setModalData({
-      title: "Atualizar",
+      title: "Atualizar Processo",
       text: updateForm(),
       btnCancel: "Fechar",
     });
@@ -115,10 +115,14 @@ function LancamentoCard({ item }) {
       <EditProcessForm
         fieldsEdit={fields}
         labelStyleEdit={{
-          textAlign: "left !important",
+          textAlign: "left",
           fontSize: "1em",
-          marginTop: "0.5em",
+          margin: "0.5em 0 0 0.5em",
         }}
+        inputFieldStyle={{
+          fontSize: "0.8em",
+        }}
+        cardStyle={{ margin: "0" }}
         actionsEdit={actionsEdit}
         btnStyle={styles.btn}
         targetEdit={"/relatorio"}

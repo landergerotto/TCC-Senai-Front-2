@@ -69,5 +69,6 @@ hr {
 }
 
 .btn {
-  height: 3em;
+  height: 4em !important;
+  font-size: 1em !important;
 }

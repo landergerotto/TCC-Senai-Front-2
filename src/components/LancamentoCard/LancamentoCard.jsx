@@ -92,14 +92,13 @@ function LancamentoCard({ item }) {
   function handleEdit() {
     fields.map((field) => {
       localStorage.setItem("id", item.id);
-      localStorage.setItem('ProcessId', item.id);
+      localStorage.setItem("ProcessId", item.id);
       if (field.id == "ProcessName")
         localStorage.setItem(field.id, processName[item.ProcessId]);
       if (item.hasOwnProperty(field.id))
         localStorage.setItem(field.id, item[field.id]);
       if (field.id == "Interditated") {
         const interditatedValue = item.Interditated ? "Sim" : "Não";
-        console.log("93 - ", interditatedValue);
         localStorage.setItem(field.id, interditatedValue);
       }
     });
@@ -128,6 +127,10 @@ function LancamentoCard({ item }) {
     );
   }
 
+  function handleDelete(id) {
+    console.log("id: ", id);
+  }
+
   return (
     <>
       <div className={styles.cardBg} id={`poc_${item.id}`}>
@@ -138,7 +141,10 @@ function LancamentoCard({ item }) {
           <div className={styles.processName}>
             {processName[item.ProcessId]}
           </div>
-          <div className={styles.btnDelete}>
+          <div
+            className={styles.btnDelete}
+            onClick={() => handleDelete(item.id)}
+          >
             <DeleteIcon sx={{ color: "white" }} />
           </div>
         </div>
@@ -146,17 +152,22 @@ function LancamentoCard({ item }) {
         <div className={styles.data}>
           <div className={styles.cardText}>{date}</div>
         </div>
-        <div className={styles.cardText}>PartNumber: {item.PartNumber}</div>
-        <div className={styles.cardText}>Id Lote: {item.BatchId}</div>
-        <div className={styles.cardText}>Quantidade Lote: {item.BatchQnt}</div>
-        <div className={styles.cardText}>
-          Quantidade Refugo: {item.ScrapQnt}
+        <div className={styles.dados}>
+          <div className={styles.cardText}>PartNumber: {item.PartNumber}</div>
+          <div className={styles.cardText}>Id Lote: {item.BatchId}</div>
+          <div className={styles.cardText}>
+            Quantidade Lote: {item.BatchQnt}
+          </div>
+          <div className={styles.cardText}>
+            Quantidade Refugo: {item.ScrapQnt}
+          </div>
+          <div className={styles.cardText}>Movimentação: {item.Movement}</div>
+          <div className={styles.cardText}>
+            Interditado: {item.Interditated == true ? "Sim" : "Não"}
+          </div>
+          <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
+          <div className={styles.cardText}>ID POC: {item.id}</div>
         </div>
-        <div className={styles.cardText}>Movimentação: {item.Movement}</div>
-        <div className={styles.cardText}>
-          Interditado: {item.Interditated == true ? "Sim" : "Não"}
-        </div>
-        <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
       </div>
       <ModalComponent
         isOpened={showModal}

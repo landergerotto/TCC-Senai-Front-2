@@ -12,12 +12,13 @@ function decodeJWT(token) {
 
 async function validateJWT(token, email) {
   try {
-    const response = await apiUrl.post('/auth/validate', { Email: email, token: token });
+    const response = await apiUrl.post("/auth/validate", {
+      Email: email,
+      token: token,
+    });
     if (response.data.valid) {
-      console.log("User Válido");
       return true;
     } else {
-      console.log("Usuário inválido (JWT inválido)");
       return false;
     }
   } catch (error) {

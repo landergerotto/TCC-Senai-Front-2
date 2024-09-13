@@ -159,6 +159,12 @@ function EditProcessForm({
       );
     }
 
+    if (field.label == "Processo") {
+      return (
+        <Input {...commonProps} disabled={"disabled"} />
+      );
+    }
+
     return <Input {...commonProps} />;
   };
 

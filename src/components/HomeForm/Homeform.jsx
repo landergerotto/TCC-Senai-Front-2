@@ -20,6 +20,8 @@ import trash from "../../assets/Img/trash.png";
 import { apiUrl } from "../../Api/apiUrl";
 import cryptoService from "../../service/cryptoService";
 import { jwtDecode } from "jwt-decode";
+import { useLoading } from "../../contexts/LoadingContext";
+import Loading from "../Loading/Loading";
 
 function HomeForm({
   title,
@@ -50,35 +52,31 @@ function HomeForm({
   const optionsInterditado = ["Sim", "Não"];
   const optionsMovimentacao = ["Entrada", "Saída"];
 
+  const { isLoading, startLoading, stopLoading } = useLoading();
+
   useEffect(() => {
+    startLoading();
+
     getUser();
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
 
-    apiUrl
-      .get("process/get")
-      .then((response) => {
-        const listOptions = [];
-        response.data.map((resp) => {
-          listOptions.push(resp);
-        });
-        setOptionsProcesso(listOptions);
+    Promise.all([
+      apiUrl.get("process/get").then((response) => {
+        const listOptionsProcesso = response.data.map((resp) => resp);
+        setOptionsProcesso(listOptionsProcesso);
+      }),
+      apiUrl.get("partnr/get").then((response) => {
+        const listOptionsPartNumber = response.data.map((resp) => resp);
+        setOptionsPartNumber(listOptionsPartNumber);
+      }),
+    ])
+      .then(() => {
+        stopLoading();
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
-      });
-
-    apiUrl
-      .get("partnr/get")
-      .then((response) => {
-        const listOptions = [];
-        response.data.map((resp) => {
-          listOptions.push(resp);
-        });
-        setOptionsPartNumber(listOptions);
-      })
-      .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
+        console.log("Erro ao buscar dados: ", error);
+        stopLoading();
       });
   }, []);
 
@@ -490,6 +488,7 @@ function HomeForm({
 
   return (
     <Container className={styles.container}>
+      {isLoading && <Loading />}
       <Row>
         <div className={styles.inputs}>
           {fields.map((field, index) => {

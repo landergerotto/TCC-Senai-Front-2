@@ -93,7 +93,7 @@ function SideNavBar() {
               <CIcon customClassName="nav-icon" icon={cilAccountLogout} /> Login{" "}
             </CNavItem>
           )}
-          {user && (
+          {/* {user && ( */}
             <>
               <CNavItem href="/create">
                 <CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar
@@ -111,7 +111,7 @@ function SideNavBar() {
                 Relatório{" "}
               </CNavItem>
             </>
-          )}
+          {/* )} */}
           {user && (
             <CNavItem
               href="/"

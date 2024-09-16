@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 
+import Input from "../../components/Input/input";
+import Loading from "../../components/Loading/Loading";
 import CardGraph from "../../components/CardGraph/CardGraph";
 import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
 
 import { apiUrl } from "../../Api/apiUrl";
+import { useLoading } from "../../contexts/LoadingContext";
 
 import styles from "./Relatorios.module.css";
-import Input from "../../components/Input/input";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
@@ -18,20 +20,25 @@ function RelatoriosPage() {
     created_at: "",
     PartNumber: "",
   });
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   let tab = localStorage.getItem("tab");
 
   if (tab == "" || !tab) tab = "pocs";
 
   useEffect(() => {
+    startLoading();
+
     apiUrl
       .get("poc/get")
       .then((response) => {
         setData(response.data);
         setFilteredData(response.data);
+        stopLoading();
       })
       .catch((error) => {
         console.log("Erro ao buscar dados do processo: ", error);
+        stopLoading();
       });
   }, []);
 
@@ -80,6 +87,7 @@ function RelatoriosPage() {
 
   return (
     <>
+      {isLoading && <Loading />}
       <Container style={{ marginBottom: "1em" }}>
         <Tabs
           defaultActiveKey={`${tab}`}

@@ -11,6 +11,7 @@ import Formulario from "../../components/Formulario/formulario";
 import { useNavigate } from "react-router-dom";
 import HomeForm from '../../components/HomeForm/Homeform';
 import { useEffect, useState } from 'react';
+import Loading from '../../components/Loading/Loading';
 
 function HomePage() {
     const fields = [

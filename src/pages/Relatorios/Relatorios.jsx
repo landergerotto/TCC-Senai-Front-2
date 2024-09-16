@@ -95,7 +95,6 @@ function RelatoriosPage() {
                   type="number"
                   placeholder="Lote"
                   onChange={(e) => {
-                    console.log("filterLote: ", e.target.value);
                     handleFilterChange(e);
                   }}
                 />
@@ -105,7 +104,6 @@ function RelatoriosPage() {
                   name="created_at"
                   type="date"
                   onChange={(e) => {
-                    console.log("filterData: ", e.target.value);
                     handleFilterChange(e);
                   }}
                 />
@@ -116,7 +114,6 @@ function RelatoriosPage() {
                   type="text"
                   placeholder="Partnumber"
                   onChange={(e) => {
-                    console.log("filterPartnumber: ", e.target.value);
                     handleFilterChange(e);
                   }}
                 />
@@ -124,7 +121,6 @@ function RelatoriosPage() {
             </Row>
             <Row className={styles.center}>
               {filteredData.map((item, index) => {
-                console.log("filteredData: ", filteredData);
                 return (
                   <Col
                     key={index}

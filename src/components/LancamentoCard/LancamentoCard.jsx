@@ -132,7 +132,26 @@ function LancamentoCard({ item }) {
   }
 
   function handleDelete(id) {
-    console.log("id: ", id);
+    setModalData({
+      title: "Confirmar",
+      text: "Dejesa mesmo apagar a POC?",
+      btnCancel: "Fechar",
+      btnConfirm: "Apagar",
+    });
+    setModalFunc(() => () => deletePOC(id));
+    setShowModal(true);
+  }
+
+  function deletePOC(id) {
+    apiUrl
+      .delete(`/POC/delete/${id}`)
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Deu errado ai brother: ", error);
+      });
   }
 
   return (
@@ -170,7 +189,6 @@ function LancamentoCard({ item }) {
             Interditado: {item.Interditated == true ? "Sim" : "Não"}
           </div>
           <div className={styles.cardText}>EDV Operador: {item.EDV}</div>
-          <div className={styles.cardText}>ID POC: {item.id}</div>
         </div>
       </div>
       <ModalComponent

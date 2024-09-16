@@ -7,7 +7,6 @@ import styles from "./CardGraph.module.css";
 
 function CardGraph({ data }) {
   const [bgColor, setBgColor] = useState("");
-  console.log("data: ", data);
 
   useEffect(() => {
     if (data.value == 1)

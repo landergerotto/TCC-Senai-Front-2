@@ -19,6 +19,7 @@ import trash from "../../assets/Img/trash.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import cryptoService from "../../service/cryptoService";
+import { jwtDecode } from "jwt-decode";
 
 function HomeForm({
   title,
@@ -32,6 +33,9 @@ function HomeForm({
   const [data, setData] = useState([]);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
+
+  const [hasLoaded, setHasLoaded] = useState(false);
+  localStorage.setItem("hasLoaded", false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -47,6 +51,7 @@ function HomeForm({
   const optionsMovimentacao = ["Entrada", "Saída"];
 
   useEffect(() => {
+    getUser();
     const storedData = localStorage.getItem("data");
     if (storedData) setData(JSON.parse(storedData));
 
@@ -76,6 +81,28 @@ function HomeForm({
         console.log("Erro ao buscar dados do processo: ", error);
       });
   }, []);
+
+  useEffect(() => {
+    const hasReloaded = localStorage.getItem("hasReloaded");
+
+    if (hasReloaded === "false" || hasReloaded === null) {
+      localStorage.setItem("hasReloaded", "true");
+      window.location.reload();
+    }
+  }, []);
+
+  function getUser() {
+    let userEmail = sessionStorage.getItem("email");
+
+    if (!userEmail) return;
+
+    const user = jwtDecode(sessionStorage.getItem("token"));
+
+    if (!user) return;
+
+    localStorage.setItem("EDV", user.EDV);
+    setHasLoaded(true);
+  }
 
   function getValue(id) {
     const element = document.getElementById(id);
@@ -281,158 +308,6 @@ function HomeForm({
     setShowModal(true);
   }
 
-  function saveOnExcel() {
-    let data = getData();
-    console.log("273 - data: ", data);
-
-    let settings = {
-      fileName: "POC Cicle.xlsx",
-      extraLength: 5,
-      writeMode: "writeFile",
-      writeOptions: {},
-    };
-
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const workbook = xlsx.read(e.target.result, { type: "binary" });
-      const worksheet =
-        workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
-    };
-
-    let sheetData = [
-      {
-        sheet: "Lançamentos",
-        columns: [
-          {
-            label: "Processo",
-            value: "Processo",
-          },
-          {
-            label: "ID_Lote",
-            value: "ID_Lote",
-          },
-          {
-            label: "Quantidade_Lote",
-            value: "Quantidade_Lote",
-          },
-          {
-            label: "Quantidade_Refugo",
-            value: "Quantidade_Refugo",
-          },
-          {
-            label: "PartNumber",
-            value: "PartNumber",
-          },
-          {
-            label: "Movimentação",
-            value: "Movimentação",
-          },
-          {
-            label: "EDV_Operador",
-            value: "EDV_Operador",
-          },
-          {
-            label: "Data",
-            value: "Data",
-          },
-          {
-            label: "Hora",
-            value: "Hora",
-          },
-          {
-            label: "Interditado",
-            value: "Interditado",
-          },
-        ],
-        content: [
-          ...data.map((item) => ({
-            Processo: item.ProcessName,
-            ID_Lote: item.BatchId,
-            Quantidade_Lote: item.BatchQnt,
-            Quantidade_Refugo: item.ScrapQnt,
-            PartNumber: item.PartNumber,
-            Movimentação: item.Movement,
-            Data: item.Data,
-            Hora: item.Hora,
-            EDV_Operador: item.OperatorEDV,
-            Interditado: item.Interditated == true ? "Sim" : "Não",
-          })),
-        ],
-      },
-    ];
-
-    xlsx(sheetData, settings);
-  }
-
-  function saveOnExcel2() {
-    let data = getData();
-    console.log("368 - data: ", data);
-
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".xlsx, .xls";
-
-    input.onchange = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      let settings = {
-        fileName: "POC Cicle.xlsx",
-      };
-
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const workbook = xlsx.read(e.target.result, { type: "binary" });
-
-        const worksheet =
-          workbook.Sheets["Lançamentos"] || xlsx.utils.json_to_sheet([]);
-
-        let existingData = xlsx.utils.sheet_to_json(worksheet);
-
-        const newData = data.map((item) => ({
-          Processo: item.ProcessName,
-          Quantidade_Lote: item.BatchQnt,
-          ID_Lote: item.BatchId,
-          PartNumber: item.PartNumber,
-          Movimentação: item.Movement,
-          Data: item.Data,
-          Hora: item.Hora,
-          EDV_Operador: item.OperatorEDV,
-          Quantidade_Refugo: item.ScrapQnt,
-          Interditado: item.Interditated === true ? "Sim" : "Não",
-        }));
-
-        existingData = existingData.concat(newData);
-
-        const newWorksheet = xlsx.utils.json_to_sheet(existingData);
-        workbook.Sheets["Lançamentos"] = newWorksheet;
-
-        const wbout = xlsx.write(workbook, {
-          bookType: "xlsx",
-          type: "binary",
-        });
-
-        const blob = new Blob([s2ab(wbout)], {
-          type: "application/octet-stream",
-        });
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = settings.fileName;
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-      };
-
-      reader.readAsBinaryString(file);
-    };
-
-    input.click();
-  }
-
   function loadExcelFile(event) {
     console.log("436 - entrou");
 
@@ -508,7 +383,7 @@ function HomeForm({
         new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
         "POC Cicle.xlsx"
       );
-      
+
       alert("Dados salvos no arquivo");
     } else {
       console.log("Por favor, selecione um arquivo Excel antes de salvar.");
@@ -529,7 +404,7 @@ function HomeForm({
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".xlsx, .xls";
-    input.style = "display: none"
+    input.style = "display: none";
 
     input.onchange = async (event) => {
       try {
@@ -594,6 +469,19 @@ function HomeForm({
       );
       return (
         <Input {...commonProps} select={true} options={partnumberOptions} />
+      );
+    }
+
+    if (field.label === "EDV") {
+      if (!hasLoaded) {
+        getUser();
+      }
+      return (
+        <Input
+          {...commonProps}
+          defaultValue={localStorage.getItem("EDV") || ""}
+          disabled={!!localStorage.getItem("EDV")}
+        />
       );
     }
 

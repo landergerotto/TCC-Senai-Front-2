@@ -23,6 +23,8 @@ img {
 
 .text {
     font-size: 1.4em;
+    width: 100%;
+    text-align: center;
 }
 
 .footer {

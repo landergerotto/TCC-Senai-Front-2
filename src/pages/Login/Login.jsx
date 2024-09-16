@@ -16,7 +16,7 @@ function LoginPage() {
     marginTop: "0.15em",
     color: "#007BC0",
     cursor: "pointer",
-    width: "fit-content"
+    width: "fit-content",
   };
 
   const fields = [
@@ -37,6 +37,12 @@ function LoginPage() {
     { label: "Cancelar", type: "cancel" },
   ];
 
+  function clearLocalStorage() {
+    fields.forEach((field) => {
+      localStorage.removeItem(`${field.name}`);
+    });
+  }
+
   return (
     <Container className={styles.container}>
       <Col lg={6}>
@@ -48,6 +54,11 @@ function LoginPage() {
           navigate={navigate}
           labelStyle={{ marginTop: "0.5em" }}
           url={"auth/login"}
+          onSubmit={() => {
+            clearLocalStorage();
+            localStorage.setItem("hasReloaded", false);
+            console.log("hasReloaded ", localStorage.getItem("hasReloaded"));
+          }}
         />
       </Col>
     </Container>

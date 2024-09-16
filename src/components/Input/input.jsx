@@ -18,6 +18,7 @@ function Input({
   options = [],
   disabled = false,
   defaultValue = "",
+  placeholder
 }) {
   const [value, setValue] = useState(
     defaultValue || localStorage.getItem(name) || ""
@@ -65,6 +66,7 @@ function Input({
           value={value}
           onBlur={onBlur}
           disabled={disabled}
+          placeholder={placeholder}
         />
       )}
     </div>

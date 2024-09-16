@@ -57,6 +57,7 @@ function ProcessPage() {
     fields.forEach(field => {
       localStorage.removeItem(`${field.name}`)
     });
+    localStorage.removeItem('tab');
   }
 
   return (

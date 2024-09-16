@@ -1,0 +1,49 @@
+// Example list of objects
+const items = [
+    { id: 1, batchId: 1, data: 'Item 1' },
+    { id: 2, batchId: 2, data: 'Item 2' },
+    { id: 3, batchId: 1, data: 'Item 3' },
+    { id: 4, batchId: 3, data: 'Item 4' },
+    { id: 5, batchId: 2, data: 'Item 5' },
+    { id: 6, batchId: 3, data: 'Item 6' }
+  ];
+  
+  // Function to get unique batch IDs
+  const getUniqueBatchIds = (items) => {
+    return [...new Set(items.map(item => item.batchId))];
+  };
+  
+  // Function to separate items by batchId
+  const separateByBatchId = (items) => {
+    // Get all unique batch IDs
+    const uniqueBatchIds = getUniqueBatchIds(items);
+  
+    // Create an object with arrays for each batchId
+    return uniqueBatchIds.reduce((acc, batchId) => {
+      acc[batchId] = items.filter(item => item.batchId === batchId);
+      return acc;
+    }, {});
+  };
+  
+  // Separate items into arrays based on batchId
+  const separatedItems = separateByBatchId(items);
+  
+  console.log(separatedItems);
+
+  const processItems = (items) => {
+    Object.keys(items).forEach(batchId => {
+      const batchItems = items[batchId];
+      console.log(`Processing items for batchId ${batchId}:`);
+      
+      batchItems.forEach(item => {
+        // Process each item here
+        console.log(`Item ID: ${item.id}, Data: ${item.data}`);
+        // Add your processing logic here
+      });
+  
+      console.log('---'); // Separator for readability
+    });
+  };
+  
+  // Run the process function
+  processItems(separatedItems);

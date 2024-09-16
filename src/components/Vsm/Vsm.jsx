@@ -27,10 +27,128 @@ function Vsm() {
   const [data, setData] = useState([]);
   const [vsm, setVsm] = useState([]);
   const [processedVsm, setProcessedVsm] = useState([]);
+  const [processTime, setProcessTime] = useState([]);
+  const [processEntranceTime, setProcessEntranceTime] = useState([]);
   const [multiplier, setMultiplier] = useState(1);
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
 
+  function roundTo(num, places) {
+    const factor = Math.pow(10, places);
+    return Math.round(num * factor) / factor;
+  }
+
+  const calculateBatchQnt = () => {
+    let processed = Array(data.length).fill(0);
+
+    // Iterate over each process, sorted by the `Order` attribute
+    vsm.forEach((item, index) => {
+      
+      if (item.Process.Order === 1 && item.Movement == 'Entrada') {
+        console.log('PROCESSO', item.Process)
+        // First process: Sum of all 'Entrada' movements in VSM data
+        processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
+      } else {
+        // Subsequent processes: Sum of 'Saída' movements of the previous process order
+        if (item.Movement == 'Saída')
+          processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
+      }
+    });
+
+    return processed;
+  };
+
+  const calculateMachineTimes = () => {
+    let machineTime = Array(data.length).fill(0);  // Assuming 9 processes
+  
+    // Group by Process Order
+    data.forEach((processItem, index) => {
+      const processOrder = processItem.Order;
+      const batches = [...new Set(vsm
+        .filter(item => item.Process.Order === processOrder)
+        .map(item => item.BatchId))]; // Unique Batch IDs per process
+  
+      let timeDiffs = [];
+      
+      // console.log('Batches: ', batches)
+
+      batches.forEach(batchId => {
+        // Get first 'Entrada' and last 'Saída' for this batchId
+        const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
+        const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort()[0];
+        const saida = batchRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
+        // console.log('Entrada: ', entrada)
+        // console.log('Saida: ', saida)
+        
+        if (entrada && saida) {
+          const entradaTime = new Date(entrada.created_at);
+          const saidaTime = new Date(saida.created_at);
+          const diffInMilliseconds = saidaTime - entradaTime;
+          const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
+  
+          timeDiffs.push(diffInHours);
+        }
+      });
+  
+      if (timeDiffs.length > 0) {
+        // Calculate average time for this process order
+        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        machineTime[processOrder - 1] = roundTo(avgTime, 2);
+      }
+    });
+    
+    setProcessTime(machineTime);
+    return { machineTime };
+  };
+  
+  const calculateProcessEntranceTimes = () => {
+    let processEntranceTime = Array(data.length).fill(0); // Assuming 9 processes
+    
+    // Start from the second process (index 1), as the first should always be zero
+    for (let processOrder = 2; processOrder <= data.length; processOrder++) {
+      const previousProcessOrder = processOrder - 1;
+  
+      const batches = [...new Set(vsm
+        .filter(item => item.Process.Order === previousProcessOrder)
+        .map(item => item.BatchId))]; // Unique Batch IDs for the previous process
+  
+      let timeDiffs = [];
+      
+      // console.log('Batches: ', batches)
+      
+      batches.forEach(batchId => {
+        // Get last 'Saída' for the previous process
+        const previousProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === previousProcessOrder);
+        const firstSaida = previousProcessRecords.filter(item => item.Movement === 'Saída').sort()[0];
+        console.log('first Saida: ', firstSaida)
+
+        // Get first 'Entrada' for the current process
+        const currentProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
+        const lastEntrada = currentProcessRecords.filter(item => item.Movement === 'Entrada').sort().reverse()[0];
+        console.log('Last Entrada: ', lastEntrada)
+  
+        if (firstSaida && lastEntrada) {
+          const saidaTime = new Date(firstSaida.created_at);
+          const entradaTime = new Date(lastEntrada.created_at);
+          const diffInMilliseconds = entradaTime - saidaTime;
+          const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
+          console.log('Diff in minutes:', diffInHours)
+          timeDiffs.push(diffInHours);
+        }
+      });
+  
+      if (timeDiffs.length > 0) {
+        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        processEntranceTime[processOrder - 1] = roundTo(avgTime, 2); // Subtract 1 for zero-based index
+      }
+    }
+  
+    processEntranceTime[0] = 0; // Ensure the first element is always zero
+    setProcessEntranceTime(processEntranceTime)
+    return processEntranceTime;
+  };
+
+  //initial data get
   useEffect(() => {
     apiUrl
       .get("/process/get")
@@ -46,6 +164,7 @@ function Vsm() {
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
+        console.log(response.data)
         setVsm(response.data)
       })
       .catch((error) => {
@@ -53,36 +172,21 @@ function Vsm() {
       });
   }, []);
 
+
+  // calculate 
   useEffect(() => {
-    if (vsm.length > 0) {
-      const calculateBatchQnt = () => {
-        let processed = Array(data.length).fill(0);
-
-        // Iterate over each process, sorted by the `Order` attribute
-        vsm.forEach((item, index) => {
-          
-          if (item.Process.Order === 1 && item.Movement == 'Entrada') {
-            console.log('PROCESSO', item.Process)
-            // First process: Sum of all 'Entrada' movements in VSM data
-            processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
-          } else {
-            // Subsequent processes: Sum of 'Saída' movements of the previous process order
-            if (item.Movement == 'Saída')
-              processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
-
-          }
-
-        });
-  
-        return processed;
-      };
-  
       const newProcessedVsm = calculateBatchQnt();
       console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
-    }
+
+      const machineTimes = calculateMachineTimes();
+      console.log(machineTimes)
+
+      const machineEntranceTimes = calculateProcessEntranceTimes();
+      console.log('Machine Entrance: ', machineEntranceTimes)
   }, [vsm, data]);
   
+  // refresh data
   useEffect(() => {
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)
@@ -207,7 +311,7 @@ function Vsm() {
                       {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>
-                      0.00
+                      {processEntranceTime[index]}
                       <hr />
                     </div>
                   </div>
@@ -219,7 +323,7 @@ function Vsm() {
                       className={styles.vsmCard}
                     />
                     <div className={styles.machine}>
-                      <span>0.00</span>
+                      <span>{processTime[index]}</span>
                       <hr />
                     </div>
                   </div>

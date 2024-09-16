@@ -3,8 +3,7 @@ import styles from "./ProductionOrders.module.css";
 function ProductionOrders({ numOrders = 0 }) {
     return(
         <div>
-            {numOrders}
-            Ordens de Produção
+            {numOrders} Ordens de Produção
         </div>
     )
 }

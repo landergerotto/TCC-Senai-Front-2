@@ -10,13 +10,14 @@ import ProcessPage from "./pages/Process/Process";
 import NotFoundPage from "./pages/NotFound/NotFound";
 import RegisterPage from "./pages/Register/Register";
 
-import SideNavBar from "./components/Sidebar/Sidebar";
-import NavbarComponent from "./components/Navbar/navbar.jsx";
-import { RecuperaPage } from "./pages/Recupera/Recupera.jsx";
-import CodigoPage from "./pages/Codigo/Codigo.jsx";
-import RedefinePage from "./pages/Redefine/Redefine.jsx";
-import CadastroPartNumber from "./pages/CadastroPartNumber/CadastroPartNumber.jsx";
-import RelatoriosPage from "./pages/Relatorios/Relatorios.jsx";
+import SideNavBar from './components/Sidebar/Sidebar';
+import NavbarComponent from './components/Navbar/navbar.jsx';
+import { RecuperaPage } from './pages/Recupera/Recupera.jsx';
+import CodigoPage from './pages/Codigo/Codigo.jsx';
+import RedefinePage from './pages/Redefine/Redefine.jsx';
+import CadastroPartNumber from './pages/CadastroPartNumber/CadastroPartNumber.jsx';
+import RelatoriosPage from './pages/Relatorios/Relatorios.jsx';
+import VsmPage from './pages/Vsm/VsmPage.jsx';
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute.jsx";
 import { LoadingProvider } from "./contexts/LoadingContext.jsx";
 

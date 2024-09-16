@@ -21,8 +21,6 @@ import ProductionOrders from "../ProductionOrders/ProductionOrders";
 
 import cryptoService from "../../service/cryptoService";
 
-
-
 function Vsm() {
   let type = null;
   let options = null;
@@ -30,6 +28,7 @@ function Vsm() {
   const [vsm, setVsm] = useState([]);
   const [processedVsm, setProcessedVsm] = useState([]);
   const [processTime, setProcessTime] = useState([]);
+  const [processEntranceTime, setProcessEntranceTime] = useState([]);
   const [multiplier, setMultiplier] = useState(1);
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
@@ -60,7 +59,7 @@ function Vsm() {
   };
 
   const calculateMachineTimes = () => {
-    let machineTime = Array(9).fill(0);  // Assuming 9 processes
+    let machineTime = Array(data.length).fill(0);  // Assuming 9 processes
   
     // Group by Process Order
     data.forEach((processItem, index) => {
@@ -70,14 +69,16 @@ function Vsm() {
         .map(item => item.BatchId))]; // Unique Batch IDs per process
   
       let timeDiffs = [];
-  
+      
+      // console.log('Batches: ', batches)
+
       batches.forEach(batchId => {
         // Get first 'Entrada' and last 'Saída' for this batchId
         const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
         const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort()[0];
         const saida = batchRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
-        console.log('Entrada: ', entrada)
-        console.log('Saida: ', saida)
+        // console.log('Entrada: ', entrada)
+        // console.log('Saida: ', saida)
         
         if (entrada && saida) {
           const entradaTime = new Date(entrada.created_at);
@@ -101,45 +102,49 @@ function Vsm() {
   };
   
   const calculateProcessEntranceTimes = () => {
-    let processEntranceTime = Array(9).fill(0); // Assuming 9 processes
-  
-    data.forEach((processItem, index) => {
-      const processOrder = processItem.Order;
-      const nextProcessOrder = processOrder + 1;
-  
-      if (nextProcessOrder > data.length) return; // No next process for the last one
+    let processEntranceTime = Array(data.length).fill(0); // Assuming 9 processes
+    
+    // Start from the second process (index 1), as the first should always be zero
+    for (let processOrder = 2; processOrder <= data.length; processOrder++) {
+      const previousProcessOrder = processOrder - 1;
   
       const batches = [...new Set(vsm
-        .filter(item => item.Process.Order === processOrder)
-        .map(item => item.BatchId))]; // Unique Batch IDs for current process
+        .filter(item => item.Process.Order === previousProcessOrder)
+        .map(item => item.BatchId))]; // Unique Batch IDs for the previous process
   
       let timeDiffs = [];
-  
+      
+      // console.log('Batches: ', batches)
+      
       batches.forEach(batchId => {
-        // Get last 'Saída' for the current process
+        // Get last 'Saída' for the previous process
+        const previousProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === previousProcessOrder);
+        const firstSaida = previousProcessRecords.filter(item => item.Movement === 'Saída').sort()[0];
+        console.log('first Saida: ', firstSaida)
+
+        // Get first 'Entrada' for the current process
         const currentProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
-        const lastSaida = currentProcessRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
-        
-        // Get first 'Entrada' for the next process
-        const nextProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === nextProcessOrder);
-        const firstEntrada = nextProcessRecords.filter(item => item.Movement === 'Entrada').sort()[0];
+        const lastEntrada = currentProcessRecords.filter(item => item.Movement === 'Entrada').sort().reverse()[0];
+        console.log('Last Entrada: ', lastEntrada)
   
-        if (lastSaida && firstEntrada) {
-          const saidaTime = new Date(lastSaida.created_at);
-          const entradaTime = new Date(firstEntrada.created_at);
+        if (firstSaida && lastEntrada) {
+          const saidaTime = new Date(firstSaida.created_at);
+          const entradaTime = new Date(lastEntrada.created_at);
           const diffInMilliseconds = entradaTime - saidaTime;
           const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
-  
+          console.log('Diff in minutes:', diffInHours)
           timeDiffs.push(diffInHours);
         }
       });
   
       if (timeDiffs.length > 0) {
         const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
-        processEntranceTime[processOrder - 1] = roundTo(avgTime, 2);
+        processEntranceTime[processOrder - 1] = roundTo(avgTime, 2); // Subtract 1 for zero-based index
       }
-    });
+    }
   
+    processEntranceTime[0] = 0; // Ensure the first element is always zero
+    setProcessEntranceTime(processEntranceTime)
     return processEntranceTime;
   };
 
@@ -174,8 +179,11 @@ function Vsm() {
       console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
 
-      const teste = calculateMachineTimes();
-      console.log(teste)
+      const machineTimes = calculateMachineTimes();
+      console.log(machineTimes)
+
+      const machineEntranceTimes = calculateProcessEntranceTimes();
+      console.log('Machine Entrance: ', machineEntranceTimes)
   }, [vsm, data]);
   
   // refresh data
@@ -303,7 +311,7 @@ function Vsm() {
                       {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>
-                      0.00
+                      {processEntranceTime[index]}
                       <hr />
                     </div>
                   </div>

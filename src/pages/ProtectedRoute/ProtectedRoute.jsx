@@ -17,6 +17,7 @@ function ProtectedRoute({ errorPage, targetPage, roles = [] }) {
       // || !roles.find(user.data.role)
     ) {
       // setPage(errorPage);
+      setPage(targetPage);
       return;
     }
 

@@ -66,6 +66,16 @@ function App() {
               />
             }
           ></Route>
+          <Route
+            path="/vsm"
+            element={
+              <ProtectedRoute
+                errorPage={<NotFoundPage />}
+                targetPage={<VsmPage />}
+                roles={planner}
+              />
+            }
+          ></Route>
           <Route path="/recupera" element={<RecuperaPage />}></Route>
           <Route path="/codigo" element={<CodigoPage />}></Route>
           <Route path="/redefine" element={<RedefinePage />}></Route>

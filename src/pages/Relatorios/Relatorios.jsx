@@ -150,7 +150,7 @@ function RelatoriosPage() {
               })}
             </Row>
           </Tab>
-          <Tab eventKey="dados" title="Dados" className={styles.tab}>
+          <Tab eventKey="dados" title="WIP" className={styles.tab}>
             <Col>
               <TabelaRelatorio fields={fields} data={data} />
             </Col>

@@ -11,7 +11,15 @@ import Loading from "../Loading/Loading";
 
 function TabelaRelatorio({ title, fields, data }) {
   const [process, setProcess] = useState([]);
+  const [wipCount, setWipCount] = useState(0);
   const { isLoading, startLoading, stopLoading } = useLoading();
+
+  useEffect(() => {
+    if (localStorage.getItem("tab") != "dados") {
+      stopLoading();
+      return;
+    }
+  }, []);
 
   useEffect(() => {
     startLoading();
@@ -34,32 +42,47 @@ function TabelaRelatorio({ title, fields, data }) {
           console.error("Erro ao buscar processo: ", error);
         }
       }
-      return uniqueProcess;
+      setProcess(uniqueProcess);
+      stopLoading();
     };
 
-    const fetchPOCs = async () => {
-      try {
-        const response = await apiUrl.get('/poc/get');
-        console.log(response);
-        return response;
-      } catch (error) {
-        console.error('Deu errado ai: ', error);
-      }
-    };
-    Promise.all([fetchProcessNames(), fetchPOCs()])
-      .then(([processNamesResult, pocsResult]) => {
-        setProcess(processNamesResult);
-        console.log(pocsResult);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados: ", error);
-      })
-      .finally(() => {
-        stopLoading();
-      });
-
+    fetchProcessNames();
   }, [data]);
 
+  useEffect(() => {
+    let count = 0;
+
+    const checkPOCs = (pocs = []) => {
+      const processBatchGroups = {};
+
+      pocs.forEach((poc) => {
+        const key = `${poc.ProcessId}-${poc.BatchId}`;
+        if (!processBatchGroups[key]) {
+          processBatchGroups[key] = [];
+        }
+        processBatchGroups[key].push(poc);
+      });
+
+      Object.values(processBatchGroups).forEach((group) => {
+        if (group.length > 1) {
+          const mostRecentPoc = group.reduce((latest, currentPoc) => {
+            return new Date(latest.created_at) > new Date(currentPoc.created_at)
+              ? latest
+              : currentPoc;
+          });
+
+          console.log('ultima poc ', mostRecentPoc);
+
+          if (mostRecentPoc.Movement !== "Saída") {
+            count += mostRecentPoc.BatchId;
+          }
+        }
+      });
+    };
+
+    checkPOCs(data);
+    setWipCount(count);
+  }, [data]);
 
   return (
     <>
@@ -79,11 +102,13 @@ function TabelaRelatorio({ title, fields, data }) {
               {process.map((process, index) => (
                 <tr key={index}>
                   <td className={styles.firstTd}>
-                    <div className={styles.tdText}>{process.Name}</div>
+                    <div className={styles.tdText}>{process.Name} {process.id}</div>
                   </td>
-                  <td>{process.id}</td>
+                  <td>WIPcount: {wipCount}</td>
                 </tr>
               ))}
+              <tr>
+              </tr>
             </tbody>
           </Table>
         </div>

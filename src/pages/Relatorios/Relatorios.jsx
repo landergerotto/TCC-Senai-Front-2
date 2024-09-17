@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
@@ -11,6 +12,7 @@ import { apiUrl } from "../../Api/apiUrl";
 import { useLoading } from "../../contexts/LoadingContext";
 
 import styles from "./Relatorios.module.css";
+import TabelaRelatorio from "../../components/TabelaRelatorio/TabelaRelatorio";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
@@ -21,6 +23,14 @@ function RelatoriosPage() {
     PartNumber: "",
   });
   const { isLoading, startLoading, stopLoading } = useLoading();
+
+  const fields = [
+    { label: "Processo" },
+    { label: "WIP" },
+    { label: "Interditado" },
+    { label: "Refugo" },
+    { label: "Data" },
+  ];
 
   let tab = localStorage.getItem("tab");
 
@@ -73,14 +83,12 @@ function RelatoriosPage() {
         localStorage.setItem("tab", "pocs");
         break;
 
-      case "editar":
+      case "dados":
         localStorage.setItem("tab", "dados");
-        console.log(tab);
         break;
 
-      case "excluir":
+      case "graficos":
         localStorage.setItem("tab", "graficos");
-        console.log(tab);
         break;
     }
   }
@@ -144,7 +152,7 @@ function RelatoriosPage() {
           </Tab>
           <Tab eventKey="dados" title="Dados" className={styles.tab}>
             <Col>
-              <CardGraph data={data} />
+              <TabelaRelatorio fields={fields} data={data} />
             </Col>
           </Tab>
           <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>

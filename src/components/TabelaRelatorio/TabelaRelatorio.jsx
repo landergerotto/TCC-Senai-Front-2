@@ -10,10 +10,12 @@ import { useLoading } from "../../contexts/LoadingContext";
 import Loading from "../Loading/Loading";
 
 function TabelaRelatorio({ title, fields, data }) {
+  const { isLoading, startLoading, stopLoading } = useLoading();
   const [process, setProcess] = useState([]);
   const [wipCount, setWipCount] = useState(0);
-  const { isLoading, startLoading, stopLoading } = useLoading();
+  const [scrapCount, setScrapCount] = useState(0);
   const [processInterditated, setProcessInterditated] = useState({});
+  const [latestDates, setLatestDates] = useState({});
 
   useEffect(() => {
     if (localStorage.getItem("tab") != "dados") {
@@ -53,8 +55,10 @@ function TabelaRelatorio({ title, fields, data }) {
   useEffect(() => {
     const checkPOCs = (pocs = []) => {
       const processWipCounts = {};
-      const processInterditatedCounts = {}; // Novo objeto para lotes interditados
+      const processInterditatedCounts = {};
+      const processScrapCounts = {};
       const processBatchGroups = {};
+      const latestDatePerProcess = {};
 
       pocs.forEach((poc) => {
         const key = `${poc.ProcessId}-${poc.BatchId}`;
@@ -75,15 +79,34 @@ function TabelaRelatorio({ title, fields, data }) {
               saida.ProcessId === entrada.ProcessId
           );
 
-          // Lógica para contar lotes sem saída (WIP)
+          const latestEntryDate = group.reduce((latest, item) => {
+            const currentDate = new Date(item.created_at);
+            return currentDate > latest ? currentDate : latest;
+          }, new Date(group[0].created_at));
+
+          if (!latestDatePerProcess[entrada.ProcessId]) {
+            latestDatePerProcess[entrada.ProcessId] = latestEntryDate;
+          } else {
+            const existingDate = latestDatePerProcess[entrada.ProcessId];
+            if (latestEntryDate > existingDate) {
+              latestDatePerProcess[entrada.ProcessId] = latestEntryDate;
+            }
+          }
+
           if (!saida) {
             if (!processWipCounts[entrada.ProcessId]) {
               processWipCounts[entrada.ProcessId] = 0;
             }
             processWipCounts[entrada.ProcessId] += Number(entrada.BatchQnt);
+
+            if (!processScrapCounts[entrada.ProcessId]) {
+              processScrapCounts[entrada.ProcessId] = 0;
+            }
+            processScrapCounts[entrada.ProcessId] += Number(
+              entrada.ScrapQnt || 0
+            );
           }
 
-          // Lógica para contar lotes interditados
           if (!saida && entrada.Interditated) {
             if (!processInterditatedCounts[entrada.ProcessId]) {
               processInterditatedCounts[entrada.ProcessId] = 0;
@@ -96,7 +119,9 @@ function TabelaRelatorio({ title, fields, data }) {
       });
 
       setWipCount(processWipCounts);
-      setProcessInterditated(processInterditatedCounts); // Atualiza estado de processos interditados
+      setProcessInterditated(processInterditatedCounts);
+      setLatestDates(latestDatePerProcess);
+      setScrapCount(processScrapCounts);
     };
 
     checkPOCs(data);
@@ -138,13 +163,14 @@ function TabelaRelatorio({ title, fields, data }) {
                         {process.Name} {process.id}
                       </div>
                     </td>
-                    <td>{wipCount[process.id]}</td>
+                    <td>{wipCount[process.id] || 0}</td>
                     <td>{processInterditated[process.id] || 0}</td>
-                    <td>{wipCount[process.id]}</td>
-                    <td>{formatDateTime(process.created_at)}</td>
+                    <td>{scrapCount[process.id] || 0}</td>
+                    <td>
+                      {formatDateTime(latestDates[process.id]) || "Sem data"}
+                    </td>{" "}
                   </tr>
                 ))}
-              <tr></tr>
             </tbody>
           </Table>
         </div>

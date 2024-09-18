@@ -13,6 +13,7 @@ function TabelaRelatorio({ title, fields, data }) {
   const [process, setProcess] = useState([]);
   const [wipCount, setWipCount] = useState(0);
   const { isLoading, startLoading, stopLoading } = useLoading();
+  const [processInterditated, setProcessInterditated] = useState({});
 
   useEffect(() => {
     if (localStorage.getItem("tab") != "dados") {
@@ -52,10 +53,10 @@ function TabelaRelatorio({ title, fields, data }) {
   useEffect(() => {
     const checkPOCs = (pocs = []) => {
       const processWipCounts = {};
+      const processInterditatedCounts = {}; // Novo objeto para lotes interditados
       const processBatchGroups = {};
 
       pocs.forEach((poc) => {
-        console.log(poc);
         const key = `${poc.ProcessId}-${poc.BatchId}`;
         if (!processBatchGroups[key]) {
           processBatchGroups[key] = [];
@@ -74,16 +75,28 @@ function TabelaRelatorio({ title, fields, data }) {
               saida.ProcessId === entrada.ProcessId
           );
 
+          // Lógica para contar lotes sem saída (WIP)
           if (!saida) {
             if (!processWipCounts[entrada.ProcessId]) {
               processWipCounts[entrada.ProcessId] = 0;
             }
             processWipCounts[entrada.ProcessId] += Number(entrada.BatchQnt);
           }
+
+          // Lógica para contar lotes interditados
+          if (!saida && entrada.Interditated) {
+            if (!processInterditatedCounts[entrada.ProcessId]) {
+              processInterditatedCounts[entrada.ProcessId] = 0;
+            }
+            processInterditatedCounts[entrada.ProcessId] += Number(
+              entrada.BatchQnt
+            );
+          }
         });
       });
 
       setWipCount(processWipCounts);
+      setProcessInterditated(processInterditatedCounts); // Atualiza estado de processos interditados
     };
 
     checkPOCs(data);
@@ -126,7 +139,7 @@ function TabelaRelatorio({ title, fields, data }) {
                       </div>
                     </td>
                     <td>{wipCount[process.id]}</td>
-                    <td>{}</td>
+                    <td>{processInterditated[process.id] || 0}</td>
                     <td>{wipCount[process.id]}</td>
                     <td>{formatDateTime(process.created_at)}</td>
                   </tr>

@@ -189,12 +189,15 @@ function RelatoriosPage() {
     <>
       {isLoading && <Loading />}
       <Row>
-        <Container className={styles.container}>
-          <img
-            src={excel}
-            className={styles.excelIcon}
-            onClick={handleImportExcel}
-          ></img>
+        <Container className={styles.containerFlex}>
+          <div className={styles.tooltip}>
+            <img
+              src={excel}
+              className={styles.excelIcon}
+              onClick={handleImportExcel}
+            ></img>
+            <span className={styles.tooltiptext}>Importar arquivo Excel</span>
+          </div>
         </Container>
       </Row>
       <Row>

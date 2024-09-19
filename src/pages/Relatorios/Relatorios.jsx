@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as xlsx from "xlsx";
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
@@ -14,10 +15,10 @@ import { useLoading } from "../../contexts/LoadingContext";
 
 import styles from "./Relatorios.module.css";
 
-
 function RelatoriosPage() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [processes, setProcesses] = useState([]);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
@@ -38,6 +39,8 @@ function RelatoriosPage() {
 
   useEffect(() => {
     startLoading();
+
+    getProcesses();
 
     apiUrl
       .get("poc/get")
@@ -106,8 +109,11 @@ function RelatoriosPage() {
       reader.onload = (e) => {
         try {
           const data = new Uint8Array(e.target.result);
-          const loadedWorkbook = xlsx.read(data, { type: "array" });
-          resolve(loadedWorkbook);
+          const workbook = xlsx.read(data, { type: "array" });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = xlsx.utils.sheet_to_json(worksheet);
+
+          resolve(jsonData);
         } catch (error) {
           reject(error);
         }
@@ -118,69 +124,18 @@ function RelatoriosPage() {
     });
   }
 
-  async function saveExcelFile(workbook) {
-    let data = getData();
-
-    if (workbook) {
-      const ws = workbook.Sheets[workbook.SheetNames[0]];
-      xlsx.utils.sheet_add_aoa(ws, [
-        [
-          "Processo",
-          "Quantidade Lote",
-          "ID Lote",
-          "Partnumber",
-          "Movimentação",
-          "Data",
-          "Hora",
-          "EDV Operador",
-          "Quantidade de Refugo",
-          "Interditado",
-        ],
-      ]);
-
-      data.forEach((info) => {
-        xlsx.utils.sheet_add_aoa(
-          ws,
-          [
-            [
-              info.ProcessName,
-              info.BatchQnt,
-              info.BatchId,
-              info.PartNumber,
-              info.Movement,
-              info.Data,
-              info.Hora,
-              info.OperatorEDV,
-              info.ScrapQnt,
-              info.Interditated === true ? "Sim" : "Não",
-            ],
-          ],
-          { origin: -1 }
-        );
+  function getProcesses() {
+    apiUrl
+      .get("/process/get")
+      .then((response) => {
+        setProcesses(response.data);
+      })
+      .catch((error) => {
+        console.error("Deu errado ai brother: ", error);
       });
-
-      const wbout = xlsx.write(workbook, { bookType: "xlsx", type: "binary" });
-      saveAs(
-        new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-        "POC Cicle.xlsx"
-      );
-
-      alert("Dados salvos no arquivo");
-    } else {
-      console.log("Por favor, selecione um arquivo Excel antes de salvar.");
-    }
   }
 
-  function s2ab(s) {
-    const buf = new ArrayBuffer(s.length);
-    const view = new Uint8Array(buf);
-    for (let i = 0; i < s.length; i++) {
-      view[i] = s.charCodeAt(i) & 0xff;
-    }
-    return buf;
-  }
-
-  async function createFileInput() {
+  async function handleImportExcel() {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".xlsx, .xls";
@@ -188,13 +143,41 @@ function RelatoriosPage() {
 
     input.onchange = async (event) => {
       try {
-        const workbook = await loadExcelFile(event);
-        saveExcelFile(workbook);
-      } catch (error) {
-        alert("Houve um problema ao salvar: " + error.message);
-      }
+        const excelData = await loadExcelFile(event);
 
-      document.body.removeChild(input);
+        const formattedData = excelData.map((row) => {
+          const matchedProcess = processes.find(
+            (process) => process.Name === row.Processo
+          );
+
+          const data = row.Data
+            ? row.Data.split("/").reverse().join("-")
+            : null;
+          const hora = row.Hora ? row.Hora : "00:00:00";
+
+          let createdAt = null;
+
+          if (data) createdAt = new Date(`${data}T${hora}`);
+
+          return {
+            ProcessId: matchedProcess ? matchedProcess.id : null,
+            BatchQnt: row["Quantidade Lote"],
+            BatchId: row["ID Lote"],
+            PartNumber: row.Partnumber,
+            Movement: row.Movimentação,
+            created_at: createdAt ? createdAt.toISOString() : null,
+            OperatorEDV: row["EDV Operador"],
+            ScrapQnt: row["Quantidade de Refugo"],
+            Interditated: row.Interditado === "Sim",
+          };
+        });
+
+        setData(formattedData);
+        setFilteredData(formattedData);
+        console.log(formattedData);
+      } catch (error) {
+        console.error("Erro ao importar o arquivo Excel: ", error);
+      }
     };
 
     document.body.appendChild(input);
@@ -284,7 +267,7 @@ function RelatoriosPage() {
                 <Button
                   style={styles.btn}
                   text={"Importar Excel"}
-                  onClick={createFileInput}
+                  onClick={handleImportExcel}
                 />
               </Col>
             </Row>

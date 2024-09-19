@@ -9,7 +9,7 @@ import { apiUrl } from "../../Api/apiUrl";
 import { useLoading } from "../../contexts/LoadingContext";
 import Loading from "../Loading/Loading";
 
-function TabelaRelatorio({ title, fields, data, filters }) {
+function TabelaRelatorio({ title, fields, data }) {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [process, setProcess] = useState([]);
   const [wipCount, setWipCount] = useState(0);

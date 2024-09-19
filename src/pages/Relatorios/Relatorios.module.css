@@ -12,3 +12,10 @@
 .colCenter {
     margin-block: 1em;
 }
+
+.btn {
+  margin: 0em !important;
+  height: 100%;
+  font-size: 1.1em;
+  padding: 0;
+}

@@ -307,8 +307,6 @@ function HomeForm({
   }
 
   function loadExcelFile(event) {
-    console.log("436 - entrou");
-
     return new Promise((resolve, reject) => {
       const file = event.target.files[0];
       if (!file) {

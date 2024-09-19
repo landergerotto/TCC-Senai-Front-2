@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 
 import Input from "../../components/Input/input";
-import Button from "../../components/Button/button";
 import Loading from "../../components/Loading/Loading";
 import CardGraph from "../../components/CardGraph/CardGraph";
 import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
@@ -14,6 +13,8 @@ import { apiUrl } from "../../Api/apiUrl";
 import { useLoading } from "../../contexts/LoadingContext";
 
 import styles from "./Relatorios.module.css";
+
+import excel from "../../assets/Img/excel.png";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
@@ -187,103 +188,85 @@ function RelatoriosPage() {
   return (
     <>
       {isLoading && <Loading />}
-      <Container style={{ marginBottom: "1em" }}>
-        <Tabs
-          defaultActiveKey={`${tab}`}
-          id="justify-tab-example"
-          justify
-          onSelect={(eventKey) => handleSelect(eventKey)}
-        >
-          <Tab eventKey="pocs" title="Relatório" className={styles.tab}>
-            <Row className={styles.center}>
-              <Col className={styles.colCenter}>
-                <Input
-                  name="BatchId"
-                  type="number"
-                  placeholder="Lote"
-                  onChange={(e) => {
-                    handleFilterChange(e);
-                  }}
-                />
-              </Col>
-              <Col className={styles.colCenter}>
-                <Input
-                  name="created_at"
-                  type="date"
-                  onChange={(e) => {
-                    handleFilterChange(e);
-                  }}
-                />
-              </Col>
-              <Col className={styles.colCenter}>
-                <Input
-                  name="PartNumber"
-                  type="text"
-                  placeholder="Partnumber"
-                  onChange={(e) => {
-                    handleFilterChange(e);
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className={styles.center}>
-              {filteredData.map((item, index) => {
-                return (
-                  <Col
-                    key={index}
-                    sm={10}
-                    md={4}
-                    style={{ marginBottom: "1.5em" }}
-                  >
-                    <LancamentoCard item={item} />
-                  </Col>
-                );
-              })}
-            </Row>
-          </Tab>
-          <Tab eventKey="dados" title="WIP" className={styles.tab}>
-            <Row>
+      <Row>
+        <Container className={styles.container}>
+          <img
+            src={excel}
+            className={styles.excelIcon}
+            onClick={handleImportExcel}
+          ></img>
+        </Container>
+      </Row>
+      <Row>
+        <Container className={styles.container}>
+          <Tabs
+            defaultActiveKey={`${tab}`}
+            id="justify-tab-example"
+            justify
+            onSelect={(eventKey) => handleSelect(eventKey)}
+          >
+            <Tab eventKey="pocs" title="Relatório" className={styles.tab}>
+              <Row className={styles.center}>
+                <Col className={styles.colCenter}>
+                  <Input
+                    name="BatchId"
+                    type="number"
+                    placeholder="Lote"
+                    onChange={(e) => {
+                      handleFilterChange(e);
+                    }}
+                  />
+                </Col>
+                <Col className={styles.colCenter}>
+                  <Input
+                    name="created_at"
+                    type="date"
+                    onChange={(e) => {
+                      handleFilterChange(e);
+                    }}
+                  />
+                </Col>
+                <Col className={styles.colCenter}>
+                  <Input
+                    name="PartNumber"
+                    type="text"
+                    placeholder="Partnumber"
+                    onChange={(e) => {
+                      handleFilterChange(e);
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row className={styles.center}>
+                {filteredData.map((item, index) => {
+                  return (
+                    <Col
+                      key={index}
+                      sm={10}
+                      md={4}
+                      style={{ marginBottom: "1.5em" }}
+                    >
+                      <LancamentoCard item={item} />
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Tab>
+            <Tab eventKey="dados" title="WIP" className={styles.tab}>
+              <Row style={{ marginTop: "1em" }}>
+                <Col>
+                  <TabelaRelatorio fields={fields} data={data} />
+                </Col>
+              </Row>
+            </Tab>
+            <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>
               <Col>
-                <Input
-                  name="Process"
-                  type="number"
-                  placeholder="Processo"
-                  onChange={(e) => {
-                    handleFilterChange(e);
-                  }}
-                />
+                <CardGraph data={data} />
               </Col>
-              <Col>
-                <Input
-                  name="WIP"
-                  type="number"
-                  placeholder="WIP"
-                  onChange={(e) => {
-                    handleFilterChange(e);
-                  }}
-                />
-              </Col>
-              <Col>
-                <Button
-                  style={styles.btn}
-                  text={"Importar Excel"}
-                  onClick={handleImportExcel}
-                />
-              </Col>
-            </Row>
-            <Row style={{ marginTop: "1em" }}>
-              <Col>
-                <TabelaRelatorio fields={fields} data={data} />
-              </Col>
-            </Row>
-          </Tab>
-          <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>
-            <Col>
-              <CardGraph data={data} />
-            </Col>
-          </Tab>
-        </Tabs>
-      </Container>
+            </Tab>
+          </Tabs>
+        </Container>
+      </Row>
     </>
   );
 }

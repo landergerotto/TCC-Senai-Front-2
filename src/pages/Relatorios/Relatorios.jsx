@@ -78,6 +78,11 @@ function RelatoriosPage() {
 
       return matchesLote && matchesData && matchesPartnumber;
     });
+
+    const sortedData = filtered.sort((a, b) => {
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
     setFilteredData(filtered);
   }, [filters, data]);
 

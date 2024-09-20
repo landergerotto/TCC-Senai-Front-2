@@ -84,8 +84,10 @@ function EditProcessForm({
         return;
       }
       console.log("info - ", info);
-      if ((field.id = "Interditated"))
-        info == "Sim" ? (info = true) : (info = false);
+      if ((field.id == "Interditated")) {
+        info = info === "Sim" ? true : false;
+        informations[field.name] = info;
+      }
       else informations[field.name] = info;
     }
     console.log("informations: ", informations);

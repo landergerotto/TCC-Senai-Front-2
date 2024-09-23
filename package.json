@@ -36,6 +36,7 @@
     "react-modal": "^3.16.1",
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.24.0",
+    "recharts": "^2.12.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

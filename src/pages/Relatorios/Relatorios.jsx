@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as xlsx from "xlsx";
 import { useEffect, useState } from "react";
@@ -15,11 +16,13 @@ import { useLoading } from "../../contexts/LoadingContext";
 import styles from "./Relatorios.module.css";
 
 import excel from "../../assets/Img/excel.png";
+import Graph from "../../components/Graph/Graph";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [processes, setProcesses] = useState([]);
+  const [uniqueProcesses, setUniqueProcesses] = useState([]);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
@@ -34,6 +37,26 @@ function RelatoriosPage() {
     { label: "Refugo" },
     { label: "Data" },
   ];
+
+  const bars = [
+    {
+      dataKey: 'BatchQnt',
+      barWidth: 20,
+      color: '#ffc658'
+    },
+    {
+      dataKey: 'ScrapQnt',
+      barWidth: 20,
+      color: '#99c658'
+    },
+  ]
+
+  const xAxis = [
+    {
+      dataKey: 'Process',
+
+    }
+  ]
 
   let tab = localStorage.getItem("tab");
   if (tab == "" || !tab) tab = "pocs";
@@ -190,6 +213,34 @@ function RelatoriosPage() {
     input.click();
   }
 
+  useEffect(() => {
+    startLoading();
+
+    const fetchProcessNames = async () => {
+      const uniqueProcess = [];
+
+      for (const item of data) {
+        try {
+          const response = await apiUrl.get(`/process/get/${item.ProcessId}`);
+
+          const exists = uniqueProcess.find(
+            (process) => process.id === response.data.id
+          );
+
+          if (!exists) {
+            uniqueProcess.push(response.data);
+          }
+        } catch (error) {
+          console.error("Erro ao buscar processo: ", error);
+        }
+      }
+      setUniqueProcesses(uniqueProcess);
+      stopLoading();
+    };
+
+    fetchProcessNames();
+  }, [data]);
+
   return (
     <>
       {isLoading && <Loading />}
@@ -269,7 +320,12 @@ function RelatoriosPage() {
             </Tab>
             <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>
               <Col>
-                <CardGraph data={data} />
+                <Row>
+                  <h3>Peças por Processo</h3>
+                </Row>
+                <Row>
+                  <Graph data={filteredData} bars={bars} xAxis={xAxis} />
+                </Row>
               </Col>
             </Tab>
           </Tabs>

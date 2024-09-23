@@ -83,20 +83,17 @@ function EditProcessForm({
         setShowModal(true);
         return;
       }
-      console.log("info - ", info);
       if ((field.id == "Interditated")) {
         info = info === "Sim" ? true : false;
         informations[field.name] = info;
       }
       else informations[field.name] = info;
     }
-    console.log("informations: ", informations);
     const EncryptedBody = cryptoService.encryptData(informations);
 
     apiUrl
       .put(`${urlEdit}/put`, { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log(response);
         setModalData({
           title: "Confirmação",
           text: "Processo atualizado com sucesso.",
@@ -104,8 +101,7 @@ function EditProcessForm({
         });
         setShowModal(true);
         setModalFunc(() => () => {
-          if (targetEdit != null) navigate(`/${targetEdit}`);
-          else return;
+          setShowModal(false);
         });
       })
       .catch((error) => {

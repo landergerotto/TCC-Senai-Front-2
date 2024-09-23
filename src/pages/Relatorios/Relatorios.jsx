@@ -40,23 +40,18 @@ function RelatoriosPage() {
 
   const bars = [
     {
-      dataKey: 'BatchQnt',
+      dataKey: "BatchQnt",
       barWidth: 20,
-      color: '#ffc658'
+      color: "#ffc658",
     },
     {
-      dataKey: 'ScrapQnt',
+      dataKey: "ScrapQnt",
       barWidth: 20,
-      color: '#99c658'
+      color: "#99c658",
     },
-  ]
+  ];
 
-  const xAxis = [
-    {
-      dataKey: 'Process',
-
-    }
-  ]
+  const xAxis = "ProcessId";
 
   let tab = localStorage.getItem("tab");
   if (tab == "" || !tab) tab = "pocs";
@@ -324,7 +319,7 @@ function RelatoriosPage() {
                   <h3>Peças por Processo</h3>
                 </Row>
                 <Row>
-                  <Graph data={filteredData} bars={bars} xAxis={xAxis} />
+                  <Graph data={data} bars={bars} xAxis={xAxis} />
                 </Row>
               </Col>
             </Tab>

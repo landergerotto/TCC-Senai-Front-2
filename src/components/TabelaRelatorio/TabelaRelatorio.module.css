@@ -1,0 +1,32 @@
+.body {
+    width: 100%;
+}
+
+.title {
+    font-size: 1.9em;
+    font-weight: 600;
+}
+
+.tabela {
+    max-height: 13em;
+    overflow-y: auto;
+}
+
+thead {
+    position: sticky;
+    top: -1px;
+}
+
+tr {
+    text-align: center;
+}
+
+.firstTd {
+    display: flex;
+    justify-content: center;
+}
+
+.tdText {
+    display: flex;
+    justify-content: center;
+}

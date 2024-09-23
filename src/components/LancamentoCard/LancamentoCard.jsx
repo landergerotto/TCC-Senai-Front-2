@@ -92,7 +92,7 @@ function LancamentoCard({ item }) {
   function handleEdit() {
     fields.map((field) => {
       localStorage.setItem("id", item.id);
-      localStorage.setItem("ProcessId", item.id);
+      localStorage.setItem("ProcessId", item.ProcessId);
       if (field.id == "ProcessName")
         localStorage.setItem(field.id, processName[item.ProcessId]);
       if (item.hasOwnProperty(field.id))
@@ -166,7 +166,10 @@ function LancamentoCard({ item }) {
           </div>
           <div
             className={styles.btnDelete}
-            onClick={() => handleDelete(item.id)}
+            onClick={() => {
+              console.log(item);
+              handleDelete(item.ProcessId);
+            }}
           >
             <DeleteIcon sx={{ color: "white" }} />
           </div>

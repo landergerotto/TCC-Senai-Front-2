@@ -3,13 +3,12 @@ import Image from "react-bootstrap/Image";
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState, useRef } from "react";
 
-import styles from "./Vsm.module.css"; // Make sure you have this CSS file
+import styles from "./Vsm.module.css";
 
 import Arrow from "../Arrow/Arrow";
 import VsmCard from "../VsmCard/VsmCard";
 import SAPicon from "../SAPicon/SAPicon";
 import FactoryIcon from "../FactoryIcon/FactoryIcon";
-
 
 import TruckArrowUp from "../../assets/Img/TruckArrowUp.png";
 import TruckArrowDown from "../../assets/Img/TruckArrowDown.png";
@@ -18,8 +17,6 @@ import right_arrow from "../../assets/Img/right-arrow.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import ProductionOrders from "../ProductionOrders/ProductionOrders";
-
-import cryptoService from "../../service/cryptoService";
 
 function Vsm() {
   let type = null;
@@ -210,7 +207,6 @@ function Vsm() {
         console.log("Erro ao buscar dados do vsm: ", error);
       });
   }, []);
-
 
   // calculate 
   useEffect(() => {

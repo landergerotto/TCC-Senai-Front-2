@@ -10,11 +10,10 @@ function decodeJWT(token) {
   }
 }
 
-async function validateJWT(token, email) {
+async function validateJWT(token) {
   try {
     const response = await apiUrl.post("/auth/validate", {
-      Email: email,
-      token: token,
+      token,
     });
     if (response.data.valid) {
       return true;
@@ -27,4 +26,4 @@ async function validateJWT(token, email) {
   }
 }
 
-export { decodeJWT, validateJWT };
+export default { decodeJWT, validateJWT };

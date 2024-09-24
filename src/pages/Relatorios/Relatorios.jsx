@@ -22,6 +22,7 @@ function RelatoriosPage() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [processes, setProcesses] = useState([]);
+  const [labels, setLabels] = useState([]);
   const [uniqueProcesses, setUniqueProcesses] = useState([]);
   const [filters, setFilters] = useState({
     BatchId: "",
@@ -37,21 +38,6 @@ function RelatoriosPage() {
     { label: "Refugo" },
     { label: "Data" },
   ];
-
-  const bars = [
-    {
-      dataKey: "BatchQnt",
-      barWidth: 20,
-      color: "#ffc658",
-    },
-    {
-      dataKey: "ScrapQnt",
-      barWidth: 20,
-      color: "#99c658",
-    },
-  ];
-
-  const xAxis = "ProcessId";
 
   let tab = localStorage.getItem("tab");
   if (tab == "" || !tab) tab = "pocs";
@@ -229,6 +215,7 @@ function RelatoriosPage() {
           console.error("Erro ao buscar processo: ", error);
         }
       }
+      setLabels(uniqueProcess);
       setUniqueProcesses(uniqueProcess);
       stopLoading();
     };
@@ -319,7 +306,11 @@ function RelatoriosPage() {
                   <h3>Peças por Processo</h3>
                 </Row>
                 <Row>
-                  <Graph data={data} bars={bars} xAxis={xAxis} />
+                  {!isLoading && filteredData.length > 0 ? (
+                    <Graph batchData={data} processList={uniqueProcesses} />
+                  ) : (
+                    <></>
+                  )}
                 </Row>
               </Col>
             </Tab>

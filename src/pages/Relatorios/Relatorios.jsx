@@ -301,18 +301,30 @@ function RelatoriosPage() {
               </Row>
             </Tab>
             <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>
-              <Col>
-                <Row>
-                  <h3>Peças por Processo</h3>
-                </Row>
-                <Row>
-                  {!isLoading && filteredData.length > 0 ? (
+              {!isLoading && filteredData.length > 0 ? (
+                <Col>
+                  <Row>
+                    <h3>Peças por Processo</h3>
+                  </Row>
+                  <Row>
                     <Graph batchData={data} processList={uniqueProcesses} />
-                  ) : (
-                    <></>
-                  )}
-                </Row>
-              </Col>
+                  </Row>
+                  <Row>
+                    <h3>Tempo Médio por Operação</h3>
+                  </Row>
+                  <Row>
+                    <Graph batchData={data} processList={uniqueProcesses} />
+                  </Row>
+                  <Row>
+                    <h3>Total de peças nos últimos 30 dias</h3>
+                  </Row>
+                  <Row>
+                    <Graph batchData={data} processList={uniqueProcesses} />
+                  </Row>
+                </Col>
+              ) : (
+                <></>
+              )}
             </Tab>
           </Tabs>
         </Container>

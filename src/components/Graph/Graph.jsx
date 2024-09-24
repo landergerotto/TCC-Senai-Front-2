@@ -7,6 +7,9 @@ function Graph({ processList, batchData }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
+  console.log("processList: ", processList);
+  console.log("batchData: ", batchData);
+
   useEffect(() => {
     const processBatchMap = batchData.reduce((acc, item) => {
       const { ProcessId, BatchQnt } = item;
@@ -46,14 +49,13 @@ function Graph({ processList, batchData }) {
       },
     };
 
-    if (chartInstance.current)
-      chartInstance.current.destroy();
+    if (chartInstance.current) chartInstance.current.destroy();
 
     chartInstance.current = new Chart(chartRef.current, config);
   }, [processList, batchData]);
 
   return (
-    <div style={{ width: "100%", height: 800, marginBlock: '0.5em' }}>
+    <div style={{ width: "100%", height: 800, marginBlock: "0.5em" }}>
       <canvas ref={chartRef} className={styles.graph} />
     </div>
   );

@@ -4,10 +4,16 @@ import Chart from "chart.js/auto";
 import styles from "./Graph.module.css";
 import { Row } from "react-bootstrap";
 
-function Graph({ processList, batchData, title, chartType = "bar" }) {
+function Graph({
+  processList,
+  batchData,
+  averageTimes,
+  title,
+  chartType = "bar",
+}) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  
+
   useEffect(() => {
     const processBatchMap = batchData.reduce((acc, item) => {
       const { ProcessId, BatchQnt } = item;
@@ -41,32 +47,52 @@ function Graph({ processList, batchData, title, chartType = "bar" }) {
       "rgba(255, 20, 147, 0.5)",
     ];
 
+    const noGridTypes = ["doughnut", "pie", "polarArea"];
+
     const filteredProcesses = processList.filter((process) =>
       batchData.some(
         (item) => item.ProcessId === process.id && item.BatchQnt > 0
       )
     );
 
-    if (filteredProcesses.length === 0)
-      return;
+    if (filteredProcesses.length === 0) return;
 
     const labels = filteredProcesses.map((process) => process.Name);
     const data = filteredProcesses.map(
       (process) => processBatchMap[process.id]
     );
 
-    const chartData = {
-      labels,
-      datasets: [
-        {
-          label: "Batch Quantities",
-          data,
-          backgroundColor: colors,
-          borderColor: colors.map((color) => color.replace("0.5", "1")),
-          borderWidth: 1,
-        },
-      ],
-    };
+    const isUsingAverageTimes = averageTimes && averageTimes.length > 0;
+    const chartData = isUsingAverageTimes
+      ? {
+          labels: averageTimes.map((item) => item.processId), // Nomes dos processos
+          datasets: [
+            {
+              label: "Average Time (Minutes)",
+              data: averageTimes.map((item) => item.averageTime), // Médias de tempo
+              backgroundColor: colors,
+              borderColor: colors.map((color) => color.replace("0.5", "1")),
+              borderWidth: 1,
+            },
+          ],
+        }
+      : {
+          labels: processList.map((process) => process.Name), // Nomes dos processos
+          datasets: [
+            {
+              label: "Batch Quantities",
+              data: processList.map((process) => {
+                const totalBatchQnt = batchData
+                  .filter((item) => item.ProcessId === process.id)
+                  .reduce((acc, item) => acc + item.BatchQnt, 0);
+                return totalBatchQnt;
+              }),
+              backgroundColor: colors,
+              borderColor: colors.map((color) => color.replace("0.5", "1")),
+              borderWidth: 1,
+            },
+          ],
+        };
 
     const config = {
       type: chartType,
@@ -74,26 +100,37 @@ function Graph({ processList, batchData, title, chartType = "bar" }) {
       options: {
         devicePixelRatio: 4,
         maintainAspectRatio: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
         plugins: {
           legend: {
-            display: false,
+            display: noGridTypes.includes(chartType) ? true : false,
+            labels: {
+              padding: 20,
+            },
           },
         },
-        layout: {
-          padding: 20,
-        },
+        scales: !noGridTypes.includes(chartType)
+          ? {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  display: true,
+                },
+              },
+              x: {
+                grid: {
+                  display: true,
+                },
+              },
+            }
+          : {},
+        cutout: chartType === "doughnut" ? "50%" : undefined,
       },
     };
 
     if (chartInstance.current) chartInstance.current.destroy();
 
     chartInstance.current = new Chart(chartRef.current, config);
-  }, [processList, batchData]);
+  }, [processList, batchData, averageTimes]);
 
   const filteredProcesses = processList.filter((process) =>
     batchData.some((item) => item.ProcessId === process.id && item.BatchQnt > 0)
@@ -105,13 +142,9 @@ function Graph({ processList, batchData, title, chartType = "bar" }) {
         <h3>{title}</h3>
       </Row>
       <Row>
-        {filteredProcesses.length > 0 ? (
-          <div className={styles.canva}>
-            <canvas ref={chartRef} />
-          </div>
-        ) : (
-          <div>Nenhum processo foi registrado de acordo com o filtro</div>
-        )}
+        <div className={styles.canva}>
+          <canvas ref={chartRef} />
+        </div>
       </Row>
     </div>
   );

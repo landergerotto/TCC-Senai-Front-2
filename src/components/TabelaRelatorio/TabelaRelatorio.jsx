@@ -166,9 +166,6 @@ function TabelaRelatorio({ title, fields, data }) {
                     <td>{wipCount[process.id] || 0}</td>
                     <td>{processInterditated[process.id] || 0}</td>
                     <td>{scrapCount[process.id] || 0}</td>
-                    <td>
-                      {formatDateTime(latestDates[process.id]) || "Sem data"}
-                    </td>{" "}
                   </tr>
                 ))}
             </tbody>

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 
 import Input from "../../components/Input/input";
+import Graph from "../../components/Graph/Graph";
 import Loading from "../../components/Loading/Loading";
-import CardGraph from "../../components/CardGraph/CardGraph";
 import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
 import TabelaRelatorio from "../../components/TabelaRelatorio/TabelaRelatorio";
 
@@ -14,7 +14,6 @@ import { useLoading } from "../../contexts/LoadingContext";
 import styles from "./Relatorios.module.css";
 
 import excel from "../../assets/Img/excel.png";
-import Graph from "../../components/Graph/Graph";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
@@ -29,13 +28,15 @@ function RelatoriosPage() {
     PartNumber: "",
   });
   const { isLoading, startLoading, stopLoading } = useLoading();
+  const [averageTime, setAverageTime] = useState([]);
+
+  console.log(averageTime);
 
   const fields = [
     { label: "Processo" },
     { label: "WIP" },
     { label: "Interditado" },
     { label: "Refugo" },
-    { label: "Data" },
   ];
 
   let tab = localStorage.getItem("tab");
@@ -58,6 +59,14 @@ function RelatoriosPage() {
         stopLoading();
       });
   }, []);
+
+  useEffect(() => {
+    calculateAverageTimes();
+  }, [filteredData]);
+
+  useEffect(() => {
+    console.log("Average Time Updated: ", averageTime);
+  }, [averageTime]);
 
   function handleFilterChange(e) {
     const { name, value } = e.target;
@@ -238,6 +247,46 @@ function RelatoriosPage() {
     fetchProcessNames();
   }, [data]);
 
+  const calculateAverageTimes = () => {
+    const entradaSaidaMap = {};
+
+    // Agrupar entradas e saídas
+    filteredData.forEach((item) => {
+      const key = item.ProcessId; // Agrupar por ProcessId
+      entradaSaidaMap[key] = entradaSaidaMap[key] || {
+        entrada: null,
+        saida: null,
+      };
+
+      if (item.Movement === "Entrada") {
+        entradaSaidaMap[key].entrada = item.created_at;
+      } else if (item.Movement === "Saída") {
+        entradaSaidaMap[key].saida = item.created_at;
+      }
+    });
+
+    // Calcular os tempos médios para cada processo
+    const averageTimes = Object.keys(entradaSaidaMap)
+      .map((processId) => {
+        const { entrada, saida } = entradaSaidaMap[processId];
+
+        if (entrada && saida) {
+          const entradaDate = new Date(entrada);
+          const saidaDate = new Date(saida);
+          const diffInMillis = saidaDate - entradaDate;
+          const averageTimeInMinutes = diffInMillis / (1000 * 60); // converter para minutos
+
+          return { processId, averageTime: averageTimeInMinutes };
+        }
+        return null;
+      })
+      .filter((result) => result !== null); // Remover entradas nulas
+
+    console.log("Average Times for Each Process: ", averageTimes);
+
+    setAverageTime(averageTimes); // Atualizar o estado com o array de médias por processo
+  };
+
   return (
     <>
       {isLoading && <Loading />}
@@ -323,22 +372,27 @@ function RelatoriosPage() {
                       batchData={filteredData}
                       processList={uniqueProcesses}
                       title={"Peças por Processo"}
-                      chartType="bar"
+                      chartType={"bar"}
                     />
                   </Row>
                   <Row>
-                    <Graph
-                      batchData={filteredData}
-                      processList={uniqueProcesses}
-                      title={"Tempo Médio por Operação"}
-                      chartType="doughnut"
-                    />
+                    {averageTime && averageTime.length > 0 ? (
+                      <Graph
+                        batchData={averageTime}
+                        processList={uniqueProcesses}
+                        title={"Tempo Médio por Operação"}
+                        chartType={"bar"}
+                      />
+                    ) : (
+                      <p>Nenhum dado disponível para mostrar.</p> // Mensagem de fallback
+                    )}
                   </Row>
                   <Row>
                     <Graph
                       batchData={filteredData}
                       processList={uniqueProcesses}
                       title={"Total de peças"}
+                      chartType={"bar"}
                     />
                   </Row>
                 </Col>

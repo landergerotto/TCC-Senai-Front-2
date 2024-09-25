@@ -180,7 +180,7 @@ function RelatoriosPage() {
 
           return {
             ProcessId: matchedProcess ? matchedProcess.id : null,
-            BatchQnt: row["Quantidade Lote"],
+            BatchQnt: Number(row["Quantidade Lote"]),
             BatchId: row["ID Lote"],
             PartNumber: row.Partnumber,
             Movement: row.Movimentação,

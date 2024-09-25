@@ -24,6 +24,7 @@ function RelatoriosPage() {
   const [processes, setProcesses] = useState([]);
   const [labels, setLabels] = useState([]);
   const [uniqueProcesses, setUniqueProcesses] = useState([]);
+  const [lastDays, setLastDays] = useState(0);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
@@ -68,6 +69,10 @@ function RelatoriosPage() {
     }));
   }
 
+  const handleLastDaysChange = (e) => {
+    setLastDays(e.target.value);
+  };
+
   useEffect(() => {
     const filtered = data.filter((item) => {
       const matchesLote = filters.BatchId
@@ -79,15 +84,19 @@ function RelatoriosPage() {
       const matchesPartnumber = filters.PartNumber
         ? item.PartNumber.includes(filters.PartNumber)
         : true;
+      const createdAt = new Date(item.created_at);
+      const today = new Date();
+      const diffInDays = Math.abs(today - createdAt) / (1000 * 3600 * 24);
+      const matchesLastDays = lastDays ? diffInDays <= lastDays : true;
 
-      return matchesLote && matchesData && matchesPartnumber;
+      return matchesLote && matchesData && matchesPartnumber && matchesLastDays;
     });
 
     const sortedData = filtered.sort((a, b) => {
       return new Date(b.created_at) - new Date(a.created_at);
     });
 
-    setFilteredData(filtered);
+    setFilteredData(sortedData);
   }, [filters, data]);
 
   function handleSelect(key) {
@@ -304,22 +313,33 @@ function RelatoriosPage() {
               {!isLoading && filteredData.length > 0 ? (
                 <Col>
                   <Row>
-                    <h3>Peças por Processo</h3>
+                    <Input
+                      name="lastDays"
+                      type="number"
+                      placeholder="Últimos dias"
+                      onChange={handleLastDaysChange}
+                    />
                   </Row>
                   <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Peças por Processo"}
+                    />
                   </Row>
                   <Row>
-                    <h3>Tempo Médio por Operação</h3>
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Tempo Médio por Operação"}
+                    />
                   </Row>
                   <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
-                  </Row>
-                  <Row>
-                    <h3>Total de peças nos últimos 30 dias</h3>
-                  </Row>
-                  <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Total de peças"}
+                    />
                   </Row>
                 </Col>
               ) : (

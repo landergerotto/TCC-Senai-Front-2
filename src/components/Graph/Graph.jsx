@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 
 import styles from "./Graph.module.css";
+import { Row } from "react-bootstrap";
 
-function Graph({ processList, batchData }) {
+function Graph({ processList, batchData, title }) {
   const [chartType, setChartType] = useState("bar");
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
@@ -64,12 +65,16 @@ function Graph({ processList, batchData }) {
       type: chartType,
       data: chartData,
       options: {
-        devicePixelRatio: 3,
-        responsive: true,
+        devicePixelRatio: 4,
         maintainAspectRatio: true,
         scales: {
           y: {
             beginAtZero: true,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
           },
         },
       },
@@ -81,8 +86,15 @@ function Graph({ processList, batchData }) {
   }, [processList, batchData]);
 
   return (
-    <div style={{ width: "100%", height: "600px", marginBlock: "0.5em" }}>
-      <canvas ref={chartRef} className={styles.graph} />
+    <div className={styles.block}>
+      <Row>
+        <h3>{title}</h3>
+      </Row>
+      <Row>
+        <div className={styles.canva}>
+          <canvas ref={chartRef} />
+        </div>
+      </Row>
     </div>
   );
 }

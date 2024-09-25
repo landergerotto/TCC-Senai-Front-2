@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as xlsx from "xlsx";
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
@@ -24,7 +22,7 @@ function RelatoriosPage() {
   const [processes, setProcesses] = useState([]);
   const [labels, setLabels] = useState([]);
   const [uniqueProcesses, setUniqueProcesses] = useState([]);
-  const [lastDays, setLastDays] = useState(0);
+  const [lastDays, setLastDays] = useState(30);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
@@ -89,7 +87,15 @@ function RelatoriosPage() {
       const diffInDays = Math.abs(today - createdAt) / (1000 * 3600 * 24);
       const matchesLastDays = lastDays ? diffInDays <= lastDays : true;
 
-      return matchesLote && matchesData && matchesPartnumber && matchesLastDays;
+      const hasValidBatchQnt = item.BatchQnt > 0;
+
+      return (
+        matchesLote &&
+        matchesData &&
+        matchesPartnumber &&
+        matchesLastDays &&
+        hasValidBatchQnt
+      );
     });
 
     const sortedData = filtered.sort((a, b) => {
@@ -97,7 +103,7 @@ function RelatoriosPage() {
     });
 
     setFilteredData(sortedData);
-  }, [filters, data]);
+  }, [filters, data, lastDays]);
 
   function handleSelect(key) {
     switch (key) {
@@ -313,18 +319,11 @@ function RelatoriosPage() {
               {!isLoading && filteredData.length > 0 ? (
                 <Col>
                   <Row>
-                    <Input
-                      name="lastDays"
-                      type="number"
-                      placeholder="Últimos dias"
-                      onChange={handleLastDaysChange}
-                    />
-                  </Row>
-                  <Row>
                     <Graph
                       batchData={filteredData}
                       processList={uniqueProcesses}
                       title={"Peças por Processo"}
+                      chartType="bar"
                     />
                   </Row>
                   <Row>
@@ -332,6 +331,7 @@ function RelatoriosPage() {
                       batchData={filteredData}
                       processList={uniqueProcesses}
                       title={"Tempo Médio por Operação"}
+                      chartType="doughnut"
                     />
                   </Row>
                   <Row>

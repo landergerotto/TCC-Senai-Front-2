@@ -4,14 +4,10 @@ import Chart from "chart.js/auto";
 import styles from "./Graph.module.css";
 import { Row } from "react-bootstrap";
 
-function Graph({ processList, batchData, title }) {
-  const [chartType, setChartType] = useState("bar");
+function Graph({ processList, batchData, title, chartType = "bar" }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-
-  console.log("processList: ", processList);
-  console.log("batchData: ", batchData);
-
+  
   useEffect(() => {
     const processBatchMap = batchData.reduce((acc, item) => {
       const { ProcessId, BatchQnt } = item;
@@ -45,8 +41,19 @@ function Graph({ processList, batchData, title }) {
       "rgba(255, 20, 147, 0.5)",
     ];
 
-    const labels = processList.map((process) => process.Name);
-    const data = processList.map((process) => processBatchMap[process.id] || 0);
+    const filteredProcesses = processList.filter((process) =>
+      batchData.some(
+        (item) => item.ProcessId === process.id && item.BatchQnt > 0
+      )
+    );
+
+    if (filteredProcesses.length === 0)
+      return;
+
+    const labels = filteredProcesses.map((process) => process.Name);
+    const data = filteredProcesses.map(
+      (process) => processBatchMap[process.id]
+    );
 
     const chartData = {
       labels,
@@ -77,6 +84,9 @@ function Graph({ processList, batchData, title }) {
             display: false,
           },
         },
+        layout: {
+          padding: 20,
+        },
       },
     };
 
@@ -85,15 +95,23 @@ function Graph({ processList, batchData, title }) {
     chartInstance.current = new Chart(chartRef.current, config);
   }, [processList, batchData]);
 
+  const filteredProcesses = processList.filter((process) =>
+    batchData.some((item) => item.ProcessId === process.id && item.BatchQnt > 0)
+  );
+
   return (
     <div className={styles.block}>
       <Row>
         <h3>{title}</h3>
       </Row>
       <Row>
-        <div className={styles.canva}>
-          <canvas ref={chartRef} />
-        </div>
+        {filteredProcesses.length > 0 ? (
+          <div className={styles.canva}>
+            <canvas ref={chartRef} />
+          </div>
+        ) : (
+          <div>Nenhum processo foi registrado de acordo com o filtro</div>
+        )}
       </Row>
     </div>
   );

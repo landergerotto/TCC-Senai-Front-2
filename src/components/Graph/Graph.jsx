@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Row } from "react-bootstrap";
+import { useEffect, useRef } from "react";
 
 import styles from "./Graph.module.css";
-import { Row } from "react-bootstrap";
 
 function Graph({
   processList = [],
@@ -102,6 +103,9 @@ function Graph({
           ],
         };
 
+    const maxValue =
+      Math.ceil((Math.max(...chartData.datasets[0].data) * 1.1) / 100) * 100;
+
     const config = {
       type: chartType,
       data: chartData,
@@ -115,11 +119,19 @@ function Graph({
               padding: 20,
             },
           },
+          datalabels: {
+            display: true,
+            color: "black",
+            anchor: "end",
+            align: "top",
+            formatter: (value) => value.toFixed(2),
+          },
         },
         scales: !noGridTypes.includes(chartType)
           ? {
               y: {
                 beginAtZero: true,
+                max: maxValue,
                 grid: {
                   display: true,
                 },
@@ -133,12 +145,12 @@ function Graph({
           : {},
         cutout: chartType === "doughnut" ? "50%" : undefined,
       },
+      plugins: [ChartDataLabels],
     };
 
     if (chartInstance.current) chartInstance.current.destroy();
 
     chartInstance.current = new Chart(chartRef.current, config);
-
   }, [processList, batchData, averageTimes, chartType]);
 
   return (

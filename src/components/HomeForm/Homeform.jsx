@@ -127,13 +127,15 @@ function HomeForm({ title, fields }) {
 
   const clearSelectedLancamentos = () => {
     const currData = JSON.parse(localStorage.getItem("data"));
-
-    const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
-
-    const selectedIds = selectedItems.map((item) => item.BatchId);
+    const selectedLancamentos = JSON.parse(
+      localStorage.getItem("selectedItems")
+    );
 
     const updatedData = currData.filter(
-      (item) => !selectedIds.includes(item.BatchId)
+      (item) =>
+        !selectedLancamentos.some(
+          (selected) => JSON.stringify(selected) === JSON.stringify(item)
+        )
     );
 
     localStorage.setItem("data", JSON.stringify(updatedData));

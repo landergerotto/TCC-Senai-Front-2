@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as xlsx from "xlsx";
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 
 import Input from "../../components/Input/input";
+import Graph from "../../components/Graph/Graph";
 import Loading from "../../components/Loading/Loading";
-import CardGraph from "../../components/CardGraph/CardGraph";
 import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
 import TabelaRelatorio from "../../components/TabelaRelatorio/TabelaRelatorio";
 
@@ -16,7 +14,6 @@ import { useLoading } from "../../contexts/LoadingContext";
 import styles from "./Relatorios.module.css";
 
 import excel from "../../assets/Img/excel.png";
-import Graph from "../../components/Graph/Graph";
 
 function RelatoriosPage() {
   const [data, setData] = useState([]);
@@ -24,23 +21,26 @@ function RelatoriosPage() {
   const [processes, setProcesses] = useState([]);
   const [labels, setLabels] = useState([]);
   const [uniqueProcesses, setUniqueProcesses] = useState([]);
+  const [lastDays, setLastDays] = useState(30);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
     PartNumber: "",
   });
   const { isLoading, startLoading, stopLoading } = useLoading();
+  const [averageTime, setAverageTime] = useState([]);
+
+  const localTabs = ["pocs", "dados", "graficos"];
 
   const fields = [
     { label: "Processo" },
     { label: "WIP" },
     { label: "Interditado" },
     { label: "Refugo" },
-    { label: "Data" },
   ];
 
   let tab = localStorage.getItem("tab");
-  if (tab == "" || !tab) tab = "pocs";
+  if (!tab || tab === "" || !localTabs.includes(tab)) tab = "pocs";
 
   useEffect(() => {
     startLoading();
@@ -60,6 +60,10 @@ function RelatoriosPage() {
       });
   }, []);
 
+  useEffect(() => {
+    calculateAverageTimes();
+  }, [filteredData]);
+
   function handleFilterChange(e) {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -67,6 +71,10 @@ function RelatoriosPage() {
       [name]: value,
     }));
   }
+
+  const handleLastDaysChange = (e) => {
+    setLastDays(e.target.value);
+  };
 
   useEffect(() => {
     const filtered = data.filter((item) => {
@@ -79,16 +87,28 @@ function RelatoriosPage() {
       const matchesPartnumber = filters.PartNumber
         ? item.PartNumber.includes(filters.PartNumber)
         : true;
+      const createdAt = new Date(item.created_at);
+      const today = new Date();
+      const diffInDays = Math.abs(today - createdAt) / (1000 * 3600 * 24);
+      const matchesLastDays = lastDays ? diffInDays <= lastDays : true;
 
-      return matchesLote && matchesData && matchesPartnumber;
+      const hasValidBatchQnt = item.BatchQnt > 0;
+
+      return (
+        matchesLote &&
+        matchesData &&
+        matchesPartnumber &&
+        matchesLastDays &&
+        hasValidBatchQnt
+      );
     });
 
     const sortedData = filtered.sort((a, b) => {
       return new Date(b.created_at) - new Date(a.created_at);
     });
 
-    setFilteredData(filtered);
-  }, [filters, data]);
+    setFilteredData(sortedData);
+  }, [filters, data, lastDays]);
 
   function handleSelect(key) {
     switch (key) {
@@ -171,7 +191,7 @@ function RelatoriosPage() {
 
           return {
             ProcessId: matchedProcess ? matchedProcess.id : null,
-            BatchQnt: row["Quantidade Lote"],
+            BatchQnt: Number(row["Quantidade Lote"]),
             BatchId: row["ID Lote"],
             PartNumber: row.Partnumber,
             Movement: row.Movimentação,
@@ -222,6 +242,42 @@ function RelatoriosPage() {
 
     fetchProcessNames();
   }, [data]);
+
+  const calculateAverageTimes = () => {
+    const entradaSaidaMap = {};
+
+    filteredData.forEach((item) => {
+      const key = item.ProcessId;
+      entradaSaidaMap[key] = entradaSaidaMap[key] || {
+        entrada: null,
+        saida: null,
+      };
+
+      if (item.Movement === "Entrada") {
+        entradaSaidaMap[key].entrada = item.created_at;
+      } else if (item.Movement === "Saída") {
+        entradaSaidaMap[key].saida = item.created_at;
+      }
+    });
+
+    const averageTimes = Object.keys(entradaSaidaMap)
+      .map((processId) => {
+        const { entrada, saida } = entradaSaidaMap[processId];
+
+        if (entrada && saida) {
+          const entradaDate = new Date(entrada);
+          const saidaDate = new Date(saida);
+          const diffInMillis = saidaDate - entradaDate;
+          const averageTimeInMinutes = diffInMillis / (1000 * 60);
+
+          return { processId, averageTime: averageTimeInMinutes };
+        }
+        return null;
+      })
+      .filter((result) => result !== null);
+
+    setAverageTime(averageTimes);
+  };
 
   return (
     <>
@@ -304,22 +360,28 @@ function RelatoriosPage() {
               {!isLoading && filteredData.length > 0 ? (
                 <Col>
                   <Row>
-                    <h3>Peças por Processo</h3>
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Peças por Processo"}
+                      chartType={"bar"}
+                    />
                   </Row>
                   <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
+                    <Graph
+                      averageTimes={averageTime}
+                      processList={uniqueProcesses}
+                      title={"Tempo Médio por Operação"}
+                      chartType={"bar"}
+                    />
                   </Row>
                   <Row>
-                    <h3>Tempo Médio por Operação</h3>
-                  </Row>
-                  <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
-                  </Row>
-                  <Row>
-                    <h3>Total de peças nos últimos 30 dias</h3>
-                  </Row>
-                  <Row>
-                    <Graph batchData={data} processList={uniqueProcesses} />
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Total de peças"}
+                      chartType={"bar"}
+                    />
                   </Row>
                 </Col>
               ) : (

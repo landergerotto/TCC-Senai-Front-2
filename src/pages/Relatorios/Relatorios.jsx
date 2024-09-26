@@ -32,8 +32,6 @@ function RelatoriosPage() {
 
   const localTabs = ["pocs", "dados", "graficos"];
 
-  console.log("averageTime: ", averageTime);
-
   const fields = [
     { label: "Processo" },
     { label: "WIP" },
@@ -65,10 +63,6 @@ function RelatoriosPage() {
   useEffect(() => {
     calculateAverageTimes();
   }, [filteredData]);
-
-  useEffect(() => {
-    console.log("Average Time Updated: ", averageTime);
-  }, [averageTime]);
 
   function handleFilterChange(e) {
     const { name, value } = e.target;
@@ -281,8 +275,6 @@ function RelatoriosPage() {
         return null;
       })
       .filter((result) => result !== null);
-
-    console.log("Average Times for Each Process: ", averageTimes);
 
     setAverageTime(averageTimes);
   };

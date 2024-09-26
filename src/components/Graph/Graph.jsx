@@ -75,7 +75,6 @@ function Graph({
             {
               label: "Average Time",
               data: averageTimes.map((item) => {
-                console.log("item: ", item);
                 return item.averageTime;
               }),
               backgroundColor: colors.slice(0, averageTimes.length),

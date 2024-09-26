@@ -14,9 +14,6 @@ function Graph({
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  console.log("averageTimes Param: ", averageTimes);
-  console.log("processList Param: ", processList);
-
   const colors = [
     "rgba(255, 99, 132, 0.5)",
     "rgba(54, 162, 235, 0.5)",
@@ -43,7 +40,6 @@ function Graph({
   const noGridTypes = ["doughnut", "pie", "polarArea"];
 
   useEffect(() => {
-    console.log("1");
     const processBatchMap = batchData.reduce((acc, item) => {
       const { ProcessId, BatchQnt } = item;
       if (!acc[ProcessId]) {
@@ -53,14 +49,10 @@ function Graph({
       return acc;
     }, {});
 
-    console.log("2");
-
     const processIdToNameMap = processList.reduce((acc, process) => {
       acc[process.id] = process.Name;
       return acc;
     }, {});
-
-    console.log("processIdToNameMap: ", processIdToNameMap);
 
     const filteredProcesses =
       batchData.length > 0
@@ -71,12 +63,7 @@ function Graph({
           )
         : processList;
 
-    console.log("3");
-    console.log("filteredProcesses: ", filteredProcesses);
-
     if (filteredProcesses.length === 0) return;
-
-    console.log("4");
 
     const isUsingAverageTimes = averageTimes && averageTimes.length > 0;
     const chartData = isUsingAverageTimes
@@ -116,8 +103,6 @@ function Graph({
           ],
         };
 
-    console.log("5");
-
     const config = {
       type: chartType,
       data: chartData,
@@ -151,15 +136,10 @@ function Graph({
       },
     };
 
-    console.log("6");
-
     if (chartInstance.current) chartInstance.current.destroy();
-
-    console.log("7");
 
     chartInstance.current = new Chart(chartRef.current, config);
 
-    console.log("8");
   }, [processList, batchData, averageTimes, chartType]);
 
   return (

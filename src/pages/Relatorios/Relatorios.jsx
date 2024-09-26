@@ -30,6 +30,8 @@ function RelatoriosPage() {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [averageTime, setAverageTime] = useState([]);
 
+  const localTabs = ["pocs", "dados", "graficos"];
+
   console.log("averageTime: ", averageTime);
 
   const fields = [
@@ -40,7 +42,7 @@ function RelatoriosPage() {
   ];
 
   let tab = localStorage.getItem("tab");
-  if (tab == "" || !tab) tab = "pocs";
+  if (!tab || tab === "" || !localTabs.includes(tab)) tab = "pocs";
 
   useEffect(() => {
     startLoading();
@@ -250,9 +252,8 @@ function RelatoriosPage() {
   const calculateAverageTimes = () => {
     const entradaSaidaMap = {};
 
-    // Agrupar entradas e saídas
     filteredData.forEach((item) => {
-      const key = item.ProcessId; // Agrupar por ProcessId
+      const key = item.ProcessId;
       entradaSaidaMap[key] = entradaSaidaMap[key] || {
         entrada: null,
         saida: null,
@@ -265,7 +266,6 @@ function RelatoriosPage() {
       }
     });
 
-    // Calcular os tempos médios para cada processo
     const averageTimes = Object.keys(entradaSaidaMap)
       .map((processId) => {
         const { entrada, saida } = entradaSaidaMap[processId];
@@ -274,17 +274,17 @@ function RelatoriosPage() {
           const entradaDate = new Date(entrada);
           const saidaDate = new Date(saida);
           const diffInMillis = saidaDate - entradaDate;
-          const averageTimeInMinutes = diffInMillis / (1000 * 60); // converter para minutos
+          const averageTimeInMinutes = diffInMillis / (1000 * 60);
 
           return { processId, averageTime: averageTimeInMinutes };
         }
         return null;
       })
-      .filter((result) => result !== null); // Remover entradas nulas
+      .filter((result) => result !== null);
 
     console.log("Average Times for Each Process: ", averageTimes);
 
-    setAverageTime(averageTimes); // Atualizar o estado com o array de médias por processo
+    setAverageTime(averageTimes);
   };
 
   return (

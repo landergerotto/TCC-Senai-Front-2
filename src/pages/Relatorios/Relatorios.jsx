@@ -30,7 +30,7 @@ function RelatoriosPage() {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [averageTime, setAverageTime] = useState([]);
 
-  console.log(averageTime);
+  console.log("averageTime: ", averageTime);
 
   const fields = [
     { label: "Processo" },
@@ -376,16 +376,12 @@ function RelatoriosPage() {
                     />
                   </Row>
                   <Row>
-                    {averageTime && averageTime.length > 0 ? (
-                      <Graph
-                        batchData={averageTime}
-                        processList={uniqueProcesses}
-                        title={"Tempo Médio por Operação"}
-                        chartType={"bar"}
-                      />
-                    ) : (
-                      <p>Nenhum dado disponível para mostrar.</p> // Mensagem de fallback
-                    )}
+                    <Graph
+                      averageTimes={averageTime}
+                      processList={uniqueProcesses}
+                      title={"Tempo Médio por Operação"}
+                      chartType={"bar"}
+                    />
                   </Row>
                   <Row>
                     <Graph

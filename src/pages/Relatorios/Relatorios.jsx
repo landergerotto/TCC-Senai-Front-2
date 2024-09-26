@@ -279,6 +279,23 @@ function RelatoriosPage() {
     setAverageTime(averageTimes);
   };
 
+  function getLast30Days() {
+    const dates = [];
+    const today = new Date();
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      dates.unshift(date.toISOString().slice(0, 10));
+    }
+
+    return dates;
+  }
+
+  const totalPecas = filteredData.reduce((acc, item) => {
+    return acc + item.BatchQnt;
+  }, 0);
+
   return (
     <>
       {isLoading && <Loading />}
@@ -377,10 +394,17 @@ function RelatoriosPage() {
                   </Row>
                   <Row>
                     <Graph
-                      batchData={filteredData}
-                      processList={uniqueProcesses}
-                      title={"Total de peças"}
-                      chartType={"bar"}
+                      labels={getLast30Days()}
+                      totalPieces={getLast30Days().map((date) => {
+                        const totalByDate = filteredData
+                          .filter(
+                            (item) => item.created_at.slice(0, 10) === date
+                          )
+                          .reduce((acc, item) => acc + item.BatchQnt, 0);
+                        return totalByDate;
+                      })}
+                      title={"Total de Peças por Dia (últimos 30 dias)"}
+                      chartType={"line"}
                     />
                   </Row>
                 </Col>

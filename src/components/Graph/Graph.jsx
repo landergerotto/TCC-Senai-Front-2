@@ -9,6 +9,8 @@ function Graph({
   processList = [],
   batchData = [],
   averageTimes = [],
+  labels = [],
+  totalPieces = [],
   title,
   chartType = "bar",
 }) {
@@ -41,67 +43,94 @@ function Graph({
   const noGridTypes = ["doughnut", "pie", "polarArea"];
 
   useEffect(() => {
-    const processBatchMap = batchData.reduce((acc, item) => {
-      const { ProcessId, BatchQnt } = item;
-      if (!acc[ProcessId]) {
-        acc[ProcessId] = 0;
-      }
-      acc[ProcessId] += BatchQnt;
-      return acc;
-    }, {});
+    const isTotalPiecesData = labels.length > 0 && totalPieces.length > 0;
+    let chartData;
 
-    const processIdToNameMap = processList.reduce((acc, process) => {
-      acc[process.id] = process.Name;
-      return acc;
-    }, {});
-
-    const filteredProcesses =
-      batchData.length > 0
-        ? processList.filter((process) =>
-            batchData.some(
-              (item) => item.ProcessId === process.id && item.BatchQnt > 0
-            )
-          )
-        : processList;
-
-    if (filteredProcesses.length === 0) return;
-
-    const isUsingAverageTimes = averageTimes && averageTimes.length > 0;
-    const chartData = isUsingAverageTimes
-      ? {
-          labels: averageTimes.map(
-            (item) => processIdToNameMap[item.processId] || item.processId
-          ),
-          datasets: [
-            {
-              label: "Average Time",
-              data: averageTimes.map((item) => {
-                return item.averageTime;
-              }),
-              backgroundColor: colors.slice(0, averageTimes.length),
-              borderColor: colors
-                .slice(0, filteredProcesses.length)
-                .map((color) => color.replace("0.5", "1")),
-              borderWidth: 1,
-            },
-          ],
+    if (isTotalPiecesData) {
+      const formattedLabels = labels.map((dateStr) => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+      });
+      chartData = {
+        labels: formattedLabels,
+        datasets: [
+          {
+            label: "Total de Peças por Dia",
+            data: totalPieces,
+            backgroundColor: "rgba(75, 192, 192, 0.5)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+            fill: false,
+            tension: 0.1,
+          },
+        ],
+      };
+    } else {
+      const processBatchMap = batchData.reduce((acc, item) => {
+        const { ProcessId, BatchQnt } = item;
+        if (!acc[ProcessId]) {
+          acc[ProcessId] = 0;
         }
-      : {
-          labels: filteredProcesses.map((process) => process.Name),
-          datasets: [
-            {
-              label: "Batch Quantities",
-              data: filteredProcesses.map(
-                (process) => processBatchMap[process.id]
-              ),
-              backgroundColor: colors.slice(0, filteredProcesses.length),
-              borderColor: colors
-                .slice(0, filteredProcesses.length)
-                .map((color) => color.replace("0.5", "1")),
-              borderWidth: 1,
-            },
-          ],
-        };
+        acc[ProcessId] += BatchQnt;
+        return acc;
+      }, {});
+
+      const processIdToNameMap = processList.reduce((acc, process) => {
+        acc[process.id] = process.Name;
+        return acc;
+      }, {});
+
+      const filteredProcesses =
+        batchData.length > 0
+          ? processList.filter((process) =>
+              batchData.some(
+                (item) => item.ProcessId === process.id && item.BatchQnt > 0
+              )
+            )
+          : processList;
+
+      if (filteredProcesses.length === 0) return;
+
+      const isUsingAverageTimes = averageTimes && averageTimes.length > 0;
+      chartData = isUsingAverageTimes
+        ? {
+            labels: averageTimes.map(
+              (item) => processIdToNameMap[item.processId] || item.processId
+            ),
+            datasets: [
+              {
+                label: "Average Time",
+                data: averageTimes.map((item) => {
+                  return item.averageTime;
+                }),
+                backgroundColor: colors.slice(0, averageTimes.length),
+                borderColor: colors
+                  .slice(0, filteredProcesses.length)
+                  .map((color) => color.replace("0.5", "1")),
+                borderWidth: 1,
+              },
+            ],
+          }
+        : {
+            labels: filteredProcesses.map((process) => process.Name),
+            datasets: [
+              {
+                label: "Batch Quantities",
+                data: filteredProcesses.map(
+                  (process) => processBatchMap[process.id]
+                ),
+                backgroundColor: colors.slice(0, filteredProcesses.length),
+                borderColor: colors
+                  .slice(0, filteredProcesses.length)
+                  .map((color) => color.replace("0.5", "1")),
+                borderWidth: 1,
+              },
+            ],
+          };
+    }
 
     const maxValue =
       Math.ceil((Math.max(...chartData.datasets[0].data) * 1.1) / 100) * 100;
@@ -151,7 +180,7 @@ function Graph({
     if (chartInstance.current) chartInstance.current.destroy();
 
     chartInstance.current = new Chart(chartRef.current, config);
-  }, [processList, batchData, averageTimes, chartType]);
+  }, [processList, batchData, averageTimes, labels, totalPieces, chartType]);
 
   return (
     <div className={styles.block}>

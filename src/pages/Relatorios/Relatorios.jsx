@@ -371,7 +371,7 @@ function RelatoriosPage() {
                     <Graph
                       averageTimes={averageTime}
                       processList={uniqueProcesses}
-                      title={"Tempo Médio por Operação"}
+                      title={"Tempo Médio por Operação (minutos)"}
                       chartType={"bar"}
                     />
                   </Row>

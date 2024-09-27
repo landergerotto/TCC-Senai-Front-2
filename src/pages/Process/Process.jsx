@@ -44,12 +44,10 @@ function ProcessPage() {
 
       case "editar":
         localStorage.setItem("tab", "editar");
-        console.log(tab);
         break;
 
       case "excluir":
         localStorage.setItem("tab", "excluir");
-        console.log(tab);
         break;
     }
   }

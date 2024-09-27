@@ -85,18 +85,15 @@ function Formulario({
     }
 
     setData(informations);
-
+    
     const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
       if (user.Email == informations.Email) {
         const EDV = user.EDV;
-        console.log(EDV);
         const Email = user.Email;
-        console.log(Email);
         apiUrl
           .post(`/${link}`, { EDV, Email })
           .then((response) => {
-            console.log(response);
             if (response.data.valid) navigate("/codigo");
             else {
               setModalData({
@@ -109,7 +106,7 @@ function Formulario({
             }
           })
           .catch((error) => {
-            console.log("Erro: ", error);
+            console.error("Erro: ", error);
             setModalData({
               title: "Erro",
               text: "Houve um erro com a sua requisição, tente novamente.",
@@ -121,7 +118,7 @@ function Formulario({
       }
       setModalData({
         title: "Erro",
-        text: "O email inserido não é válido",
+        text: "O email inserido não é válido.",
         btnCancel: "Fechar",
       });
       setShowModal(true);
@@ -131,15 +128,13 @@ function Formulario({
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log("137 - data: ", response.data);
         setModalData({
           title: "Confirmação",
-          text: `${title} realizado com sucesso`,
-          btnConfirm: "Fechar",
+          text: `${title} realizado com sucesso.`,
+          btnCancel: "Fechar",
         });
         setShowModal(true);
         if (title == "Login") {
-          console.log("informations: ", informations);
           cryptoService.decrypt(response.data.data, informations.email);
         }
 
@@ -166,7 +161,6 @@ function Formulario({
     apiUrl
       .get(`/user/get/${EDV}`)
       .then((response) => {
-        console.log(response);
         setUser(response.data);
       })
       .catch((error) => {
@@ -225,15 +219,6 @@ function Formulario({
                   type={action.type}
                   style={{ marginTop: "1em" }}
                   onClick={() => navigate("/")}
-                />
-              );
-            } else if (action.label === "Registrar-se") {
-              return (
-                <Button
-                  key={index}
-                  text={action.label}
-                  style={{ marginTop: "1em" }}
-                  onClick={() => navigate("/register")}
                 />
               );
             } else {

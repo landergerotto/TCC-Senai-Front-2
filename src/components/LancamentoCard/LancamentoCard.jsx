@@ -146,8 +146,7 @@ function LancamentoCard({ item }) {
     apiUrl
       .delete(`/POC/delete/${id}`)
       .then((response) => {
-        console.log(response);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Deu errado ai brother: ", error);
@@ -167,7 +166,6 @@ function LancamentoCard({ item }) {
           <div
             className={styles.btnDelete}
             onClick={() => {
-              console.log(item);
               handleDelete(item.id);
             }}
           >

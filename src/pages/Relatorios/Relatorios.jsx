@@ -55,7 +55,7 @@ function RelatoriosPage() {
         stopLoading();
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
+        console.error("Erro ao buscar dados do processo: ", error);
         stopLoading();
       });
   }, []);
@@ -204,7 +204,6 @@ function RelatoriosPage() {
 
         setData(formattedData);
         setFilteredData(formattedData);
-        console.log(formattedData);
       } catch (error) {
         console.error("Erro ao importar o arquivo Excel: ", error);
       }

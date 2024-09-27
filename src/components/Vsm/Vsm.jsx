@@ -1,15 +1,14 @@
 import { Col, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-import styles from "./Vsm.module.css"; // Make sure you have this CSS file
+import styles from "./Vsm.module.css";
 
 import Arrow from "../Arrow/Arrow";
 import VsmCard from "../VsmCard/VsmCard";
 import SAPicon from "../SAPicon/SAPicon";
 import FactoryIcon from "../FactoryIcon/FactoryIcon";
-
 
 import TruckArrowUp from "../../assets/Img/TruckArrowUp.png";
 import TruckArrowDown from "../../assets/Img/TruckArrowDown.png";
@@ -18,8 +17,6 @@ import right_arrow from "../../assets/Img/right-arrow.png";
 
 import { apiUrl } from "../../Api/apiUrl";
 import ProductionOrders from "../ProductionOrders/ProductionOrders";
-
-import cryptoService from "../../service/cryptoService";
 
 function Vsm() {
   let type = null;
@@ -32,6 +29,45 @@ function Vsm() {
   const [multiplier, setMultiplier] = useState(1);
   const [selected, setSelected] = useState('Days');
   const [period, setPeriod] = useState(1);
+  const [triangleSrc, setTriangleSrc] = useState(triangle);
+  const [rightArrowSrc, setRightArrowSrc] = useState(right_arrow);
+
+  // Refs for file inputs
+  const triangleInputRef = useRef(null);
+  const rightArrowInputRef = useRef(null);
+
+  // Double-click handlers
+  const handleTriangleDoubleClick = () => {
+    triangleInputRef.current.click();
+  };
+
+  const handleRightArrowDoubleClick = () => {
+    rightArrowInputRef.current.click();
+  };
+
+  // File change handlers
+  const handleTriangleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTriangleSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRightArrowFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setRightArrowSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   function roundTo(num, places) {
     const factor = Math.pow(10, places);
@@ -172,7 +208,6 @@ function Vsm() {
       });
   }, []);
 
-
   // calculate 
   useEffect(() => {
       const newProcessedVsm = calculateBatchQnt();
@@ -299,7 +334,7 @@ function Vsm() {
               <div key={item.id} className={styles.cardWrapper}>
                 <div className={styles.flexTables}>
                   <div className={styles.center}>
-                    <Image src={triangle} width={50} fluid alt="Triangle" />
+                    <Image src={triangleSrc} width={50} fluid alt="Triangle" onDoubleClick={handleTriangleDoubleClick}/>
                     <div className={styles.placa}>
                       <div>
                         <span>{processedVsm[index]}</span>
@@ -307,7 +342,7 @@ function Vsm() {
                       <div>Placas</div>
                     </div>
                     <div className={styles.arrow}>
-                      <Image src={right_arrow} fluid width={70} alt="Right Arrow" />
+                      <Image src={rightArrowSrc} fluid width={70} alt="Right Arrow" onDoubleClick={handleRightArrowDoubleClick}/>
                       {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>
@@ -333,6 +368,20 @@ function Vsm() {
           </>
         )}
       </div>
+      <input
+        type="file"
+        ref={triangleInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={handleTriangleFileChange}
+      />
+      <input
+        type="file"
+        ref={rightArrowInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={handleRightArrowFileChange}
+      />
     </>
   );
 }

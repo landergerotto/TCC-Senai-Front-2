@@ -90,13 +90,10 @@ function Formulario({
     if (user) {
       if (user.Email == informations.Email) {
         const EDV = user.EDV;
-        console.log(EDV);
         const Email = user.Email;
-        console.log(Email);
         apiUrl
           .post(`/${link}`, { EDV, Email })
           .then((response) => {
-            console.log(response);
             if (response.data.valid) navigate("/codigo");
             else {
               setModalData({
@@ -109,7 +106,7 @@ function Formulario({
             }
           })
           .catch((error) => {
-            console.log("Erro: ", error);
+            console.error("Erro: ", error);
             setModalData({
               title: "Erro",
               text: "Houve um erro com a sua requisição, tente novamente.",
@@ -131,7 +128,6 @@ function Formulario({
     apiUrl
       .post(`/${link}`, { EncryptedBody: EncryptedBody })
       .then((response) => {
-        console.log("137 - data: ", response.data);
         setModalData({
           title: "Confirmação",
           text: `${title} realizado com sucesso`,
@@ -139,7 +135,6 @@ function Formulario({
         });
         setShowModal(true);
         if (title == "Login") {
-          console.log("informations: ", informations);
           cryptoService.decrypt(response.data.data, informations.email);
         }
 
@@ -166,7 +161,6 @@ function Formulario({
     apiUrl
       .get(`/user/get/${EDV}`)
       .then((response) => {
-        console.log(response);
         setUser(response.data);
       })
       .catch((error) => {

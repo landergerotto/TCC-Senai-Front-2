@@ -66,7 +66,7 @@ function HomeForm({ title, fields }) {
         stopLoading();
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados: ", error);
+        console.error("Erro ao buscar dados: ", error);
         stopLoading();
       });
   }, []);
@@ -288,7 +288,7 @@ function HomeForm({ title, fields }) {
             btnCancel: "Fechar",
           });
           setShowModal(true);
-          console.log("Erro ao salvar os dados: ", error);
+          console.error("Erro ao salvar os dados: ", error);
           return;
         });
     });
@@ -427,7 +427,13 @@ function HomeForm({ title, fields }) {
         const workbook = await loadExcelFile(event);
         saveExcelFile(workbook);
       } catch (error) {
-        alert("Houve um problema ao salvar: " + error.message);
+        console.error("Houve um problema ao salvar: " + error.message);
+        setModalData({
+          title: "Erro",
+          text: "Houve um erro na requisição, tente novamente.",
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
       }
 
       document.body.removeChild(input);

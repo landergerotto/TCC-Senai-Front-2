@@ -11,13 +11,22 @@ import {
 import styles from "./Codigo.module.css";
 import Button from "../../components/Button/button";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { apiUrl } from "../../Api/apiUrl";
+import ModalComponent from "../../components/Modal/ModalComponent";
 
 function CodigoPage() {
   const navigate = useNavigate();
   const inputRefs = useRef([]);
   const size = 6;
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [modalFunc, setModalFunc] = useState();
+  const [modalFunc2, setModalFunc2] = useState();
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   function checkInput(input) {
     let letters = [...input];
@@ -60,31 +69,42 @@ function CodigoPage() {
 
   function verifyToken() {
     const token = inputRefs.current.map((input) => input.value).join("");
-    console.log("Código inserido: ", token);
     const Email = localStorage.getItem("Email");
-    console.log("Email: ", Email);
     const EDV = localStorage.getItem("EDV");
-    console.log("EDV: ", EDV);
 
     if (token.length != 6 || !onlyNumbers) {
-      alert("Código Inválido, tente novamente.");
+      setModalData({
+        title: "Erro",
+        text: "Código Inválido, tente novamente.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
       return;
     }
 
     if (!EDV || !Email) {
-      alert("Houve um problema ao processar a solicitação, tente novamente.");
+      setModalData({
+        title: "Erro",
+        text: "Houve um problema ao processar a solicitação, tente novamente.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
       return;
     }
 
     apiUrl
       .post("/auth/validtoken", { EDV, Email, token })
       .then((response) => {
-        console.log(response.data);
         navigate("/redefine");
       })
       .catch((error) => {
         console.error("Houve um erro na requisição: ", error);
-        alert("Um erro ocorreu, tente novamente");
+        setModalData({
+          title: "Erro",
+          text: "Houve um erro na requisição, tente novamente.",
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
       });
   }
 
@@ -129,6 +149,13 @@ function CodigoPage() {
           </Col>
         </Row>
       </Container>
+      <ModalComponent
+        isOpened={showModal}
+        onClose={handleCloseModal}
+        data={modalData}
+        confirmOnClick={modalFunc}
+        confirmOnClick2={modalFunc2}
+      />
     </>
   );
 }

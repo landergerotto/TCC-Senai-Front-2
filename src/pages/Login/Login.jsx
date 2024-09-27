@@ -57,7 +57,6 @@ function LoginPage() {
           onSubmit={() => {
             clearLocalStorage();
             localStorage.setItem("hasReloaded", false);
-            console.log("hasReloaded ", localStorage.getItem("hasReloaded"));
           }}
         />
       </Col>

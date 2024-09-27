@@ -45,7 +45,6 @@ function Vsm() {
     vsm.forEach((item, index) => {
       
       if (item.Process.Order === 1 && item.Movement == 'Entrada') {
-        console.log('PROCESSO', item.Process)
         // First process: Sum of all 'Entrada' movements in VSM data
         processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
       } else {
@@ -69,17 +68,13 @@ function Vsm() {
         .map(item => item.BatchId))]; // Unique Batch IDs per process
   
       let timeDiffs = [];
-      
-      // console.log('Batches: ', batches)
 
       batches.forEach(batchId => {
         // Get first 'Entrada' and last 'Saída' for this batchId
         const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
         const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort()[0];
         const saida = batchRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
-        // console.log('Entrada: ', entrada)
-        // console.log('Saida: ', saida)
-        
+
         if (entrada && saida) {
           const entradaTime = new Date(entrada.created_at);
           const saidaTime = new Date(saida.created_at);
@@ -114,25 +109,20 @@ function Vsm() {
   
       let timeDiffs = [];
       
-      // console.log('Batches: ', batches)
-      
       batches.forEach(batchId => {
         // Get last 'Saída' for the previous process
         const previousProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === previousProcessOrder);
         const firstSaida = previousProcessRecords.filter(item => item.Movement === 'Saída').sort()[0];
-        console.log('first Saida: ', firstSaida)
 
         // Get first 'Entrada' for the current process
         const currentProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
         const lastEntrada = currentProcessRecords.filter(item => item.Movement === 'Entrada').sort().reverse()[0];
-        console.log('Last Entrada: ', lastEntrada)
   
         if (firstSaida && lastEntrada) {
           const saidaTime = new Date(firstSaida.created_at);
           const entradaTime = new Date(lastEntrada.created_at);
           const diffInMilliseconds = entradaTime - saidaTime;
           const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
-          console.log('Diff in minutes:', diffInHours)
           timeDiffs.push(diffInHours);
         }
       });
@@ -153,22 +143,19 @@ function Vsm() {
     apiUrl
       .get("/process/get")
       .then((response) => {
-        // console.log(response.data);
         setData(response.data.sort((a, b) => a.Order - b.Order));
-        // console.log(data);
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
+        console.error("Erro ao buscar dados do processo: ", error);
       });
 
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
-        console.log(response.data)
         setVsm(response.data)
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do vsm: ", error);
+        console.error("Erro ao buscar dados do vsm: ", error);
       });
   }, []);
 
@@ -176,14 +163,11 @@ function Vsm() {
   // calculate 
   useEffect(() => {
       const newProcessedVsm = calculateBatchQnt();
-      console.log(newProcessedVsm)
       setProcessedVsm(newProcessedVsm);
 
       const machineTimes = calculateMachineTimes();
-      console.log(machineTimes)
 
       const machineEntranceTimes = calculateProcessEntranceTimes();
-      console.log('Machine Entrance: ', machineEntranceTimes)
   }, [vsm, data]);
   
   // refresh data
@@ -194,7 +178,7 @@ function Vsm() {
         setVsm(response.data)
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do vsm: ", error);
+        console.error("Erro ao buscar dados do vsm: ", error);
       });
   }, [period, selected]);
 
@@ -221,14 +205,12 @@ function Vsm() {
 
     // Ensure the period value is valid for the new selection
     if (period > maxPeriod) {
-      console.log("atualizou pra 1")
       setPeriod(1); // Set to a default value if the current period is not valid
     }
   };
 
   const changePeriodOptionHandler = (event) => {
     const newPeriod = Number(event.target.value);
-    console.log(newPeriod)
     setPeriod(newPeriod);
   };
 

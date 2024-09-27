@@ -58,7 +58,7 @@ function EditProcessForm({
         setOptionsProcesso(listOptions);
       })
       .catch((error) => {
-        console.log("Erro ao buscar dados do processo: ", error);
+        console.error("Erro ao buscar dados do processo: ", error);
       });
   }, []);
 

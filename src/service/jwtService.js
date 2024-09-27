@@ -26,4 +26,4 @@ async function validateJWT(token) {
   }
 }
 
-export default { decodeJWT, validateJWT };
+export { decodeJWT, validateJWT };

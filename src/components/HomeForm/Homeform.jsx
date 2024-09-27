@@ -131,6 +131,16 @@ function HomeForm({ title, fields }) {
       localStorage.getItem("selectedItems")
     );
 
+    if (!selectedLancamentos) {
+      setModalData({
+        title: "Erro",
+        text: "Nenhum lançamento foi selecionado.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
+      return;
+    }
+
     const updatedData = currData.filter(
       (item) =>
         !selectedLancamentos.some(

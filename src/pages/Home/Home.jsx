@@ -21,7 +21,7 @@ function HomePage() {
         { label: "Qntd de Refugo", type: "number", name: "ScrapQnt", id: "ScrapQnt" },
         { label: "PartNumber", type: "text", name: "PartNumber", id: "PartNumber" },
         { label: "Movimentação", type: "text", name: "Movement", id: "Movement" },
-        { label: "EDV", type: "text", name: "OperatorEDV", id: "OperatorEDV" },
+        { label: "EDV", type: "number", name: "OperatorEDV", id: "OperatorEDV" },
         { label: "Interditado", type: "text", name: "Interditated", id: "Interditated" }
     ]
     

@@ -14,7 +14,6 @@ import styles from "./formulario.module.css";
 import { apiUrl } from "../../Api/apiUrl";
 
 import cryptoService from "../../service/cryptoService";
-import { decodeJWT } from "../../service/jwtService";
 
 function Formulario({
   title,
@@ -71,6 +70,40 @@ function Formulario({
         setShowModal(true);
         return;
       }
+
+      if (field.type === "number" && isNaN(info)) {
+        setModalData({
+          title: "Erro",
+          text: `O campo ${field.label} deve conter apenas números.`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
+        return;
+      }
+
+      if (
+        field.type === "text" ||
+        (field.type == "email" && /^[0-9]+$/.test(info))
+      ) {
+        setModalData({
+          title: "Erro",
+          text: `O campo ${field.label} não pode conter apenas números.`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
+        return;
+      }
+
+      if (field.type === "email" && !info.includes("@")) {
+        setModalData({
+          title: "Erro",
+          text: `O campo ${field.label} deve conter um "@" válido.`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
+        return;
+      }
+
       if (confirmPassword() == true) {
         if (field.name != "confirm") informations[field.name] = info;
       } else {
@@ -85,7 +118,7 @@ function Formulario({
     }
 
     setData(informations);
-    
+
     const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
       if (user.Email == informations.Email) {

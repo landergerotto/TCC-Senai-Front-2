@@ -177,6 +177,26 @@ function HomeForm({ title, fields }) {
         return;
       }
 
+      if (field.type === "number" && isNaN(info)) {
+        setModalData({
+          title: "Erro",
+          text: `O campo ${field.label} deve conter apenas números.`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
+        return;
+      }
+
+      if (field.type === "text" && /^[0-9]+$/.test(info)) {
+        setModalData({
+          title: "Erro",
+          text: `O campo ${field.label} não pode conter apenas números.`,
+          btnCancel: "Fechar",
+        });
+        setShowModal(true);
+        return;
+      }
+
       if (field.name === "ProcessName") {
         const selectedProcessId = localStorage.getItem("ProcessId");
         if (selectedProcessId) informations["ProcessId"] = selectedProcessId;

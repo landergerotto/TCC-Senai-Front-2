@@ -6,7 +6,6 @@ import * as xlsx from "xlsx";
 import { saveAs } from "file-saver";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
 
 import Input from "../Input/input";
@@ -23,15 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import { useLoading } from "../../contexts/LoadingContext";
 import Loading from "../Loading/Loading";
 
-function HomeForm({
-  title,
-  fields,
-  actions = [],
-  target,
-  type,
-  labelStyle,
-  url,
-}) {
+function HomeForm({ title, fields }) {
   const [data, setData] = useState([]);
   const [optionsProcesso, setOptionsProcesso] = useState([]);
   const [optionsPartNumber, setOptionsPartNumber] = useState([]);
@@ -136,17 +127,16 @@ function HomeForm({
 
   const clearSelectedLancamentos = () => {
     const currData = JSON.parse(localStorage.getItem("data"));
-    console.log("currData: ", currData);
-
-    const selectedItems = JSON.parse(localStorage.getItem("selectedItems"));
-    console.log("selected: ", selectedItems);
-
-    const selectedIds = selectedItems.map((item) => item.BatchId);
+    const selectedLancamentos = JSON.parse(
+      localStorage.getItem("selectedItems")
+    );
 
     const updatedData = currData.filter(
-      (item) => !selectedIds.includes(item.BatchId)
+      (item) =>
+        !selectedLancamentos.some(
+          (selected) => JSON.stringify(selected) === JSON.stringify(item)
+        )
     );
-    console.log("updated: ", updatedData);
 
     localStorage.setItem("data", JSON.stringify(updatedData));
     localStorage.setItem("selectedItems", "");
@@ -262,7 +252,6 @@ function HomeForm({
   function getData() {
     let data = localStorage.getItem("data");
     data = JSON.parse(data);
-    console.log("227 - data: ", data);
 
     if (!data) {
       setModalData({
@@ -285,7 +274,12 @@ function HomeForm({
       apiUrl
         .post("poc/create", { EncryptedBody: encryptedBody })
         .then((response) => {
-          console.log(response.data);
+          setModalData({
+            title: "Sucesso",
+            text: "Os lançamentos foram salvos na nuvem.",
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
         })
         .catch((error) => {
           setModalData({
@@ -298,12 +292,6 @@ function HomeForm({
           return;
         });
     });
-    setModalData({
-      title: "Sucesso",
-      text: "Os lançamentos foram salvos na nuvem.",
-      btnCancel: "Fechar",
-    });
-    setShowModal(true);
   }
 
   function loadExcelFile(event) {
@@ -336,42 +324,66 @@ function HomeForm({
     let data = getData();
 
     if (workbook) {
-      console.log("467 - workbook existe");
       const ws = workbook.Sheets[workbook.SheetNames[0]];
-      xlsx.utils.sheet_add_aoa(ws, [
+
+      const existingData = xlsx.utils.sheet_to_json(ws, { header: 1 });
+
+      const existingRecords = new Set(existingData.map((row) => row.join("|")));
+
+      xlsx.utils.sheet_add_aoa(
+        ws,
         [
-          "Processo",
-          "Quantidade Lote",
-          "ID Lote",
-          "Partnumber",
-          "Movimentação",
-          "Data",
-          "Hora",
-          "EDV Operador",
-          "Quantidade de Refugo",
-          "Interditado",
+          [
+            "Processo",
+            "Quantidade Lote",
+            "ID Lote",
+            "Partnumber",
+            "Movimentação",
+            "Data",
+            "Hora",
+            "EDV Operador",
+            "Quantidade de Refugo",
+            "Interditado",
+          ],
         ],
-      ]);
+        { origin: 0 }
+      );
 
       data.forEach((info) => {
-        xlsx.utils.sheet_add_aoa(
-          ws,
-          [
+        const recordString = [
+          info.ProcessName,
+          info.BatchQnt,
+          info.BatchId,
+          info.PartNumber,
+          info.Movement,
+          info.Data,
+          info.Hora,
+          info.OperatorEDV,
+          info.ScrapQnt,
+          info.Interditated === true ? "Sim" : "Não",
+        ].join("|");
+
+        if (!existingRecords.has(recordString)) {
+          xlsx.utils.sheet_add_aoa(
+            ws,
             [
-              info.ProcessName,
-              info.BatchQnt,
-              info.BatchId,
-              info.PartNumber,
-              info.Movement,
-              info.Data,
-              info.Hora,
-              info.OperatorEDV,
-              info.ScrapQnt,
-              info.Interditated === true ? "Sim" : "Não",
+              [
+                info.ProcessName,
+                info.BatchQnt,
+                info.BatchId,
+                info.PartNumber,
+                info.Movement,
+                info.Data,
+                info.Hora,
+                info.OperatorEDV,
+                info.ScrapQnt,
+                info.Interditated === true ? "Sim" : "Não",
+              ],
             ],
-          ],
-          { origin: -1 }
-        );
+            { origin: -1 }
+          );
+          existingRecords.add(recordString);
+        }
       });
 
       const wbout = xlsx.write(workbook, { bookType: "xlsx", type: "binary" });
@@ -380,9 +392,18 @@ function HomeForm({
         "POC Cicle.xlsx"
       );
 
-      alert("Dados salvos no arquivo");
+      setModalData({
+        title: "Sucesso.",
+        text: "Os arquivos foram salvos no Excel.",
+        btnCancel: "Fechar",
+      });
+      setShowModal(true);
     } else {
-      console.log("Por favor, selecione um arquivo Excel antes de salvar.");
+      setModalData({
+        title: "Erro.",
+        text: "Selecione um arquivo Excel para salvar os dados.",
+        btnCancel: "Fechar",
+      });
     }
   }
 
@@ -396,7 +417,6 @@ function HomeForm({
   }
 
   async function createFileInput() {
-    console.log("528 - clicou");
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".xlsx, .xls";

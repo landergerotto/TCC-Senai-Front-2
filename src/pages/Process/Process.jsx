@@ -10,9 +10,10 @@ import EditProcessForm from "../../components/EditProcessForm/EditProcessForm";
 import DeleteProcessForm from "../../components/DeleteProcessForm/DeleteProcessForm";
 
 function ProcessPage() {
+  const localTabs = ["cadastro", "editar", "excluir"];
   let tab = localStorage.getItem("tab");
 
-  if (tab == "" || !tab) tab = "cadastro";
+  if (tab == "" || !tab || !localTabs.includes(tab)) tab = "cadastro";
 
   const fields = [
     { label: "Nome", type: "text", name: "Name" },
@@ -54,10 +55,10 @@ function ProcessPage() {
   }
 
   function clearLocalStorage() {
-    fields.forEach(field => {
-      localStorage.removeItem(`${field.name}`)
+    fields.forEach((field) => {
+      localStorage.removeItem(`${field.name}`);
     });
-    localStorage.removeItem('tab');
+    localStorage.removeItem("tab");
   }
 
   return (
@@ -91,7 +92,7 @@ function ProcessPage() {
               typeEdit={"register"}
               labelStyleEdit={{ marginTop: "0.3em" }}
               urlEdit={"process"}
-              btnStyle={{ marginTop: '1em' }}
+              btnStyle={{ marginTop: "1em" }}
             />
           </Tab>
           <Tab eventKey="excluir" title="Excluir">

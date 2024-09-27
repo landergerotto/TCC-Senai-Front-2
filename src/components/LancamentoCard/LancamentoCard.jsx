@@ -92,7 +92,7 @@ function LancamentoCard({ item }) {
   function handleEdit() {
     fields.map((field) => {
       localStorage.setItem("id", item.id);
-      localStorage.setItem("ProcessId", item.id);
+      localStorage.setItem("ProcessId", item.ProcessId);
       if (field.id == "ProcessName")
         localStorage.setItem(field.id, processName[item.ProcessId]);
       if (item.hasOwnProperty(field.id))
@@ -147,7 +147,7 @@ function LancamentoCard({ item }) {
       .delete(`/POC/delete/${id}`)
       .then((response) => {
         console.log(response);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Deu errado ai brother: ", error);
@@ -166,7 +166,10 @@ function LancamentoCard({ item }) {
           </div>
           <div
             className={styles.btnDelete}
-            onClick={() => handleDelete(item.id)}
+            onClick={() => {
+              console.log(item);
+              handleDelete(item.id);
+            }}
           >
             <DeleteIcon sx={{ color: "white" }} />
           </div>

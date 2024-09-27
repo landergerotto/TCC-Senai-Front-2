@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as xlsx from "xlsx";
 import { useEffect, useState } from "react";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 
 import Input from "../../components/Input/input";
+import Graph from "../../components/Graph/Graph";
 import Loading from "../../components/Loading/Loading";
-import CardGraph from "../../components/CardGraph/CardGraph";
 import LancamentoCard from "../../components/LancamentoCard/LancamentoCard";
 import TabelaRelatorio from "../../components/TabelaRelatorio/TabelaRelatorio";
 
@@ -20,23 +19,28 @@ function RelatoriosPage() {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [processes, setProcesses] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [uniqueProcesses, setUniqueProcesses] = useState([]);
+  const [lastDays, setLastDays] = useState(30);
   const [filters, setFilters] = useState({
     BatchId: "",
     created_at: "",
     PartNumber: "",
   });
   const { isLoading, startLoading, stopLoading } = useLoading();
+  const [averageTime, setAverageTime] = useState([]);
+
+  const localTabs = ["pocs", "dados", "graficos"];
 
   const fields = [
     { label: "Processo" },
     { label: "WIP" },
     { label: "Interditado" },
     { label: "Refugo" },
-    { label: "Data" },
   ];
 
   let tab = localStorage.getItem("tab");
-  if (tab == "" || !tab) tab = "pocs";
+  if (!tab || tab === "" || !localTabs.includes(tab)) tab = "pocs";
 
   useEffect(() => {
     startLoading();
@@ -56,6 +60,10 @@ function RelatoriosPage() {
       });
   }, []);
 
+  useEffect(() => {
+    calculateAverageTimes();
+  }, [filteredData]);
+
   function handleFilterChange(e) {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -63,6 +71,10 @@ function RelatoriosPage() {
       [name]: value,
     }));
   }
+
+  const handleLastDaysChange = (e) => {
+    setLastDays(e.target.value);
+  };
 
   useEffect(() => {
     const filtered = data.filter((item) => {
@@ -75,16 +87,28 @@ function RelatoriosPage() {
       const matchesPartnumber = filters.PartNumber
         ? item.PartNumber.includes(filters.PartNumber)
         : true;
+      const createdAt = new Date(item.created_at);
+      const today = new Date();
+      const diffInDays = Math.abs(today - createdAt) / (1000 * 3600 * 24);
+      const matchesLastDays = lastDays ? diffInDays <= lastDays : true;
 
-      return matchesLote && matchesData && matchesPartnumber;
+      const hasValidBatchQnt = item.BatchQnt > 0;
+
+      return (
+        matchesLote &&
+        matchesData &&
+        matchesPartnumber &&
+        matchesLastDays &&
+        hasValidBatchQnt
+      );
     });
 
     const sortedData = filtered.sort((a, b) => {
       return new Date(b.created_at) - new Date(a.created_at);
     });
 
-    setFilteredData(filtered);
-  }, [filters, data]);
+    setFilteredData(sortedData);
+  }, [filters, data, lastDays]);
 
   function handleSelect(key) {
     switch (key) {
@@ -167,7 +191,7 @@ function RelatoriosPage() {
 
           return {
             ProcessId: matchedProcess ? matchedProcess.id : null,
-            BatchQnt: row["Quantidade Lote"],
+            BatchQnt: Number(row["Quantidade Lote"]),
             BatchId: row["ID Lote"],
             PartNumber: row.Partnumber,
             Movement: row.Movimentação,
@@ -189,6 +213,88 @@ function RelatoriosPage() {
     document.body.appendChild(input);
     input.click();
   }
+
+  useEffect(() => {
+    startLoading();
+
+    const fetchProcessNames = async () => {
+      const uniqueProcess = [];
+
+      for (const item of data) {
+        try {
+          const response = await apiUrl.get(`/process/get/${item.ProcessId}`);
+
+          const exists = uniqueProcess.find(
+            (process) => process.id === response.data.id
+          );
+
+          if (!exists) {
+            uniqueProcess.push(response.data);
+          }
+        } catch (error) {
+          console.error("Erro ao buscar processo: ", error);
+        }
+      }
+      setLabels(uniqueProcess);
+      setUniqueProcesses(uniqueProcess);
+      stopLoading();
+    };
+
+    fetchProcessNames();
+  }, [data]);
+
+  const calculateAverageTimes = () => {
+    const entradaSaidaMap = {};
+
+    filteredData.forEach((item) => {
+      const key = item.ProcessId;
+      entradaSaidaMap[key] = entradaSaidaMap[key] || {
+        entrada: null,
+        saida: null,
+      };
+
+      if (item.Movement === "Entrada") {
+        entradaSaidaMap[key].entrada = item.created_at;
+      } else if (item.Movement === "Saída") {
+        entradaSaidaMap[key].saida = item.created_at;
+      }
+    });
+
+    const averageTimes = Object.keys(entradaSaidaMap)
+      .map((processId) => {
+        const { entrada, saida } = entradaSaidaMap[processId];
+
+        if (entrada && saida) {
+          const entradaDate = new Date(entrada);
+          const saidaDate = new Date(saida);
+          const diffInMillis = saidaDate - entradaDate;
+          const averageTimeInMinutes = diffInMillis / (1000 * 60);
+
+          return { processId, averageTime: averageTimeInMinutes };
+        }
+        return null;
+      })
+      .filter((result) => result !== null);
+
+    setAverageTime(averageTimes);
+  };
+
+  function getLast30Days() {
+    const dates = [];
+    const today = new Date();
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      dates.unshift(date.toISOString().slice(0, 10));
+    }
+
+    return dates;
+  }
+
+  const totalPecas = filteredData.reduce((acc, item) => {
+    return acc + item.BatchQnt;
+  }, 0);
 
   return (
     <>
@@ -268,9 +374,43 @@ function RelatoriosPage() {
               </Row>
             </Tab>
             <Tab eventKey="graficos" title="Gráficos" className={styles.tab}>
-              <Col>
-                <CardGraph data={data} />
-              </Col>
+              {!isLoading && filteredData.length > 0 ? (
+                <Col>
+                  <Row>
+                    <Graph
+                      batchData={filteredData}
+                      processList={uniqueProcesses}
+                      title={"Peças por Processo"}
+                      chartType={"bar"}
+                    />
+                  </Row>
+                  <Row>
+                    <Graph
+                      averageTimes={averageTime}
+                      processList={uniqueProcesses}
+                      title={"Tempo Médio por Operação (minutos)"}
+                      chartType={"bar"}
+                    />
+                  </Row>
+                  <Row>
+                    <Graph
+                      labels={getLast30Days()}
+                      totalPieces={getLast30Days().map((date) => {
+                        const totalByDate = filteredData
+                          .filter(
+                            (item) => item.created_at.slice(0, 10) === date
+                          )
+                          .reduce((acc, item) => acc + item.BatchQnt, 0);
+                        return totalByDate;
+                      })}
+                      title={"Total de Peças por Dia (últimos 30 dias)"}
+                      chartType={"line"}
+                    />
+                  </Row>
+                </Col>
+              ) : (
+                <></>
+              )}
             </Tab>
           </Tabs>
         </Container>

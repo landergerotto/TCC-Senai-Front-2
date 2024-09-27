@@ -85,7 +85,7 @@ function Formulario({
     }
 
     setData(informations);
-
+    
     const EncryptedBody = cryptoService.encryptData(informations);
     if (user) {
       if (user.Email == informations.Email) {
@@ -118,7 +118,7 @@ function Formulario({
       }
       setModalData({
         title: "Erro",
-        text: "O email inserido não é válido",
+        text: "O email inserido não é válido.",
         btnCancel: "Fechar",
       });
       setShowModal(true);
@@ -130,8 +130,8 @@ function Formulario({
       .then((response) => {
         setModalData({
           title: "Confirmação",
-          text: `${title} realizado com sucesso`,
-          btnConfirm: "Fechar",
+          text: `${title} realizado com sucesso.`,
+          btnCancel: "Fechar",
         });
         setShowModal(true);
         if (title == "Login") {
@@ -219,15 +219,6 @@ function Formulario({
                   type={action.type}
                   style={{ marginTop: "1em" }}
                   onClick={() => navigate("/")}
-                />
-              );
-            } else if (action.label === "Registrar-se") {
-              return (
-                <Button
-                  key={index}
-                  text={action.label}
-                  style={{ marginTop: "1em" }}
-                  onClick={() => navigate("/register")}
                 />
               );
             } else {

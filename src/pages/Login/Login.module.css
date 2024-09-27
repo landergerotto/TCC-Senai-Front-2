@@ -1,4 +1,11 @@
 .container {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45vw !important;
+  margin-bottom: 2em;
+}
+
+.tab {
+  margin-bottom: 0;
 }

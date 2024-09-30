@@ -178,7 +178,7 @@ function Formulario({
         console.error("Houve um erro na requisição:", error);
         setModalData({
           title: "Erro",
-          text: "Ouve um erro com a requisição, tente novamente",
+          text: `${error.response.data.message}`,
           btnCancel: "Fechar",
         });
         setShowModal(true);

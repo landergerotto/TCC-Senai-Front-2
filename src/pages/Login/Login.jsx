@@ -109,6 +109,7 @@ function LoginPage() {
                 fields={fieldsRegister}
                 actions={actionsRegister}
                 type={"register"}
+                target={"login"}
                 labelStyle={{ marginTop: "0.5em" }}
                 bgStyle={{ width: "15em" }}
                 url={"user/create"}

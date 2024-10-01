@@ -177,7 +177,7 @@ function Formulario({
 
         if (onSubmit) onSubmit();
 
-        setModalFunc(() => navigate(`/${target}`));
+        setModalFunc(() => () => navigate(`/${target}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);

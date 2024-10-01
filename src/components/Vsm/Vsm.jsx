@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
-import Form from 'react-bootstrap/Form';
+import Form from "react-bootstrap/Form";
 import { useEffect, useState, useRef } from "react";
 
 import styles from "./Vsm.module.css";
@@ -27,7 +27,7 @@ function Vsm() {
   const [processTime, setProcessTime] = useState([]);
   const [processEntranceTime, setProcessEntranceTime] = useState([]);
   const [multiplier, setMultiplier] = useState(1);
-  const [selected, setSelected] = useState('Days');
+  const [selected, setSelected] = useState("Days");
   const [period, setPeriod] = useState(1);
   const [triangleSrc, setTriangleSrc] = useState(triangle);
   const [rightArrowSrc, setRightArrowSrc] = useState(right_arrow);
@@ -68,7 +68,6 @@ function Vsm() {
     }
   };
 
-
   function roundTo(num, places) {
     const factor = Math.pow(10, places);
     return Math.round(num * factor) / factor;
@@ -79,14 +78,15 @@ function Vsm() {
 
     // Iterate over each process, sorted by the `Order` attribute
     vsm.forEach((item, index) => {
-      
-      if (item.Process.Order === 1 && item.Movement == 'Entrada') {
+      if (item.Process.Order === 1 && item.Movement == "Entrada") {
         // First process: Sum of all 'Entrada' movements in VSM data
-        processed[item.Process.Order - 1] = processed[item.Process.Order - 1] + item.BatchQnt
+        processed[item.Process.Order - 1] =
+          processed[item.Process.Order - 1] + item.BatchQnt;
       } else {
         // Subsequent processes: Sum of 'Saída' movements of the previous process order
-        if (item.Movement == 'Saída')
-          processed[item.Process.Order] = processed[item.Process.Order] + item.BatchQnt
+        if (item.Movement == "Saída")
+          processed[item.Process.Order] =
+            processed[item.Process.Order] + item.BatchQnt;
       }
     });
 
@@ -94,66 +94,95 @@ function Vsm() {
   };
 
   const calculateMachineTimes = () => {
-    let machineTime = Array(data.length).fill(0);  // Assuming 9 processes
-  
+    let machineTime = Array(data.length).fill(0); // Assuming 9 processes
+
     // Group by Process Order
     data.forEach((processItem, index) => {
       const processOrder = processItem.Order;
-      const batches = [...new Set(vsm
-        .filter(item => item.Process.Order === processOrder)
-        .map(item => item.BatchId))]; // Unique Batch IDs per process
-  
+      const batches = [
+        ...new Set(
+          vsm
+            .filter((item) => item.Process.Order === processOrder)
+            .map((item) => item.BatchId)
+        ),
+      ]; // Unique Batch IDs per process
+
       let timeDiffs = [];
 
-      batches.forEach(batchId => {
+      batches.forEach((batchId) => {
         // Get first 'Entrada' and last 'Saída' for this batchId
-        const batchRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
-        const entrada = batchRecords.filter(item => item.Movement === 'Entrada').sort()[0];
-        const saida = batchRecords.filter(item => item.Movement === 'Saída').sort().reverse()[0];
+        const batchRecords = vsm.filter(
+          (item) =>
+            item.BatchId === batchId && item.Process.Order === processOrder
+        );
+        const entrada = batchRecords
+          .filter((item) => item.Movement === "Entrada")
+          .sort()[0];
+        const saida = batchRecords
+          .filter((item) => item.Movement === "Saída")
+          .sort()
+          .reverse()[0];
 
         if (entrada && saida) {
           const entradaTime = new Date(entrada.created_at);
           const saidaTime = new Date(saida.created_at);
           const diffInMilliseconds = saidaTime - entradaTime;
           const diffInHours = diffInMilliseconds / (1000 * 60); // Convert to minutes
-  
+
           timeDiffs.push(diffInHours);
         }
       });
-  
+
       if (timeDiffs.length > 0) {
         // Calculate average time for this process order
-        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        const avgTime =
+          timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
         machineTime[processOrder - 1] = roundTo(avgTime, 2);
       }
     });
-    
+
     setProcessTime(machineTime);
     return { machineTime };
   };
-  
+
   const calculateProcessEntranceTimes = () => {
     let processEntranceTime = Array(data.length).fill(0); // Assuming 9 processes
-    
+
     // Start from the second process (index 1), as the first should always be zero
     for (let processOrder = 2; processOrder <= data.length; processOrder++) {
       const previousProcessOrder = processOrder - 1;
-  
-      const batches = [...new Set(vsm
-        .filter(item => item.Process.Order === previousProcessOrder)
-        .map(item => item.BatchId))]; // Unique Batch IDs for the previous process
-  
+
+      const batches = [
+        ...new Set(
+          vsm
+            .filter((item) => item.Process.Order === previousProcessOrder)
+            .map((item) => item.BatchId)
+        ),
+      ]; // Unique Batch IDs for the previous process
+
       let timeDiffs = [];
-      
-      batches.forEach(batchId => {
+
+      batches.forEach((batchId) => {
         // Get last 'Saída' for the previous process
-        const previousProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === previousProcessOrder);
-        const firstSaida = previousProcessRecords.filter(item => item.Movement === 'Saída').sort()[0];
+        const previousProcessRecords = vsm.filter(
+          (item) =>
+            item.BatchId === batchId &&
+            item.Process.Order === previousProcessOrder
+        );
+        const firstSaida = previousProcessRecords
+          .filter((item) => item.Movement === "Saída")
+          .sort()[0];
 
         // Get first 'Entrada' for the current process
-        const currentProcessRecords = vsm.filter(item => item.BatchId === batchId && item.Process.Order === processOrder);
-        const lastEntrada = currentProcessRecords.filter(item => item.Movement === 'Entrada').sort().reverse()[0];
-  
+        const currentProcessRecords = vsm.filter(
+          (item) =>
+            item.BatchId === batchId && item.Process.Order === processOrder
+        );
+        const lastEntrada = currentProcessRecords
+          .filter((item) => item.Movement === "Entrada")
+          .sort()
+          .reverse()[0];
+
         if (firstSaida && lastEntrada) {
           const saidaTime = new Date(firstSaida.created_at);
           const entradaTime = new Date(lastEntrada.created_at);
@@ -162,15 +191,16 @@ function Vsm() {
           timeDiffs.push(diffInHours);
         }
       });
-  
+
       if (timeDiffs.length > 0) {
-        const avgTime = timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
+        const avgTime =
+          timeDiffs.reduce((sum, time) => sum + time, 0) / timeDiffs.length;
         processEntranceTime[processOrder - 1] = roundTo(avgTime, 2); // Subtract 1 for zero-based index
       }
     }
-  
+
     processEntranceTime[0] = 0; // Ensure the first element is always zero
-    setProcessEntranceTime(processEntranceTime)
+    setProcessEntranceTime(processEntranceTime);
     return processEntranceTime;
   };
 
@@ -188,29 +218,29 @@ function Vsm() {
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
-        setVsm(response.data)
+        setVsm(response.data);
       })
       .catch((error) => {
         console.error("Erro ao buscar dados do vsm: ", error);
       });
   }, []);
 
-  // calculate 
+  // calculate
   useEffect(() => {
-      const newProcessedVsm = calculateBatchQnt();
-      setProcessedVsm(newProcessedVsm);
+    const newProcessedVsm = calculateBatchQnt();
+    setProcessedVsm(newProcessedVsm);
 
-      const machineTimes = calculateMachineTimes();
+    const machineTimes = calculateMachineTimes();
 
-      const machineEntranceTimes = calculateProcessEntranceTimes();
+    const machineEntranceTimes = calculateProcessEntranceTimes();
   }, [vsm, data]);
-  
+
   // refresh data
   useEffect(() => {
     apiUrl
       .get(`/vsm/filtered/${period * multiplier}`)
       .then((response) => {
-        setVsm(response.data)
+        setVsm(response.data);
       })
       .catch((error) => {
         console.error("Erro ao buscar dados do vsm: ", error);
@@ -229,13 +259,13 @@ function Vsm() {
     let maxPeriod;
     if (newSelection === "Days") {
       maxPeriod = days.length;
-      setMultiplier(1)
+      setMultiplier(1);
     } else if (newSelection === "Months") {
       maxPeriod = months.length;
-      setMultiplier(30)
+      setMultiplier(30);
     } else if (newSelection === "Years") {
       maxPeriod = years.length;
-      setMultiplier(365)
+      setMultiplier(365);
     }
 
     // Ensure the period value is valid for the new selection
@@ -259,18 +289,22 @@ function Vsm() {
   }
 
   if (type) {
-    options = type.map((el) => <option key={el} value={el}>{el}</option>);
+    options = type.map((el) => (
+      <option key={el} value={el}>
+        {el}
+      </option>
+    ));
   }
 
   return (
     <>
-      <Row>
+      <Row style={{ marginBottom: '1em' }}>
         <div className={styles.filterRow}>
-          Filtros aqui
           <Form.Select
             value={period} // Ensure the current period is selected in the dropdown
             onChange={changePeriodOptionHandler}
             aria-label="Select period"
+            style={{ marginRight: "1em" }}
           >
             {options}
           </Form.Select>
@@ -298,13 +332,19 @@ function Vsm() {
       </Row>
       <Row>
         <Col sm={2} className={styles.col}>
-          <img src={TruckArrowDown} className={styles.truckLineUp} alt="Truck Arrow Down" />
+          <img
+            src={TruckArrowDown}
+            className={styles.truckLineUp}
+            alt="Truck Arrow Down"
+          />
         </Col>
-        <Col sm={8}>
-          <ProductionOrders numOrders={50} />
-        </Col>
+        <Col sm={8}>{/* <ProductionOrders numOrders={50} /> */}</Col>
         <Col sm={2} className={styles.col}>
-          <img src={TruckArrowUp} className={styles.truckLineDown} alt="Truck Arrow Up" />
+          <img
+            src={TruckArrowUp}
+            className={styles.truckLineDown}
+            alt="Truck Arrow Up"
+          />
         </Col>
       </Row>
       <div className={styles.container}>
@@ -316,7 +356,13 @@ function Vsm() {
               <div key={item.id} className={styles.cardWrapper}>
                 <div className={styles.flexTables}>
                   <div className={styles.center}>
-                    <Image src={triangleSrc} width={50} fluid alt="Triangle" onDoubleClick={handleTriangleDoubleClick}/>
+                    <Image
+                      src={triangleSrc}
+                      width={50}
+                      fluid
+                      alt="Triangle"
+                      onDoubleClick={handleTriangleDoubleClick}
+                    />
                     <div className={styles.placa}>
                       <div>
                         <span>{processedVsm[index]}</span>
@@ -324,7 +370,13 @@ function Vsm() {
                       <div>Placas</div>
                     </div>
                     <div className={styles.arrow}>
-                      <Image src={rightArrowSrc} fluid width={70} alt="Right Arrow" onDoubleClick={handleRightArrowDoubleClick}/>
+                      <Image
+                        src={rightArrowSrc}
+                        fluid
+                        width={70}
+                        alt="Right Arrow"
+                        onDoubleClick={handleRightArrowDoubleClick}
+                      />
                       {/* <CIcon icon={cilArrowThickFromLeft} /> */}
                     </div>
                     <div className={styles.entrance}>
@@ -353,14 +405,14 @@ function Vsm() {
       <input
         type="file"
         ref={triangleInputRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         accept="image/*"
         onChange={handleTriangleFileChange}
       />
       <input
         type="file"
         ref={rightArrowInputRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         accept="image/*"
         onChange={handleRightArrowFileChange}
       />

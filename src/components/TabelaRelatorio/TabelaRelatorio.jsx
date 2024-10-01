@@ -160,7 +160,7 @@ function TabelaRelatorio({ title, fields, data }) {
                   <tr key={index}>
                     <td className={styles.firstTd}>
                       <div className={styles.tdText}>
-                        {process.Name} {process.id}
+                        {process.Name}
                       </div>
                     </td>
                     <td>{wipCount[process.id] || 0}</td>

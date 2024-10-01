@@ -161,7 +161,7 @@ function RelatoriosPage() {
         setProcesses(response.data);
       })
       .catch((error) => {
-        console.error("Deu errado ai brother: ", error);
+        console.error("Houve um erro na requisição: ", error);
       });
   }
 

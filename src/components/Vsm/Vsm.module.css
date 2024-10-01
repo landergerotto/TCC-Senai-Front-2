@@ -1,6 +1,7 @@
 .filterRow {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 1em;
 }
 
 .container {

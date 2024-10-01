@@ -71,27 +71,29 @@ function Formulario({
         return;
       }
 
-      if (field.type === "number" && isNaN(info)) {
-        setModalData({
-          title: "Erro",
-          text: `O campo ${field.label} deve conter apenas números.`,
-          btnCancel: "Fechar",
-        });
-        setShowModal(true);
-        return;
+      if (field.type === "number") {
+        if (isNaN(info) || /^\s*$/.test(info)) {
+          setModalData({
+            title: "Erro",
+            text: `O campo ${field.label} deve conter apenas números.`,
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
+          return;
+        }
       }
 
-      if (
-        field.type === "text" ||
-        (field.type == "email" && /^[0-9]+$/.test(info))
-      ) {
-        setModalData({
-          title: "Erro",
-          text: `O campo ${field.label} não pode conter apenas números.`,
-          btnCancel: "Fechar",
-        });
-        setShowModal(true);
-        return;
+      if (field.type === "text" && field.label != "CT") {
+
+        if (/^\s*$/.test(info) || /^\d+$/.test(info)) {
+          setModalData({
+            title: "Erro",
+            text: `O campo ${field.label} não pode ter apenas números.`,
+            btnCancel: "Fechar",
+          });
+          setShowModal(true);
+          return;
+        }
       }
 
       if (field.type === "email" && !info.includes("@")) {
@@ -120,6 +122,7 @@ function Formulario({
     setData(informations);
 
     const EncryptedBody = cryptoService.encryptData(informations);
+
     if (user) {
       if (user.Email == informations.Email) {
         const EDV = user.EDV;
@@ -168,11 +171,13 @@ function Formulario({
         });
         setShowModal(true);
         if (title == "Login") {
-          cryptoService.decrypt(response.data.data, informations.email);
+          sessionStorage.setItem('token', cryptoService.decrypt(response.data.data));
+          sessionStorage.setItem('email', informations.email);
         }
 
         if (onSubmit) onSubmit();
-        setModalFunc(() => () => navigate(`/${target}`));
+
+        setModalFunc(() => navigate(`/${target}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);

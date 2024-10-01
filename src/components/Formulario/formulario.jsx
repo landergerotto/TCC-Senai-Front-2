@@ -168,11 +168,13 @@ function Formulario({
         });
         setShowModal(true);
         if (title == "Login") {
-          cryptoService.decrypt(response.data.data, informations.email);
+          sessionStorage.setItem('token', cryptoService.decrypt(response.data.data));
+          sessionStorage.setItem('email', informations.email);
         }
 
         if (onSubmit) onSubmit();
-        setModalFunc(() => () => navigate(`/${target}`));
+
+        setModalFunc(() => navigate(`/${target}`));
       })
       .catch((error) => {
         console.error("Houve um erro na requisição:", error);

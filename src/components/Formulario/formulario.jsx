@@ -84,7 +84,6 @@ function Formulario({
       }
 
       if (field.type === "text" && field.label != "CT") {
-
         if (/^\s*$/.test(info) || /^\d+$/.test(info)) {
           setModalData({
             title: "Erro",
@@ -108,7 +107,8 @@ function Formulario({
 
       if (confirmPassword() == true) {
         if (field.name != "confirm") informations[field.name] = info;
-      } else {
+      } else if (field.name == "confirm") localStorage.removeItem("confirm");
+      else {
         setModalData({
           title: "Erro",
           text: "As senhas não coincidem.",
@@ -171,8 +171,11 @@ function Formulario({
         });
         setShowModal(true);
         if (title == "Login") {
-          sessionStorage.setItem('token', cryptoService.decrypt(response.data.data));
-          sessionStorage.setItem('email', informations.email);
+          sessionStorage.setItem(
+            "token",
+            cryptoService.decrypt(response.data.data)
+          );
+          sessionStorage.setItem("email", informations.email);
         }
 
         if (onSubmit) onSubmit();

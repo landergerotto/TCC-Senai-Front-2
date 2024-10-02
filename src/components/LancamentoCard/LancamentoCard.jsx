@@ -134,7 +134,7 @@ function LancamentoCard({ item }) {
   function handleDelete(id) {
     setModalData({
       title: "Confirmar",
-      text: "Dejesa mesmo apagar a POC?",
+      text: "Deseja mesmo apagar a POC?",
       btnCancel: "Fechar",
       btnConfirm: "Apagar",
     });

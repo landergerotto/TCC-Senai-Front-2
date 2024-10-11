@@ -93,25 +93,22 @@ function SideNavBar() {
               <CIcon customClassName="nav-icon" icon={cilAccountLogout} /> Login{" "}
             </CNavItem>
           )}
-          {user && (
-            <>
-              <CNavItem href="/create">
-                <CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar
-                Processo{" "}
-              </CNavItem>
-              <CNavItem href="/partnumber">
-                <CIcon customClassName="nav-icon" icon={cilTag} /> Cadastrar
-                PartNumber{" "}
-              </CNavItem>
-              <CNavItem href="/vsm">
-                <CIcon customClassName="nav-icon" icon={cilFactory} /> VSM{" "}
-              </CNavItem>
-              <CNavItem href="/relatorio">
-                <CIcon customClassName="nav-icon" icon={cilChartLine} />{" "}
-                Relatório{" "}
-              </CNavItem>
-            </>
-          )}
+          <>
+            <CNavItem href="/create">
+              <CIcon customClassName="nav-icon" icon={cilPlus} /> Cadastrar
+              Processo{" "}
+            </CNavItem>
+            <CNavItem href="/partnumber">
+              <CIcon customClassName="nav-icon" icon={cilTag} /> Cadastrar
+              PartNumber{" "}
+            </CNavItem>
+            <CNavItem href="/vsm">
+              <CIcon customClassName="nav-icon" icon={cilFactory} /> VSM{" "}
+            </CNavItem>
+            <CNavItem href="/relatorio">
+              <CIcon customClassName="nav-icon" icon={cilChartLine} /> Relatório{" "}
+            </CNavItem>
+          </>
           {user && (
             <CNavItem
               href="/"
